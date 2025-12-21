@@ -277,12 +277,12 @@ class Unit {
       this.attackRange = 20;
       this.attackDamage = 170;
     } else if (type === "Archer") {
-      this.hp = 600;
+      this.hp = 300;
       this.maxHp = this.hp;
       this.speed = 0.7;
       this.r = 16;
       this.attackRange = 125;  // longer range
-      this.attackDamage = 100;   // weaker per shot
+      this.attackDamage = 125;   // weaker per shot
     }
 
     this.sightRange = 150;
@@ -503,8 +503,8 @@ canvas.addEventListener("click", function (e) {
     if (card.name === "Knight") {
       units.push(new Unit(mouseX, mouseY, "player", "Knight"));
     } else if (card.name === "Archers") {
-      units.push(new Unit(mouseX - 10, mouseY, "player", "Archer"));
-      units.push(new Unit(mouseX + 10, mouseY, "player", "Archer"));
+      units.push(new Unit(mouseX - 25, mouseY, "player", "Archer"));
+      units.push(new Unit(mouseX + 25, mouseY, "player", "Archer"));
     }
     // You can add Musketeer or Giant similarly
 
