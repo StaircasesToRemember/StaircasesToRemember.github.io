@@ -267,15 +267,29 @@ class Unit {
       moveTarget = this.closestBridge();
     }
 
-    const dx = moveTarget.x - this.x;
-    const dy = moveTarget.y - this.y;
-    const mag = Math.hypot(dx, dy);
+    if (this.target) {
+  let targetX = this.target.x;
+  let targetY = this.target.y;
 
-    if (mag > 0) {
-      if (isLocked) return;
-      this.x += (dx / mag) * this.speed;
-      this.y += (dy / mag) * this.speed;
-    }
+  // Ground units cannot cross river
+  if ((this.team === "player" && this.y > 325 && targetY < 275) ||
+      (this.team === "enemy"  && this.y < 275 && targetY > 325)) {
+    // Redirect toward closest bridge
+    const bridge = this.closestBridge();
+    targetX = bridge.x;
+    targetY = bridge.y;
+  }
+
+  const dx = targetX - this.x;
+  const dy = targetY - this.y;
+  const mag = Math.hypot(dx, dy);
+
+  if (mag > 0) {
+    this.x += (dx / mag) * this.speed;
+    this.y += (dy / mag) * this.speed;
+  }
+}
+
   }
 
   closestBridge() {
