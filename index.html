@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<canvas id="arena" width="400" height="600" style="border:2px solid black; background-color: lightgreen;"></canvas>
+<canvas id="arena" width="400" height="1000" style="border:0px solid black; background-color: lightgreen;"></canvas>
 
 <script>
 const canvas = document.getElementById("arena");
@@ -80,8 +80,9 @@ function generateElixir() {
   
 // Draw loop
 function drawArena() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  ctx.fillStyle = "lightgreen";
+  ctx.fillRect(0, 0, canvas.width, 600);
+  
    // Draw river
   ctx.fillStyle = "#1E90FF"; // blue river
   ctx.fillRect(0, 275, canvas.width, 50);
