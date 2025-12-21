@@ -627,10 +627,13 @@ function drawArena() {
       units.splice(i, 1);
     }
   }
-
+  // Clear margin
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 600, canvas.width, 650);
+  
   // Draw elixir bar
   drawElixirBar();
-
+  
   requestAnimationFrame(drawArena);
 }
 
