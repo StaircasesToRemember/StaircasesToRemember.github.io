@@ -219,7 +219,7 @@ update() {
 
   // 3️⃣ If still no target, decide where to move
   if (!closestTarget) {
-    if ((this.team === "player" && sameSide) || (this.team === "opponent" && sameSide)) {
+    if ((this.team === "player" && this.y >= 300) || (this.team === "opponent" && this.y <= 300)) {
       // Own side → move toward nearest bridge
       closestTarget = this.closestBridge();
     } else {
