@@ -206,6 +206,7 @@ class Tower {
     this.maxHp = hp;
     this.team = team;
     this.isKing = isKing; // true if this is the king tower
+    this.target = null;
   }
 
   draw(ctx) {
@@ -222,7 +223,10 @@ class Tower {
 
     // Tower attack logic here (target nearest enemy unit, deal ranged damage)
     const enemyUnits = units.filter(u => u.team !== this.team);
-    if (enemyUnits.length === 0) return;
+    if (enemyUnits.length === 0) {
+      this.target = null;
+      return;
+    }
 
     // Find closest enemy
     let closest = null;
@@ -236,7 +240,10 @@ class Tower {
     }
 
     if (closest && closestDist <= 150) { // attack range
+      this.target = closest;
       closest.hp -= 5; // tower damage
+    } else {
+      this.target = null;
     }
   }
 }
@@ -268,81 +275,80 @@ class Unit {
   }
 
   update() {
-  // Reduce attack cooldown
-  if (this.attackCooldown > 0) this.attackCooldown--;
+    // Reduce attack cooldown
+    if (this.attackCooldown > 0) this.attackCooldown--;
 
-  // Remove dead target
-  if (this.target && this.target.hp <= 0) {
-    this.target = null;
-  }
-
-  // Acquire target if none
-  if (!this.target) {
-    let closest = null;
-    let closestDist = Infinity;
-
-    // Enemy units
-    const enemyUnits = units.filter(u => u.team !== this.team);
-    for (const u of enemyUnits) {
-      const d = distance(this, u);
-      if (d < closestDist && d <= this.sightRange) {
-        closest = u;
-        closestDist = d;
-      }
+    // Remove dead target
+    if (this.target && this.target.hp <= 0) {
+      this.target = null;
     }
 
-    // Enemy towers
-    const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
-    if (!closest) {
-      for (const t of enemyTowersList) {
-        const d = distance(this, t);
-        if (d < closestDist) {
-          closest = t;
+    // Acquire target if none
+    if (!this.target) {
+      let closest = null;
+      let closestDist = Infinity;
+
+      // Enemy units
+      const enemyUnits = units.filter(u => u.team !== this.team);
+      for (const u of enemyUnits) {
+        const d = distance(this, u);
+        if (d < closestDist && d <= this.sightRange) {
+          closest = u;
           closestDist = d;
         }
       }
+
+      // Enemy towers
+      const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
+      if (!closest) {
+        for (const t of enemyTowersList) {
+          const d = distance(this, t);
+          if (d < closestDist) {
+            closest = t;
+            closestDist = d;
+          }
+        }
+      }
+
+      this.target = closest;
     }
 
-    this.target = closest;
-  }
+    // If no target, do nothing
+    if (!this.target) return;
 
-  // If no target, do nothing
-  if (!this.target) return;
+    const d = distance(this, this.target);
 
-  const d = distance(this, this.target);
-
-  // Attack lock-in
-  if (d <= ATTACK_RANGE) {
-    if (this.attackCooldown === 0) {
-      this.target.hp -= ATTACK_DAMAGE;
-      this.attackCooldown = ATTACK_COOLDOWN;
+    // Attack lock-in
+    if (d <= ATTACK_RANGE) {
+      if (this.attackCooldown === 0) {
+        this.target.hp -= ATTACK_DAMAGE;
+        this.attackCooldown = ATTACK_COOLDOWN;
+      }
+      return; // stop moving while attacking
     }
-    return; // stop moving while attacking
-  }
 
-  // Determine where to move
-  let moveX, moveY;
-  if (sameSide(this, this.target)) {
-    // Target is on same side: move directly toward it
-    moveX = this.target.x;
-    moveY = this.target.y;
-  } else {
-    // Target across river: move to nearest bridge
-    const bridge = this.closestBridge();
-    moveX = bridge.x;
-    moveY = bridge.y;
-  }
+    // Determine where to move
+    let moveX, moveY;
+    if (sameSide(this, this.target)) {
+      // Target is on same side: move directly toward it
+      moveX = this.target.x;
+      moveY = this.target.y;
+    } else {
+      // Target across river: move to nearest bridge
+      const bridge = this.closestBridge();
+      moveX = bridge.x;
+      moveY = bridge.y;
+    }
 
-  // Move toward moveX, moveY
-  const dx = moveX - this.x;
-  const dy = moveY - this.y;
-  const mag = Math.hypot(dx, dy);
-  if (mag > 0) {
-    this.x += (dx / mag) * this.speed;
-    this.y += (dy / mag) * this.speed;
+    // Move toward moveX, moveY
+    const dx = moveX - this.x;
+    const dy = moveY - this.y;
+    const mag = Math.hypot(dx, dy);
+    if (mag > 0) {
+      this.x += (dx / mag) * this.speed;
+      this.y += (dy / mag) * this.speed;
+    }
   }
-}
-
 
   closestBridge() {
     let best = null;
@@ -370,7 +376,7 @@ class Unit {
     return best;
   }
 
-    draw(ctx) {
+  draw(ctx) {
     // Draw Knight
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
@@ -383,8 +389,6 @@ class Unit {
     ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / 1800) * this.r * 2, 4);
   }
 }
-
-
 
 // Function to generate elixir
 function generateElixir() {
@@ -422,26 +426,6 @@ function drawArena() {
   // Update and draw towers
   updateTowers();
 
-    // Optional: draw attack line if attacking
-    if (t.target) {
-      ctx.strokeStyle = t.team === "player" ? "blue" : "red";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(t.x, t.y);
-      ctx.lineTo(t.target.x, t.target.y);
-      ctx.stroke();
-    }
-
-    if (t.target) {
-      ctx.strokeStyle = t.team === "player" ? "blue" : "red";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(t.x, t.y);
-      ctx.lineTo(t.target.x, t.target.y);
-      ctx.stroke();
-    }
-  }
-
   // Update and draw units
   for (let i = units.length - 1; i >= 0; i--) {
     const u = units[i];
@@ -459,14 +443,13 @@ function drawArena() {
   requestAnimationFrame(drawArena);
 }
 
-
 drawArena();
   
 // Generate 1 elixir every 2.8 seconds
 setInterval(generateElixir, 2800);
 
-  // Event listener
- canvas.addEventListener("click", function (e) {
+// Event listener
+canvas.addEventListener("click", function (e) {
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
   const mouseY = e.clientY - rect.top;
@@ -487,33 +470,31 @@ setInterval(generateElixir, 2800);
     }
   }
 
-// 2️⃣ Check arena click
-if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
-  const card = cards[selectedCardIndex];
+  // 2️⃣ Check arena click
+  if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
+    const card = cards[selectedCardIndex];
 
-  if (!canPlaceCard(card, mouseX, mouseY, "player")) {
-    console.log("Illegal placement");
-    return;
+    if (!canPlaceCard(card, mouseX, mouseY, "player")) {
+      console.log("Illegal placement");
+      return;
+    }
+
+    const cost = card.cost;
+    
+    if (playerElixir < cost) {
+      console.log("Not enough elixir!");
+      return;
+    }
+
+    playerElixir -= cost;
+
+    // SPAWN KNIGHT
+    units.push(new Unit(mouseX, mouseY, "player"));
+
+    console.log("Spawned Knight at", mouseX, mouseY);
+
+    selectedCardIndex = null;
   }
-
-  
-  const cost = card.cost;
-  
-  if (playerElixir < cost) {
-    console.log("Not enough elixir!");
-    return;
-  }
-
-  playerElixir -= cost;
-
-  // SPAWN KNIGHT
-  units.push(new Unit(mouseX, mouseY, "player"));
-
-  console.log("Spawned Knight at", mouseX, mouseY);
-
-  selectedCardIndex = null;
-}
-
 });
 
 </script>
