@@ -243,7 +243,7 @@ class Tower {
       }
     }
 
-    if (closest && closestDist <= 150) { // attack range
+    if (closest && closestDist <= 175) { // attack range
       this.target = closest;
       if (this.attackCooldown == 0) {
         closest.hp -= 140; // tower damage
