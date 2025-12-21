@@ -435,10 +435,10 @@ class Unit {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
 
-    if (card.name === "Knight") ctx.fillStyle = "yellow";
-    if (card.name === "Archer") ctx.fillStyle = "magenta";
-    if (card.name === "Musketeer") ctx.fillStyle = "purple";
-    if (card.name === "Giant") ctx.fillStyle = "orange";
+    if (this.type === "Knight") ctx.fillStyle = "yellow";
+    else if (this.type === "Archer") ctx.fillStyle = "magenta";
+    else if (this.type === "Musketeer") ctx.fillStyle = "purple";
+    else if (this.type === "Giant") ctx.fillStyle = "orange";
 
     ctx.fill();
     ctx.closePath();
@@ -451,7 +451,7 @@ class Unit {
       (this.hp / this.maxHp) * this.r * 2,
       4
     );
-  }
+}
 }
 
 // Function to generate elixir
