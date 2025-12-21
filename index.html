@@ -50,6 +50,16 @@ function drawArena() {
    // Draw river
   ctx.fillStyle = "#1E90FF"; // blue river
   ctx.fillRect(0, 275, canvas.width, 50);
+
+    // Draw bridges
+  ctx.fillStyle = "#8B4513"; // brown
+  const bridgeWidth = 50;
+  const bridgeHeight = 100;
+  const bridgeXs = [75, 325];
+
+  for (let x of bridgeXs) {
+    ctx.fillRect(x - bridgeWidth/2, 275 - (bridgeHeight - 50)/2, bridgeWidth, bridgeHeight);
+  }
   
   for (let t of playerTowers) {
     console.log("Drawing player tower object:", t); // DEBUG
