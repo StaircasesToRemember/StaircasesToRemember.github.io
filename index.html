@@ -1,301 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>40 Staircases You MUST Visit Before You Die</title>
-  </head>
+<html>
+<body>
 
-  <body>
-    <h1>40 Staircases You MUST Visit Before You Die</h1>
+<canvas id="arena" width="400" height="600" style="border:2px solid black;"></canvas>
 
-    <h2>What could be so special about staircases?</h2>
-    <p>
-      So many things could make a staircase unforgettable: it might feature a striking or beautiful design, serve as the site of a pivotal historical moment, stand as a forgotten relic of an ancient civilization, or exist as a modern spectacle shaped by contemporary design and pop culture. Whether it climbs thousands of feet into the sky or only rises a mere six or seven steps, there is only one way to fully experience what makes each of these staircases so special.
-    </p>
+<script>
+const canvas = document.getElementById("arena");
+const ctx = canvas.getContext("2d");
 
-    <h2>The Defensive Stairways of the Great Wall</h2>
-    <img
-      src="https://cdn.britannica.com/82/94382-050-20CF23DB/Great-Wall-of-China-Beijing.jpg"
-      alt="Stone steps along the Great Wall of China"
-      style="width: 25%; height: auto;"
-    >
-    <p>
-The Great Wall of China runs across northern China, stretching thousands of miles from the eastern coast near the Bohai Sea to the deserts of the west. Construction began as early as the 7th century BCE and continued for over two thousand years, with major rebuilding during the Qin, Han, and Ming dynasties. Built to defend against invasions from the north, the wall served as a military barrier, a lookout system, and a means of controlling movement and trade. Throughout the wall, stone stairways climb steep hills and mountain ridges, often rising at sharp angles that follow the natural terrain. These stairs were designed for soldiers, not civilians: the steps are uneven, narrow, and sometimes extremely tall, allowing defenders to move quickly between watchtowers and patrol points while making it difficult for attackers to advance. Over time, these steps were worn down by marching troops, laborers, and later by travelers and tourists. Today, the stairways of the Great Wall connect past and present, carrying the physical weight of history while still guiding people across the same rugged landscape they once protected.
-    </p>
+// Tower class
+class Tower {
+  constructor(x, y, hp, team) {
+    this.x = x;
+    this.y = y;
+    this.hp = hp;
+    this.maxHp = hp;
+    this.team = team;
+  }
 
-    <h2>The Stairs of Death at Machu Pichu</h2>
-    <img
-      src="https://peruways.com/wp-content/uploads/2024/06/stairs-machu-picchu.jpg"
-      alt="Steep stone stairs at Machu Picchu"
-      style="width: 25%; height: auto;"
-    >
-    <p>
-      Machu Picchu is located high in the Andes Mountains of present-day Peru, perched above the Urubamba River valley. It was built in the mid-15th century during the height of the Inca Empire, likely under the rule of Emperor Pachacuti. The site served as a royal estate, religious center, and ceremonial space, carefully designed to blend with the surrounding mountains rather than dominate them. One of its most striking features is the steep stone stairway often called the Stairs of Death. These narrow, uneven steps cling tightly to the mountainside, rising sharply with little room for error. Carved directly from stone and fitted without mortar, the stairs reflect the Inca mastery of engineering and their deep understanding of the landscape. Their primary use was practical and ceremonial, allowing movement between agricultural terraces, temples, and sacred spaces while also reinforcing the spiritual significance of elevation in Inca culture. Today, the Stairs of Death test the balance and nerve of visitors, offering a physical reminder of the precision, purpose, and reverence for nature that defined Machu Picchu.
-    </p>
+  draw(ctx) {
+    console.log("Inside draw for", this.team, this.x, this.y); // DEBUG
+    ctx.fillStyle = this.team === "player" ? "blue" : "red";
+    ctx.fillRect(this.x - 25, this.y - 25, 50, 50);
+    ctx.fillStyle = "green";
+    ctx.fillRect(this.x - 25, this.y - 30, 50 * (this.hp / this.maxHp), 5);
+  }
+}
 
-    <h2>The Entrance Staircase of MIT Building 7</h2>
-    <img
-      src="https://www.sgh.com/wp-content/uploads/2022/01/4E0A2354-scaled.jpg"
-      alt="Staircase in front of MIT Building 7"
-      style="width: 25%; height: auto;"
-    >
-    <p>
-      The Massachusetts Institute of Technology is located in Cambridge, Massachusetts, along the north bank of the Charles River. Founded in 1861, MIT developed into a leading center for science, engineering, and technological research. Building 7, completed in 1939 as part of MIT’s central campus redesign, serves as the main entrance and symbolic gateway to the Institute. The broad stone staircase in front of Building 7 rises gently from Massachusetts Avenue toward the campus interior. Unlike defensive or sacred stairways, these steps were designed to welcome and gather people. Wide, evenly spaced, and symmetrical, the staircase encourages movement, conversation, and pause rather than urgency. Over decades, it has been used by students rushing to class, visitors entering the campus for the first time, and demonstrators assembling for speeches and protests, making it a social and civic space as much as an architectural one. Today, the Building 7 staircase reflects MIT’s values of openness and exchange, standing not as a barrier to overcome but as an invitation to enter a place defined by ideas, innovation, and community.
-    </p>
+// Create towers
+const playerTowers = [
+  new Tower(50, 100, 1000, "player"),
+  new Tower(200, 50, 2000, "player"),
+  new Tower(350, 100, 1000, "player")
+];
 
-<h2>The Heavenly Stairway of Mount Tai</h2>
-<img
-  src="https://www.travelawaits.com/wp-content/uploads/2021/04/the-stairway-to-heaven-at-tia7381fa.jpg"
-  alt="Steep stone stairway ascending Mount Tai"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
+const enemyTowers = [
+  new Tower(50, 500, 1000, "enemy"),
+  new Tower(200, 550, 2000, "enemy"),
+  new Tower(350, 500, 1000, "enemy")
+];
 
-<h2>The Fuxi Temple Mountain Stairway</h2>
-<img
-  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJb6qE3ET-qgHZyg0Gaofii08IDlN4C2SCuw&s"
-  alt="Mountain staircase leading to Fuxi Temple"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
+console.log("Player towers:", playerTowers);
+console.log("Enemy towers:", enemyTowers);
 
-<h2>The Sacred Steps of Sabarimala</h2>
-<img
-  src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhHvCMVZ_3qEdBP-VHy6TsGUbqdtrww1S55kwNxT26hCXY71H76cNzQl0lfwIbmAQKrgnFvMfacKfqLCA6yAds4cg-ddQMF_fEVLwmkwJ3OPQYIv2hk3dgT9NNChT4fx56KQtE75ZNiESqT/s1600-rw/ayyappa+Temple+Located.jpg"
-  alt="Pilgrimage steps leading to the Sabarimala temple"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
+// Draw loop
+function drawArena() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-<h2>The Suga Shrine Staircase</h2>
-<img
-  src="https://i.redd.it/51485xzq8rc31.jpg"
-  alt="Stone staircase at Suga Shrine in Tokyo"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
+  for (let t of playerTowers) {
+    console.log("Drawing player tower object:", t); // DEBUG
+    t.draw(ctx);
+  }
 
-<h2>The Hogwarts Grand Staircase</h2>
-<img
-  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzhqnN-Cy6D87h2m1Ir3oiEOw5UFyuEpVYmg&s"
-  alt="The moving grand staircase from Harry Potter"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
+  for (let t of enemyTowers) {
+    console.log("Drawing enemy tower object:", t); // DEBUG
+    t.draw(ctx);
+  }
 
-<h2>The Cascading Sunken Courtyard Staircase</h2>
-<img
-  src="https://static.designboom.com/wp-content/uploads/2025/07/cascading-staircase-sunken-courtyard-trop-terrains-plus-open-space-shanghai-residence-designboom-500.jpg"
-  alt="Modern cascading staircase in a sunken courtyard"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
+  requestAnimationFrame(drawArena);
+}
 
-<h2>The Tokyo Tower Exterior Stairway</h2>
-<img
-  src="https://minatokankoprod.blob.core.windows.net/assets/2019/08/08/07/18/44/080803.jpg"
-  alt="Exterior stairway spiraling up Tokyo Tower"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
+drawArena();
+</script>
 
-<h2>The Torii Stairways of Fushimi Inari</h2>
-<img
-  src="https://images.squarespace-cdn.com/content/v1/58d95f3bf5e231abb460fca7/1662928680042-SJT078PTN8DD960N0DBR/_MG_9549_edit.jpg?format=1000w"
-  alt="Torii gate-lined stairway at Fushimi Inari Shrine"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Hillside Stairways of Chongqing</h2>
-<img
-  src="https://i.ytimg.com/vi/3IOu-TTrmQ0/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCYKTmSU6oMaKrMOVbueCm1gVuXsQ"
-  alt="Urban hillside stairways in Chongqing, China"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Widener Library Steps</h2>
-<img
-  src="https://library.harvard.edu/sites/default/files/styles/media_embed_center_1170/public/082713_widener_steps_2268_h_2500_0.jpg?itok=rT01Yd8o"
-  alt="Stone steps leading to Widener Library at Harvard"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Grand Staircase of the Palais Garnier</h2>
-<img
-  src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Opera_Garnier_Grand_Escalier.jpg/963px-Opera_Garnier_Grand_Escalier.jpg"
-  alt="Ornate grand staircase inside the Palais Garnier"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Interior Staircase of the Statue of Liberty</h2>
-<img
-  src="https://www.denverpost.com/wp-content/uploads/2016/05/20100809__20100810_A02_ND10DTSTATUEp1.jpg?w=640"
-  alt="Interior spiral staircase inside the Statue of Liberty"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Percy Warner Park Stone Staircase</h2>
-<img
-  src="https://live.staticflickr.com/65535/52682333831_116d6012e3_b.jpg"
-  alt="Stone staircase in Percy Warner Park"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Sacred Stairways of Angkor Wat</h2>
-<img
-  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRauGO29x31ZyAP6JS8o52wVOWYSsHB9lDKzQ&s"
-  alt="Steep temple stairways at Angkor Wat"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Ascending Stairways of the Potala Palace</h2>
-<img
-  src="https://thumbs.dreamstime.com/b/potala-palace-lhasa-tibet-15690368.jpg"
-  alt="Stairways ascending the Potala Palace in Lhasa"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Spanish Steps</h2>
-<img
-  src="https://theromanguy.com/wp-content/uploads/AdobeStock_122995935.jpeg"
-  alt="The Spanish Steps in Rome"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Royal Stairways of Al-Karaneh Palace</h2>
-<img
-  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs5XI64HiYYbi1y8ejQpsz8RVGbR4tgdCGIA&s"
-  alt="Royal palace stairways in Jordan"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Imperial Staircases of the Forbidden City</h2>
-<img
-  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTZ5r232g_zFUTzEVojdEmY4avmVo9ShIqbg&s"
-  alt="Imperial staircases at the Forbidden City"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Stairway of the Pyramid of the Sun</h2>
-<img
-  src="https://cdn.mos.cms.futurecdn.net/6Txsk2q5k3Hxho7cVhdrbV.jpg"
-  alt="Stairway ascending the Pyramid of the Sun at Teotihuacan"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Staircase of El Castillo</h2>
-<img
-  src="https://upload.wikimedia.org/wikipedia/commons/5/51/Chichen_Itza_3.jpg"
-  alt="Staircase of El Castillo at Chichen Itza"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Lion Rock Stairway of Sigiriya</h2>
-<img
-  src="https://d1bv4heaa2n05k.cloudfront.net/user-images/1533635353234/shutterstock-358175291_destinationMain_1533635373763.jpeg"
-  alt="Stairway climbing Sigiriya Lion Rock"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Lincoln Memorial Steps</h2>
-<img
-  src="https://www.washingtonplazahotel.com/resourcefiles/mainimages/lincoln-memorial-in-washington-top.jpg?version=11182025065557"
-  alt="Steps leading up to the Lincoln Memorial"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Potemkin Stairs of Odesa</h2>
-<img
-  src="https://upload.wikimedia.org/wikipedia/commons/5/53/%D0%9F%D0%BE%D1%82%D1%8C%D0%BE%D0%BC%D0%BA%D1%96%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D1%81%D1%85%D0%BE%D0%B4%D0%B8_11.jpg"
-  alt="The Potemkin Stairs in Odesa"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Pilgrimage Stairways of Borobudur</h2>
-<img
-  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf32oNoXIduRARUW6o8gj99PgOZOR0nKCqNA&s"
-  alt="Pilgrimage stairways at Borobudur Temple"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Selarón Steps</h2>
-<img
-  src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Selaron_Stairs%2C_Rio_de_Janeiro%2C_Brasil.jpg/250px-Selaron_Stairs%2C_Rio_de_Janeiro%2C_Brasil.jpg"
-  alt="Colorful tiled Selarón Steps in Rio de Janeiro"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Montmartre Hill Stairways</h2>
-<img
-  src="https://frenchmoments.eu/wp-content/uploads/2015/05/Stairs-of-rue-Ronsard-in-Montmartre-%C2%A9-French-Moments1.jpg"
-  alt="Hill stairways in Montmartre, Paris"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Sacred Ascent of Adam’s Peak</h2>
-<img
-  src="https://thrilltourism.com/storage/6636/o11iAm6lgzydEpnl6G1K64X8nAuHLwEfeXWuK3YH.jpg"
-  alt="Pilgrimage stairway ascending Adam’s Peak"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-<h2>The Haʻikū Stairs</h2>
-<img
-  src="https://upload.wikimedia.org/wikipedia/commons/c/c1/HaikuLadder.jpg"
-  alt="The Haʻikū Stairs, also known as the Stairway to Heaven"
-  style="width: 25%; height: auto;"
->
-<p>
-</p>
-
-  </body>
+</body>
 </html>
-
-
