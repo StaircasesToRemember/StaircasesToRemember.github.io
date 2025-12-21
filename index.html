@@ -153,11 +153,12 @@ function generateElixir() {
 }
 
 // Draw loop
+  // Draw grass
 function drawArena() {
   ctx.fillStyle = "lightgreen";
   ctx.fillRect(0, 0, canvas.width, 600);
 
-  // Hand 
+  // Draw hand 
   ctx.fillStyle = "#ddd";
   ctx.fillRect(0, 700, canvas.width, 150);
   drawHand();
@@ -175,7 +176,7 @@ function drawArena() {
   for (let x of bridgeXs) {
     ctx.fillRect(x - bridgeWidth/2, 275 - (bridgeHeight - 50)/2, bridgeWidth, bridgeHeight);
   }
-  
+
   for (let t of playerTowers) {
     t.draw(ctx);
   }
@@ -184,6 +185,10 @@ function drawArena() {
     t.draw(ctx);
   }
 
+  //draw units
+  drawUnits();
+
+  //draw elixir bar
   drawElixirBar();
 
   requestAnimationFrame(drawArena);
