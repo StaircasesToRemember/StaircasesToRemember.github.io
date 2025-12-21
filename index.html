@@ -101,8 +101,8 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Giant"));
   }
   else if (card.name === "Minions") {
-    units.push(new Unit(x - 15, y + 10, "enemy", "Minion"));
-    units.push(new Unit(x + 15, y + 10, "enemy", "Minion"));
+    units.push(new Unit(x - 15, y - 10, "enemy", "Minion"));
+    units.push(new Unit(x + 15, y - 10, "enemy", "Minion"));
     units.push(new Unit(x, y, "enemy", "Minion"));
   }
   else if (card.name === "Mini Pekka") {
@@ -656,8 +656,8 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Giant") {
       units.push(new Unit(mouseX, mouseY, "player", "Giant"));
     } else if (card.name === "Minions") {
-      units.push(new Unit(mouseX - 15, mouseY - 10, "player", "Minion"));
-      units.push(new Unit(mouseX + 15, mouseY - 10, "player", "Minion"));
+      units.push(new Unit(mouseX - 15, mouseY + 10, "player", "Minion"));
+      units.push(new Unit(mouseX + 15, mouseY + 10, "player", "Minion"));
       units.push(new Unit(mouseX, mouseY, "player", "Minion"));
     } else if (card.name === "Mini Pekka") {
       units.push(new Unit(mouseX, mouseY, "player", "Mini Pekka"));
