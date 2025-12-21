@@ -177,12 +177,25 @@ class Unit {
 
   update() {
     if (this.attacking) return;
-
+  
     const enemyUnits = getEnemyUnits(this);
-    const enemyTowers = this.team === "player" ? enemyTowers : playerTowers;
-
+    const targetTowers = this.team === "player" ? enemyTowers : playerTowers;
+  
     let closestTarget = null;
     let closestDist = Infinity;
+  
+    // now use `targetTowers` instead of `enemyTowers` below
+    if (!closestTarget) {
+      for (const t of targetTowers) {
+        const dx = t.x - this.x;
+        const dy = t.y - this.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist <= this.sightRange && dist < closestDist) {
+          closestDist = dist;
+          closestTarget = t;
+        }
+      }
+    }
 
     // movement logic here...
     // same as your update() code
