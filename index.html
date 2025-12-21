@@ -111,6 +111,8 @@ function drawHand() {
 
   for (let i = 0; i < 4; i++) {
     const x = startX + i * (cardWidth + spacing);
+    const card = cards[i];
+    const cost = card.cost;
 
     // store card bounds
     handCards.push({ x, y, w: cardWidth, h: cardHeight });
@@ -124,41 +126,38 @@ function drawHand() {
     // card body
     ctx.fillStyle = "white";
     ctx.fillRect(x, y, cardWidth, cardHeight);
-    ctx.globalAlpha = 1.0;
 
+    // Draw unit icon/circle in the middle
+    ctx.globalAlpha = 1.0;
+    ctx.beginPath();
+    ctx.arc(x + cardWidth / 2, y + 35, 20, 0, Math.PI * 2);
+    
+    if (card.name === "Knight") ctx.fillStyle = "yellow";
+    if (card.name === "Archer") ctx.fillStyle = "magenta";
+    if (card.name === "Musketeer") ctx.fillStyle = "purple";
+    if (card.name === "Giant") ctx.fillStyle = "orange";
+    
+    ctx.fill();
+    ctx.closePath();
+
+    // Draw unit name
+    ctx.fillStyle = "black";
+    ctx.font = "10px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(card.name, x + cardWidth / 2, y + 70);
+
+    // Draw elixir cost in magenta at bottom
+    ctx.fillStyle = "magenta";
+    ctx.font = "bold 16px Arial";
+    ctx.fillText(cost, x + cardWidth / 2, y + 90);
+
+    ctx.globalAlpha = 1.0;
 
     // border
     ctx.strokeStyle = "black";
     ctx.strokeRect(x, y, cardWidth, cardHeight);
   }
 }
-  
-// In drawArena or a separate tower management function:
-function updateTowers() {
-  // Player towers
-  for (let i = playerTowers.length - 1; i >= 0; i--) {
-    const t = playerTowers[i];
-    t.update();
-    t.draw(ctx);
-
-    // Optional: draw attack line
-    if (t.target) {
-      ctx.strokeStyle = t.team === "player" ? "blue" : "red";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(t.x, t.y);
-      ctx.lineTo(t.target.x, t.target.y);
-      ctx.stroke();
-    }
-
-    if (!t.isKing && t.hp <= 0) {
-      playerTowers.splice(i, 1);
-    }
-    if (t.isKing && t.hp <= 0) {
-      alert("Enemy wins!");
-      location.reload(); // simple game over reset
-    }
-  }
 
   // Enemy towers
   for (let i = enemyTowers.length - 1; i >= 0; i--) {
