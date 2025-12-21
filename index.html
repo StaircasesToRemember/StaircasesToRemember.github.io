@@ -203,7 +203,7 @@ class Unit {
   // Reduce attack cooldown
   if (this.attackCooldown > 0) this.attackCooldown--;
 
-  // Remove target if dead
+  // Remove dead target
   if (this.target && this.target.hp <= 0) {
     this.target = null;
   }
@@ -252,16 +252,14 @@ class Unit {
     return; // stop moving while attacking
   }
 
-  // Determine movement target
-  let moveX = this.target.x;
-  let moveY = this.target.y;
-
-  // Bridge routing for ground units
-  // Player side: y > 325, Enemy side: y < 275
-
-  const targetAcrossRiver = sameSide(this.y, moveY);
-
-  if (targetAcrossRiver) {
+  // Determine where to move
+  let moveX, moveY;
+  if (sameSide(this, this.target)) {
+    // Target is on same side: move directly toward it
+    moveX = this.target.x;
+    moveY = this.target.y;
+  } else {
+    // Target across river: move to nearest bridge
     const bridge = this.closestBridge();
     moveX = bridge.x;
     moveY = bridge.y;
@@ -271,12 +269,12 @@ class Unit {
   const dx = moveX - this.x;
   const dy = moveY - this.y;
   const mag = Math.hypot(dx, dy);
-
   if (mag > 0) {
     this.x += (dx / mag) * this.speed;
     this.y += (dy / mag) * this.speed;
   }
 }
+
 
   closestBridge() {
     let best = null;
