@@ -43,30 +43,36 @@ function drawInitialHand() {
 
 drawInitialHand();
 
+console.log("Player deck:", playerDeck);
+console.log("Player hand:", playerHand);
+console.log("Enemy deck:", enemyDeck);
+console.log("Enemy hand:", enemyHand);
+  
 // Player elixir values
 let playerElixir = 6;
 let enemyElixir = 6;
 const maxElixir = 10;
 
 function cyclePlayerCard(handIndex) {
-  const used = playerHand[handIndex];
-  playerHand.splice(handIndex, 1);
+  const playedCard = playerHand.splice(handIndex, 1)[0];
 
-  const remaining = playerDeck.filter(c => !playerHand.includes(c));
-  const next = remaining[Math.floor(Math.random() * remaining.length)];
+  // draw next card from deck
+  const nextCard = playerDeck.shift();
+  playerHand.push(nextCard);
 
-  playerHand.push(next);
+  // put played card at bottom of deck
+  playerDeck.push(playedCard);
 }
 
 function cycleEnemyCard(handIndex) {
-  const used = enemyHand[handIndex];
-  enemyHand.splice(handIndex, 1);
+  const playedCard = enemyHand.splice(handIndex, 1)[0];
 
-  const remaining = enemyDeck.filter(c => !enemyHand.includes(c));
-  const next = remaining[Math.floor(Math.random() * remaining.length)];
+  const nextCard = enemyDeck.shift();
+  enemyHand.push(nextCard);
 
-  enemyHand.push(next);
+  enemyDeck.push(playedCard);
 }
+
   
 // Card selected variables
 let selectedCardIndex = null; // 0–3, or null if none selected
