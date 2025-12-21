@@ -151,7 +151,7 @@ class Unit {
     this.y = y;
     this.team = team;
     this.hp = 100;
-    this.r = 12;
+    this.r = 24;
     this.type = "knight";
 
     this.speed = 1.0;
@@ -163,7 +163,7 @@ class Unit {
   draw(ctx) {
     // Draw Knight
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 4);
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
     ctx.fillStyle = this.team === "player" ? "yellow" : "yellow";
     ctx.fill();
     ctx.closePath();
