@@ -20,12 +20,12 @@ const PlacementType = {
 };
 
 const cards = [
-  { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
-  { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY }
+  { name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
 
 let enemyHand = [0, 1, 2, 3]; // indices into cards
@@ -101,9 +101,9 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Giant"));
   }
   else if (card.name === "Minions") {
-      units.push(new Unit(mouseX - 15, mouseY + 10, "enemy", "Minion"));
-      units.push(new Unit(mouseX + 15, mouseY + 10, "enemy", "Minion"));
-      units.push(new Unit(mouseX, mouseY, "enemy", "Minion"));
+    units.push(new Unit(x - 15, y + 10, "enemy", "Minion"));
+    units.push(new Unit(x + 15, y + 10, "enemy", "Minion"));
+    units.push(new Unit(x, y, "enemy", "Minion"));
   }
   else if (card.name === "Mini Pekka") {
     units.push(new Unit(x, y, "enemy", "Mini Pekka"));
@@ -437,7 +437,7 @@ class Unit {
       for (const u of units) {
         if (u.team === this.team) continue;
       
-        if (u.isAir && !this.canAttackAir) continue;
+        if (u.isAir && !this.attacksAir) continue;
       
         const d = distance(this, u);
         if (d < closestDist && d <= this.sightRange) {
@@ -473,6 +473,7 @@ class Unit {
     }
 
     // Move logic
+    let moveX, moveY;
     if (!this.isAir && !sameSide(this, this.target)) {
       const bridge = this.closestBridge();
       moveX = bridge.x;
