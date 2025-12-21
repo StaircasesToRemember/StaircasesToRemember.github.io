@@ -258,11 +258,8 @@ class Unit {
 
   // Bridge routing for ground units
   // Player side: y > 325, Enemy side: y < 275
-  const riverTop = 275;
-  const riverBottom = 325;
 
-  const targetAcrossRiver = (this.team === "player" && moveY < riverTop) ||
-                            (this.team === "enemy" && moveY > riverBottom);
+  const targetAcrossRiver = sameSide(this.y, moveY);
 
   if (targetAcrossRiver) {
     const bridge = this.closestBridge();
