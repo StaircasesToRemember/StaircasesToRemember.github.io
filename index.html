@@ -13,6 +13,11 @@ let playerElixir = 6;
 let enemyElixir = 6;
 const maxElixir = 10;
 
+// Card selected variables
+let selectedCardIndex = null; // 0–3, or null if none selected
+const handCards = [];
+
+
 // Draw elixir bar
 function drawElixirBar() {
   const barWidth = 200;
@@ -54,14 +59,25 @@ function drawHand() {
 
   for (let i = 0; i < 4; i++) {
     const x = startX + i * (cardWidth + spacing);
+
+    // store card bounds
+    handCards.push({ x, y, w: cardWidth, h: cardHeight });
+
+    // highlight if selected
+    if (selectedCardIndex === i) {
+      ctx.fillStyle = "gold";
+      ctx.fillRect(x - 4, y - 4, cardWidth + 8, cardHeight + 8);
+    }
+
+    // card body
+    ctx.fillStyle = "white";
     ctx.fillRect(x, y, cardWidth, cardHeight);
 
-    // card border
+    // border
     ctx.strokeStyle = "black";
     ctx.strokeRect(x, y, cardWidth, cardHeight);
   }
 }
-
   
   
 // Tower class
@@ -76,7 +92,7 @@ class Tower {
 
   draw(ctx) {
     console.log("Inside draw for", this.team, this.x, this.y); // DEBUG
-    ctx.fillStyle = this.team === "player" ? "burlywood" : "burlywood";
+    ctx.fillStyle = this.team === "player" ? "blue" : "red";
     ctx.fillRect(this.x - 25, this.y - 25, 50, 50);
     ctx.fillStyle = this.team === "player" ? "blue" : "red";
     ctx.fillRect(this.x - 25, this.y - 35, 50 * (this.hp / this.maxHp), 5);
@@ -148,6 +164,29 @@ drawArena();
   
 // Generate 1 elixir every 2.8 seconds
 setInterval(generateElixir, 2800);
+
+  // Detect clicks
+  canvas.addEventListener("click", function (e) {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  for (let i = 0; i < handCards.length; i++) {
+    const c = handCards[i];
+
+    if (
+      mouseX >= c.x &&
+      mouseX <= c.x + c.w &&
+      mouseY >= c.y &&
+      mouseY <= c.y + c.h
+    ) {
+      selectedCardIndex = i;
+      console.log("Selected card:", i);
+      return;
+    }
+  }
+});
+
 </script>
 
 </body>
