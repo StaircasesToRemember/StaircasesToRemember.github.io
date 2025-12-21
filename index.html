@@ -6,14 +6,25 @@ ow<!DOCTYPE html>
 
 <script>
 const canvas = document.getElementById("arena");
-const ctx = canvas.getContext("2d");
 const cardCosts = [3, 4, 2, 5]; // cost for each of the 4 cards
 const units = [];
 const bridges = [
   { x: 75, y: 600 / 2 },  // middle of first bridge
   { x: 325, y: 600 / 2 }  // middle of second bridge
 ];
+const PlacementType = {
+  PLAYER_SIDE_ONLY: "player",
+  ANYWHERE: "anywhere"
+};
 
+const cards = [
+  { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Musketeer", cost: 4, placement: PlacementType.ANYWHERE },
+  { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
+];
+const card = cards[selectedCardIndex];
+const cost = card.cost;
 
 // Player elixir values
 let playerElixir = 6;
@@ -35,6 +46,18 @@ function spawnUnit(x, y, team) {
   });
 }
 
+function canPlaceCard(card, x, y, team) {
+  // River
+  if (y >= 275 && y <= 325) return false;
+
+  if (card.placement === PlacementType.PLAYER_SIDE_ONLY) {
+    if (team === "player" && y < 325) return false;
+    if (team === "enemy" && y > 275) return false;
+  }
+
+  return true;
+}
+  
 function drawUnits() {
   for (const u of units) {
     u.draw(ctx);
@@ -358,8 +381,16 @@ setInterval(generateElixir, 2800);
 
 // 2️⃣ Check arena click
 if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
-  const cost = cardCosts[selectedCardIndex];
+  const card = cards[selectedCardIndex];
 
+  if (!canPlaceCard(card, mouseX, mouseY, "player")) {
+    console.log("Illegal placement");
+    return;
+  }
+
+  
+  const cost = cardCosts[selectedCardIndex];
+  
   if (playerElixir < cost) {
     console.log("Not enough elixir!");
     return;
