@@ -13,6 +13,8 @@ const bridges = [
   { x: 75, y: 600 / 2 },  // middle of first bridge
   { x: 325, y: 600 / 2 }  // middle of second bridge
 ];
+const RIVER_TOP = 275;
+const RIVER_BOTTOM = 325;
 const PlacementType = {
   PLAYER_SIDE_ONLY: "player",
   ANYWHERE: "anywhere"
@@ -38,6 +40,14 @@ const ARENA_HEIGHT = 600;
 const ATTACK_RANGE = 20;
 const ATTACK_DAMAGE = 10;
 const ATTACK_COOLDOWN = 60; // frames (~1 second at 60fps)
+
+function sameSide(a, b) {
+  // both above river
+  if (a.y < RIVER_TOP && b.y < RIVER_TOP) return true;
+  // both below river
+  if (a.y > RIVER_BOTTOM && b.y > RIVER_BOTTOM) return true;
+  return false;
+}
   
 function spawnUnit(x, y, team) {
   units.push({
@@ -264,17 +274,21 @@ update() {
   }
 
   // Move toward target
-  const dx = this.target.x - this.x;
-  const dy = this.target.y - this.y;
-  const mag = Math.hypot(dx, dy);
+  let moveTarget = this.target;
 
+  // Ground unit pathing: prevent river crossing
+  if (!sameSide(this, this.target)) {
+    moveTarget = this.closestBridge();
+  }
+  
+  const dx = moveTarget.x - this.x;
+  const dy = moveTarget.y - this.y;
+  const mag = Math.hypot(dx, dy);
+  
   if (mag > 0) {
     this.x += (dx / mag) * this.speed;
     this.y += (dy / mag) * this.speed;
   }
-}
-
-
 
   closestBridge() {
     let best = null;
