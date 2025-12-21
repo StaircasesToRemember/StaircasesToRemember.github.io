@@ -273,12 +273,14 @@ class Unit {
     // Default stats
     if (type === "Knight") {
       this.hp = 1800;
+      this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 24;
       this.attackRange = 20;
       this.attackDamage = 170;
     } else if (type === "Archer") {
       this.hp = 900;
+      this.maxHp = this.hp;
       this.speed = 0.6;
       this.r = 16;
       this.attackRange = 100;  // longer range
@@ -379,7 +381,12 @@ class Unit {
 
     // HP bar
     ctx.fillStyle = this.team === "player" ? "blue" : "red";
-    ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / this.hp) * this.r * 2, 4);
+    ctx.fillRect(
+      this.x - this.r,
+      this.y - this.r - 6,
+      (this.hp / this.maxHp) * this.r * 2, // <- use maxHp
+      4
+    );
   }
 }
 
