@@ -384,8 +384,8 @@ class Unit {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
 
-    if (this.type === "Knight") ctx.fillStyle = this.team === "yellow";
-    if (this.type === "Archer") ctx.fillStyle = this.team === "magenta";
+    if (this.type === "Knight") ctx.fillStyle = "yellow";
+    if (this.type === "Archer") ctx.fillStyle = "magenta";
 
     ctx.fill();
     ctx.closePath();
