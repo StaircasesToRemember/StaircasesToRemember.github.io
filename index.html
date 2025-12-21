@@ -6,6 +6,7 @@
 
 <script>
 const canvas = document.getElementById("arena");
+const ctx = canvas.getContext("2d");
 const cardCosts = [3, 4, 2, 5]; // cost for each of the 4 cards
 const units = [];
 const bridges = [
@@ -23,8 +24,6 @@ const cards = [
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
-const card = cards[selectedCardIndex];
-const cost = card.cost;
 
 // Player elixir values
 let playerElixir = 6;
@@ -108,6 +107,7 @@ function distance(a, b) {
   
 // Draw hand
 function drawHand() {
+  handCards.length = 0;
   const cardWidth = 70;
   const cardHeight = 100;
   const startX = 25;
@@ -406,7 +406,7 @@ if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
   }
 
   
-  const cost = cardCosts[selectedCardIndex];
+  const cost = card.cost;
   
   if (playerElixir < cost) {
     console.log("Not enough elixir!");
