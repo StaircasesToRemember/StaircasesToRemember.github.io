@@ -150,6 +150,18 @@ function updateTowers() {
   for (let i = playerTowers.length - 1; i >= 0; i--) {
     const t = playerTowers[i];
     t.update();
+    t.draw(ctx);
+
+    // Optional: draw attack line
+    if (t.target) {
+      ctx.strokeStyle = t.team === "player" ? "blue" : "red";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(t.x, t.y);
+      ctx.lineTo(t.target.x, t.target.y);
+      ctx.stroke();
+    }
+
     if (!t.isKing && t.hp <= 0) {
       playerTowers.splice(i, 1);
     }
@@ -163,6 +175,17 @@ function updateTowers() {
   for (let i = enemyTowers.length - 1; i >= 0; i--) {
     const t = enemyTowers[i];
     t.update();
+    t.draw(ctx);
+
+    if (t.target) {
+      ctx.strokeStyle = t.team === "player" ? "blue" : "red";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(t.x, t.y);
+      ctx.lineTo(t.target.x, t.target.y);
+      ctx.stroke();
+    }
+
     if (!t.isKing && t.hp <= 0) {
       enemyTowers.splice(i, 1);
     }
@@ -172,6 +195,7 @@ function updateTowers() {
     }
   }
 }
+
   
 // Tower class
 class Tower {
@@ -407,11 +431,6 @@ function drawArena() {
       ctx.lineTo(t.target.x, t.target.y);
       ctx.stroke();
     }
-  }
-
-  for (const t of enemyTowers) {
-    t.update();
-    t.draw(ctx);
 
     if (t.target) {
       ctx.strokeStyle = t.team === "player" ? "blue" : "red";
