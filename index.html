@@ -9,6 +9,11 @@ const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
 const cardCosts = [3, 4, 2, 5]; // cost for each of the 4 cards
 const units = [];
+const bridges = [
+  { x: 75, y: 600 / 2 },  // middle of first bridge
+  { x: 325, y: 600 / 2 }  // middle of second bridge
+];
+
 
 // Player elixir values
 let playerElixir = 6;
@@ -34,6 +39,10 @@ function drawUnits() {
   for (const u of units) {
     u.draw(ctx);
   }
+}
+
+function getEnemyUnits(unit) {
+  return units.filter(u => u.team !== unit.team);
 }
 
   
@@ -142,14 +151,130 @@ class Unit {
     this.y = y;
     this.team = team; // "player" or "opponent"
     this.hp = 100;
-    this.r = 12; // radius for drawing
+    this.r = 12;
     this.type = "knight";
+
+    this.speed = 1.0;         // units per frame
+    this.sightRange = 150;    // how far he can see
+    this.target = null;       // current target (unit or tower)
+    this.attacking = false;   // whether currently attacking
   }
+
+  draw(ctx) {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = this.team === "player" ? "blue" : "red";
+    ctx.fill();
+    ctx.closePath();
+
+    // HP bar
+    ctx.fillStyle = "green";
+    ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / 100) * this.r * 2, 4);
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(this.x - this.r, this.y - this.r - 6, this.r * 2, 4);
+  }
+  
+  update() {
+  if (this.attacking) return; // don’t move if attacking
+
+  const enemyUnits = getEnemyUnits(this);
+  const enemyTowers = this.team === "player" ? opponentTowers : playerTowers;
+
+  let closestTarget = null;
+  let closestDist = Infinity;
+
+  // 1️⃣ Check for enemy units in sight range
+  for (const e of enemyUnits) {
+    const dx = e.x - this.x;
+    const dy = e.y - this.y;
+    const dist = Math.hypot(dx, dy);
+
+    // same side of the arena?
+    const sameSide = (this.team === "player" && this.y > 300) || (this.team === "opponent" && this.y < 300);
+
+    if (dist <= this.sightRange && sameSide && dist < closestDist) {
+      closestDist = dist;
+      closestTarget = e;
+    }
+  }
+
+  // 2️⃣ If no enemy unit, check for enemy towers in sight range
+  if (!closestTarget) {
+    for (const t of enemyTowers) {
+      const dx = t.x - this.x;
+      const dy = t.y - this.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist <= this.sightRange && dist < closestDist) {
+        closestDist = dist;
+        closestTarget = t;
+      }
+    }
+  }
+
+  // 3️⃣ If no target found
+  if (!closestTarget) {
+    if ((this.team === "player" && this.y > 300) || (this.team === "opponent" && this.y < 300)) {
+      // own side: move toward nearest bridge
+      closestTarget = this.closestBridge();
+    } else {
+      // enemy side: move toward nearest tower
+      closestTarget = this.closestTower(enemyTowers);
+    }
+  }
+
+  // Move toward target
+  if (closestTarget) {
+    const dx = closestTarget.x - this.x;
+    const dy = closestTarget.y - this.y;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist > 1) {
+      this.x += (dx / dist) * this.speed;
+      this.y += (dy / dist) * this.speed;
+    }
+  }
+
+    
+}
+
+
+  closestBridge() {
+  let best = null;
+  let minDist = Infinity;
+  for (const b of bridges) {
+    const dx = b.x - this.x;
+    const dy = b.y - this.y;
+    const d = Math.hypot(dx, dy);
+    if (d < minDist) {
+      minDist = d;
+      best = b;
+    }
+  }
+  return best;
+}
+
+closestTower(towers) {
+  let best = null;
+  let minDist = Infinity;
+  for (const t of towers) {
+    const dx = t.x - this.x;
+    const dy = t.y - this.y;
+    const d = Math.hypot(dx, dy);
+    if (d < minDist) {
+      minDist = d;
+      best = t;
+    }
+  }
+  return best;
+}
+
+}
+
 
   draw(ctx) {
     // Draw Knight as a blue/red circle depending on team
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 4);
     ctx.fillStyle = this.team === "player" ? "yellow" : "yellow";
     ctx.fill();
     ctx.closePath();
@@ -205,7 +330,11 @@ function drawArena() {
   }
 
   //draw units
-  drawUnits();
+  for (const u of units) {
+    u.update();
+    u.draw(ctx);
+  }
+
 
   //draw elixir bar
   drawElixirBar();
