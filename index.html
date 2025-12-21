@@ -38,7 +38,7 @@ const handCards = [];
 const ARENA_HEIGHT = 600;
 
 const ATTACK_RANGE = 20;
-const ATTACK_DAMAGE = 150;
+const ATTACK_DAMAGE = 170;
 const ATTACK_COOLDOWN = 60; // frames (~1 second at 60fps)
 
 function sameSide(a, b) {
@@ -156,7 +156,7 @@ class Tower {
     this.isKing = isKing;
 
     this.attackRange = 150;   // how far tower can shoot
-    this.attackDamage = 100;   // damage per shot
+    this.attackDamage = 140;   // damage per shot
     this.attackCooldownMax = 60; // frames
     this.attackCooldown = 0;
     this.target = null;
@@ -222,15 +222,15 @@ class Tower {
 
 // Create towers
 const playerTowers = [
-  new Tower(75, 500, 1000, "player"),
-  new Tower(200, 550, 2000, "player", true), // King tower in center
-  new Tower(325, 500, 1000, "player")
+  new Tower(75, 500, 3000, "player"),
+  new Tower(200, 550, 5000, "player", true), // King tower in center
+  new Tower(325, 500, 3000, "player")
 ];
 
 const enemyTowers = [
-  new Tower(75, 100, 1000, "enemy"),
-  new Tower(200, 50, 2000, "enemy", true), // Enemy king tower
-  new Tower(325, 100, 1000, "enemy")
+  new Tower(75, 100, 3000, "enemy"),
+  new Tower(200, 50, 5000, "enemy", true), // Enemy king tower
+  new Tower(325, 100, 3000, "enemy")
 ];
 
 class Unit {
@@ -238,7 +238,7 @@ class Unit {
     this.x = x;
     this.y = y;
     this.team = team;
-    this.hp = 500;
+    this.hp = 1800;
     this.r = 24;
     this.speed = 0.5;
     this.sightRange = 150;
@@ -359,7 +359,7 @@ class Unit {
 
     // Draw HP bar
     ctx.fillStyle = this.team === "player" ? "blue" : "red";
-    ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / 500) * this.r * 2, 4);
+    ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / 1800) * this.r * 2, 4);
   }
 }
 
