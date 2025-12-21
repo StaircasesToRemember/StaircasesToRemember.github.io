@@ -244,6 +244,13 @@ class Unit {
 
     const d = distance(this, this.target);
 
+    // Target escaped attack range → chase resumes
+    if (d > this.sightRange) {
+      this.target = null;
+      return;
+    }
+
+    // Attack
     if (d <= ATTACK_RANGE) {
       if (this.attackCooldown === 0) {
         this.target.hp -= ATTACK_DAMAGE;
