@@ -165,12 +165,13 @@ drawArena();
 // Generate 1 elixir every 2.8 seconds
 setInterval(generateElixir, 2800);
 
-  // Detect clicks
-  canvas.addEventListener("click", function (e) {
+  // Event listener
+ canvas.addEventListener("click", function (e) {
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
   const mouseY = e.clientY - rect.top;
 
+  // 1️⃣ Check card clicks FIRST
   for (let i = 0; i < handCards.length; i++) {
     const c = handCards[i];
 
@@ -182,8 +183,22 @@ setInterval(generateElixir, 2800);
     ) {
       selectedCardIndex = i;
       console.log("Selected card:", i);
-      return;
+      return; // stop here
     }
+  }
+
+  // 2️⃣ Check arena click
+  if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
+    console.log(
+      "Attempting to place card",
+      selectedCardIndex,
+      "at",
+      mouseX,
+      mouseY
+    );
+
+    // TEMP: clear selection after attempt
+    selectedCardIndex = null;
   }
 });
 
