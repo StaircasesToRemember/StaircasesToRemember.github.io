@@ -7,7 +7,6 @@
 <script>
 const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
-const cardCosts = [3, 4, 2, 5]; // cost for each of the 4 cards
 const units = [];
 const bridges = [
   { x: 75, y: 600 / 2 },  // middle of first bridge
@@ -24,7 +23,8 @@ const cards = [
   { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY }
+  { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
 
 let enemyHand = [0, 1, 2, 3]; // indices into cards
@@ -90,14 +90,19 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Knight"));
   } 
   else if (card.name === "Archers") {
-    units.push(new Unit(x - 25, y, "enemy", "Archer"));
-    units.push(new Unit(x + 25, y, "enemy", "Archer"));
+    units.push(new Unit(x - 15, y, "enemy", "Archer"));
+    units.push(new Unit(x + 15, y, "enemy", "Archer"));
   } 
   else if (card.name === "Musketeer") {
     units.push(new Unit(x, y, "enemy", "Musketeer"));
   } 
   else if (card.name === "Giant") {
     units.push(new Unit(x, y, "enemy", "Giant"));
+  }
+  else if (card.name === "Minions") {
+      units.push(new Unit(mouseX - 15, mouseY + 10, "enemy", "Minion"));
+      units.push(new Unit(mouseX + 15, mouseY + 10, "enemy", "Minion"));
+      units.push(new Unit(mouseX, mouseY, "enemy", "Minion"));
   }
 }
   
@@ -184,8 +189,9 @@ function drawHand() {
     
     if (card.name === "Knight") ctx.fillStyle = "yellow";
     if (card.name === "Archers") ctx.fillStyle = "magenta";
-    if (card.name === "Musketeer") ctx.fillStyle = "purple";
+    if (card.name === "Musketeer") ctx.fillStyle = "blueviolet";
     if (card.name === "Giant") ctx.fillStyle = "orange";
+    if (card.name === "Minions") ctx.fillStyle = "cornflowerblue";
     
     ctx.fill();
     ctx.closePath();
@@ -339,9 +345,11 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 24;
-      this.attackRange = 20;
+      this.attackRange = 25;
       this.attackDamage = 175;
       this.attackCooldown = 60;
+      this.isAir = false;
+      this.attacksAir = false;
       this.targetsOnlyBuildings = false;
       this.sightRange = 170;
     } else if (type === "Archer") {
@@ -352,6 +360,8 @@ class Unit {
       this.attackRange = 145;  // longer range
       this.attackDamage = 125;   // weaker per shot
       this.attackCooldown = 60;
+      this.isAir = false;
+      this.attacksAir = true;
       this.targetsOnlyBuildings = false;
       this.sightRange = 170;
     } else if (type === "Musketeer") {
@@ -362,6 +372,8 @@ class Unit {
       this.attackRange = 160;  // very long range
       this.attackDamage = 225;   // strong per shot
       this.attackCooldown = 60;
+      this.isAir = false;
+      this.attacksAir = true;
       this.targetsOnlyBuildings = false;
       this.sightRange = 185;
     } else if (type === "Giant") {
@@ -369,15 +381,27 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.35;
       this.r = 36;
-      this.attackRange = 20;  // melee range
+      this.attackRange = 25;  // melee range
       this.attackDamage = 175;
       this.attackCooldown = 90;  // slower attack speed
+      this.isAir = false;
+      this.attacksAir = false;
       this.targetsOnlyBuildings = true;  // Only targets towers!
-      this.sightRange = 175;
-
+      this.sightRange = 200;
+    } else if (type === "Minion") {
+      this.hp = 240;
+      this.maxHp = this.hp;
+      this.speed = 0.6;
+      this.r = 16;
+      this.attackRange = 75;  // melee range
+      this.attackDamage = 100;
+      this.attackCooldown = 60;  // slower attack speed
+      this.isAir = true;
+      this.attacksAir = true;
+      this.targetsOnlyBuildings = false;  // Only targets towers!
+      this.sightRange = 170;
     }
-
-    this.sightRange = 150;
+    
     this.target = null;
     this.currentAttackCooldown = 0;
   }
@@ -395,6 +419,9 @@ class Unit {
     if (!this.targetsOnlyBuildings) {
       for (const u of units) {
         if (u.team === this.team) continue;
+      
+        if (u.isAir && !this.canAttackAir) continue;
+      
         const d = distance(this, u);
         if (d < closestDist && d <= this.sightRange) {
           closest = u;
@@ -429,15 +456,15 @@ class Unit {
     }
 
     // Move logic
-    let moveX, moveY;
-    if (sameSide(this, this.target)) {
-      moveX = this.target.x;
-      moveY = this.target.y;
-    } else {
+    if (!this.isAir && !sameSide(this, this.target)) {
       const bridge = this.closestBridge();
       moveX = bridge.x;
       moveY = bridge.y;
+    } else {
+      moveX = this.target.x;
+      moveY = this.target.y;
     }
+
 
     const dx = moveX - this.x;
     const dy = moveY - this.y;
@@ -480,8 +507,9 @@ class Unit {
 
     if (this.type === "Knight") ctx.fillStyle = "yellow";
     else if (this.type === "Archer") ctx.fillStyle = "magenta";
-    else if (this.type === "Musketeer") ctx.fillStyle = "purple";
+    else if (this.type === "Musketeer") ctx.fillStyle = "blueviolet";
     else if (this.type === "Giant") ctx.fillStyle = "orange";
+    else if (this.type === "Minion") ctx.fillStyle = "cornflowerblue";
 
     ctx.fill();
     ctx.closePath();
@@ -602,12 +630,16 @@ canvas.addEventListener("click", function (e) {
     if (card.name === "Knight") {
       units.push(new Unit(mouseX, mouseY, "player", "Knight"));
     } else if (card.name === "Archers") {
-      units.push(new Unit(mouseX - 25, mouseY, "player", "Archer"));
-      units.push(new Unit(mouseX + 25, mouseY, "player", "Archer"));
+      units.push(new Unit(mouseX - 15, mouseY, "player", "Archer"));
+      units.push(new Unit(mouseX + 15, mouseY, "player", "Archer"));
     } else if (card.name === "Musketeer") {
       units.push(new Unit(mouseX, mouseY, "player", "Musketeer"));
     } else if (card.name === "Giant") {
       units.push(new Unit(mouseX, mouseY, "player", "Giant"));
+    } else if (card.name === "Minions") {
+      units.push(new Unit(mouseX - 15, mouseY - 10, "player", "Minion"));
+      units.push(new Unit(mouseX + 15, mouseY - 10, "player", "Minion"));
+      units.push(new Unit(mouseX, mouseY, "player", "Minion"));
     }
 
     console.log("Spawned", card.name, "at", mouseX, mouseY);
