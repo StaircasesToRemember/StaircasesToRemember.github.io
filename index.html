@@ -15,17 +15,17 @@ const maxElixir = 10;
 
 // Draw elixir bar
 function drawElixirBar() {
-  const barWidth = 200;   // full width of the bar
+  const barWidth = 400;   // full width of the bar
   const barHeight = 20;
-  const x = 100;          // position on canvas
-  const y = canvas.height - 40; // 40 px from bottom
+  const x = 0;          // position on canvas
+  const y = canvas.height + 50; // 50 px below bottom
 
   // Background of bar (optional)
   ctx.fillStyle = "lightgray";
   ctx.fillRect(x, y, barWidth, barHeight);
 
   // Elixir fill (pink)
-  ctx.fillStyle = "pink";
+  ctx.fillStyle = "magenta";
   const fillWidth = (playerElixir / maxElixir) * barWidth;
   ctx.fillRect(x, y, fillWidth, barHeight);
 
