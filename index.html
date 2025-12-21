@@ -264,33 +264,41 @@ const enemyTowers = [
 ];
 
 class Unit {
-  constructor(x, y, team) {
+  constructor(x, y, team, type = "Knight") {
     this.x = x;
     this.y = y;
     this.team = team;
-    this.hp = 1800;
-    this.r = 24;
-    this.speed = 0.5;
+    this.type = type;  // Knight, Archer, etc.
+
+    // Default stats
+    if (type === "Knight") {
+      this.hp = 1800;
+      this.speed = 0.5;
+      this.r = 24;
+      this.attackRange = 20;
+      this.attackDamage = 170;
+    } else if (type === "Archer") {
+      this.hp = 900;
+      this.speed = 0.6;
+      this.r = 16;
+      this.attackRange = 100;  // longer range
+      this.attackDamage = 50;   // weaker per shot
+    }
+
     this.sightRange = 150;
     this.target = null;
     this.attackCooldown = 0;
   }
 
   update() {
-    // Reduce attack cooldown
     if (this.attackCooldown > 0) this.attackCooldown--;
 
-    // Remove dead target
-    if (this.target && this.target.hp <= 0) {
-      this.target = null;
-    }
+    if (this.target && this.target.hp <= 0) this.target = null;
 
-    // Acquire target if none
     if (!this.target) {
       let closest = null;
       let closestDist = Infinity;
 
-      // Enemy units
       const enemyUnits = units.filter(u => u.team !== this.team);
       for (const u of enemyUnits) {
         const d = distance(this, u);
@@ -300,7 +308,6 @@ class Unit {
         }
       }
 
-      // Enemy towers
       const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
       if (!closest) {
         for (const t of enemyTowersList) {
@@ -315,34 +322,29 @@ class Unit {
       this.target = closest;
     }
 
-    // If no target, do nothing
     if (!this.target) return;
 
     const d = distance(this, this.target);
 
-    // Attack lock-in
-    if (d <= ATTACK_RANGE) {
+    if (d <= this.attackRange) {
       if (this.attackCooldown === 0) {
-        this.target.hp -= ATTACK_DAMAGE;
+        this.target.hp -= this.attackDamage;
         this.attackCooldown = ATTACK_COOLDOWN;
       }
       return; // stop moving while attacking
     }
 
-    // Determine where to move
+    // Move logic (same as before)
     let moveX, moveY;
     if (sameSide(this, this.target)) {
-      // Target is on same side: move directly toward it
       moveX = this.target.x;
       moveY = this.target.y;
     } else {
-      // Target across river: move to nearest bridge
       const bridge = this.closestBridge();
       moveX = bridge.x;
       moveY = bridge.y;
     }
 
-    // Move toward moveX, moveY
     const dx = moveX - this.x;
     const dy = moveY - this.y;
     const mag = Math.hypot(dx, dy);
@@ -365,32 +367,22 @@ class Unit {
     return best;
   }
 
-  closestTower(towers) {
-    let best = null;
-    let minDist = Infinity;
-    for (const t of towers) {
-      const d = Math.hypot(t.x - this.x, t.y - this.y);
-      if (d < minDist) {
-        minDist = d;
-        best = t;
-      }
-    }
-    return best;
-  }
-
   draw(ctx) {
-    // Draw Knight
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fillStyle = this.team === "player" ? "yellow" : "yellow";
+
+    if (this.type === "Knight") ctx.fillStyle = this.team === "player" ? "yellow" : "orange";
+    if (this.type === "Archer") ctx.fillStyle = this.team === "player" ? "green" : "darkgreen";
+
     ctx.fill();
     ctx.closePath();
 
-    // Draw HP bar
+    // HP bar
     ctx.fillStyle = this.team === "player" ? "blue" : "red";
-    ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / 1800) * this.r * 2, 4);
+    ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / this.hp) * this.r * 2, 4);
   }
 }
+
 
 // Function to generate elixir
 function generateElixir() {
@@ -490,12 +482,14 @@ canvas.addEventListener("click", function (e) {
 
     playerElixir -= cost;
 
-    // SPAWN KNIGHT
-    units.push(new Unit(mouseX, mouseY, "player"));
+    // Spawn cards
+    if (card.name === "Knight") {
+      units.push(new Unit(mouseX, mouseY, "player", "Knight"));
+    } else if (card.name === "Archer") {
+      units.push(new Unit(mouseX, mouseY, "player", "Archer"));
+    }
+// You can add Musketeer or Giant similarly
 
-    console.log("Spawned Knight at", mouseX, mouseY);
-
-    selectedCardIndex = null;
   }
 });
 
