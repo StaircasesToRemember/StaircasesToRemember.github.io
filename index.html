@@ -38,7 +38,7 @@ const handCards = [];
 const ARENA_HEIGHT = 600;
 
 const ATTACK_RANGE = 20;
-const ATTACK_DAMAGE = 10;
+const ATTACK_DAMAGE = 150;
 const ATTACK_COOLDOWN = 60; // frames (~1 second at 60fps)
 
 function sameSide(a, b) {
@@ -166,7 +166,7 @@ class Tower {
     this.isKing = isKing;
 
     this.attackRange = 150;   // how far tower can shoot
-    this.attackDamage = 15;   // damage per shot
+    this.attackDamage = 100;   // damage per shot
     this.attackCooldownMax = 60; // frames
     this.attackCooldown = 0;
     this.target = null;
@@ -248,9 +248,9 @@ class Unit {
     this.x = x;
     this.y = y;
     this.team = team;
-    this.hp = 100;
+    this.hp = 500;
     this.r = 24;
-    this.speed = 1.0;
+    this.speed = 0.5;
     this.sightRange = 150;
     this.target = null;
     this.attackCooldown = 0;
