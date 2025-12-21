@@ -36,6 +36,10 @@ let selectedCardIndex = null; // 0–3, or null if none selected
 const handCards = [];
 const ARENA_HEIGHT = 600;
 
+const ATTACK_RANGE = 20;
+const ATTACK_DAMAGE = 10;
+const ATTACK_COOLDOWN = 60; // frames (~1 second at 60fps)
+  
 function spawnUnit(x, y, team) {
   units.push({
     x: x,
@@ -98,6 +102,10 @@ function drawElixirBar() {
   );
 }
 
+function distance(a, b) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+  
 // Draw hand
 function drawHand() {
   const cardWidth = 70;
@@ -181,6 +189,7 @@ class Unit {
     this.sightRange = 150;
     this.target = null;
     this.attacking = false;
+    this.attackCooldown = 0;
   }
 
   draw(ctx) {
@@ -199,70 +208,72 @@ class Unit {
   }
 
 update() {
-  if (this.attacking) return; // don’t move if attacking
-
-  // Get all enemy units
-  const enemyUnits = getEnemyUnits(this);
-
-  // Determine which towers are “enemy” for this unit
-  const targetTowers = this.team === "player" ? enemyTowers : playerTowers;
-
-  let closestTarget = null;
-  let closestDist = Infinity;
-
-  // 1️⃣ Check for enemy units in sight range on the same side
-  for (const e of enemyUnits) {
-    const dx = e.x - this.x;
-    const dy = e.y - this.y;
-    const dist = Math.hypot(dx, dy);
-
-    // same side: player > 300, enemy < 300
-    const sameSide = (this.team === "player" && this.y >= 325) || 
-                     (this.team === "opponent" && this.y <= 275);
-
-    if (dist <= this.sightRange && sameSide && dist < closestDist) {
-      closestDist = dist;
-      closestTarget = e;
-    }
+  // Reduce cooldown
+  if (this.attackCooldown > 0) {
+    this.attackCooldown--;
   }
 
-  // 2️⃣ If no enemy unit found, check for enemy towers in sight
-  if (!closestTarget) {
-    for (const t of targetTowers) {
-      const dx = t.x - this.x;
-      const dy = t.y - this.y;
-      const dist = Math.hypot(dx, dy);
+  // Determine enemies
+  const enemyUnits = units.filter(u => u.team !== this.team);
+  const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
 
-      if (dist <= this.sightRange && dist < closestDist) {
-        closestDist = dist;
-        closestTarget = t;
+  // Remove dead target
+  if (this.target && this.target.hp <= 0) {
+    this.target = null;
+  }
+
+  // Acquire target if none
+  if (!this.target) {
+    let closest = null;
+    let closestDist = Infinity;
+
+    // Check enemy units
+    for (const u of enemyUnits) {
+      const d = distance(this, u);
+      if (d < closestDist && d <= this.sightRange) {
+        closest = u;
+        closestDist = d;
       }
     }
+
+    // If no unit target, check towers
+    if (!closest) {
+      for (const t of enemyTowersList) {
+        const d = distance(this, t);
+        if (d < closestDist) {
+          closest = t;
+          closestDist = d;
+        }
+      }
+    }
+
+    this.target = closest;
   }
 
-  // 3️⃣ If still no target, decide where to move
-  if (!closestTarget) {
-    if ((this.team === "player" && this.y >= 325) || (this.team === "opponent" && this.y <= 275)) {
-      // Own side → move toward nearest bridge
-      closestTarget = this.closestBridge();
-    } else {
-      // Enemy side → move toward nearest enemy tower
-      closestTarget = this.closestTower(targetTowers);
+  if (!this.target) return;
+
+  const d = distance(this, this.target);
+
+  // Attack
+  if (d <= ATTACK_RANGE) {
+    if (this.attackCooldown === 0) {
+      this.target.hp -= ATTACK_DAMAGE;
+      this.attackCooldown = ATTACK_COOLDOWN;
     }
+    return;
   }
 
-  // 4️⃣ Move toward the target if it exists
-  if (closestTarget) {
-    const dx = closestTarget.x - this.x;
-    const dy = closestTarget.y - this.y;
-    const dist = Math.hypot(dx, dy);
+  // Move toward target
+  const dx = this.target.x - this.x;
+  const dy = this.target.y - this.y;
+  const mag = Math.hypot(dx, dy);
 
-    if (dist > 1) {
-      this.x += (dx / dist) * this.speed;
-      this.y += (dy / dist) * this.speed;
-    }
+  if (mag > 0) {
+    this.x += (dx / mag) * this.speed;
+    this.y += (dy / mag) * this.speed;
   }
 }
+
 
 
   closestBridge() {
@@ -340,10 +351,16 @@ function drawArena() {
   }
 
   //draw units
-  for (const u of units) {
-    u.update();
-    u.draw(ctx);
+  for (let i = units.length - 1; i >= 0; i--) {
+  const u = units[i];
+  u.update();
+  u.draw(ctx);
+
+  if (u.hp <= 0) {
+    units.splice(i, 1);
   }
+}
+
 
 
   //draw elixir bar
