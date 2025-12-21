@@ -206,20 +206,26 @@ class Unit {
     const enemyUnits = units.filter(u => u.team !== this.team);
     const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
 
-    if (this.target && this.target.hp <= 0) this.target = null;
-
+    // Drop target ONLY if dead
+    if (this.target && this.target.hp <= 0) {
+      this.target = null;
+    }
+    
+    // Acquire target ONLY if we don't already have one
     if (!this.target) {
       let closest = null;
       let closestDist = Infinity;
-
+    
+      // Enemy units first
       for (const u of enemyUnits) {
         const d = distance(this, u);
-        if (d < closestDist && d <= this.sightRange) {
+        if (d <= this.sightRange && d < closestDist) {
           closest = u;
           closestDist = d;
         }
       }
-
+    
+      // Then towers
       if (!closest) {
         for (const t of enemyTowersList) {
           const d = distance(this, t);
@@ -230,8 +236,9 @@ class Unit {
         }
       }
 
-      this.target = closest;
-    }
+  this.target = closest;
+}
+
 
     if (!this.target) return;
 
