@@ -7,7 +7,6 @@
 <script>
 const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
-const cardCosts = [3, 4, 2, 5]; // cost for each of the 4 cards
 const units = [];
 const bridges = [
   { x: 75, y: 600 / 2 },  // middle of first bridge
@@ -127,12 +126,6 @@ function drawHand() {
     }
 
     // card body
-    const cost = cardCosts[i];
-
-    if (playerElixir < cost) {
-      ctx.globalAlpha = 0.5;
-    }
-
     ctx.fillStyle = "white";
     ctx.fillRect(x, y, cardWidth, cardHeight);
     ctx.globalAlpha = 1.0;
