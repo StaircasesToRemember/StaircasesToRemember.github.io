@@ -8,6 +8,13 @@
 const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
 
+// Player elixir values
+let playerElixir = 6;
+let enemyElixir = 6;
+const maxElixir = 10;
+
+
+  
 // Tower class
 class Tower {
   constructor(x, y, hp, team) {
@@ -43,6 +50,14 @@ const enemyTowers = [
 console.log("Player towers:", playerTowers);
 console.log("Enemy towers:", enemyTowers);
 
+// Function to generate elixir
+function generateElixir() {
+  if (playerElixir < maxElixir) playerElixir += 1;
+  if (enemyElixir < maxElixir) enemyElixir += 1;
+  
+  console.log("Player Elixir:", playerElixir, "Enemy Elixir:", enemyElixir);
+}
+  
 // Draw loop
 function drawArena() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -75,6 +90,9 @@ function drawArena() {
 }
 
 drawArena();
+  
+// Generate 1 elixir every 2.8 seconds
+setInterval(generateElixir, 2800);
 </script>
 
 </body>
