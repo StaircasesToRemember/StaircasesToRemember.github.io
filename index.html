@@ -201,6 +201,7 @@ class Unit {
 
   update() {
     if (this.attackCooldown > 0) this.attackCooldown--;
+    const isLocked = this.attackCooldown > 0;
 
     const enemyUnits = units.filter(u => u.team !== this.team);
     const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
@@ -241,8 +242,10 @@ class Unit {
         this.target.hp -= ATTACK_DAMAGE;
         this.attackCooldown = ATTACK_COOLDOWN;
       }
+      // LOCK movement while attacking
       return;
     }
+
 
     let moveTarget = this.target;
 
@@ -255,6 +258,7 @@ class Unit {
     const mag = Math.hypot(dx, dy);
 
     if (mag > 0) {
+      if (isLocked) return;
       this.x += (dx / mag) * this.speed;
       this.y += (dy / mag) * this.speed;
     }
