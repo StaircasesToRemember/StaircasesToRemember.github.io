@@ -13,7 +13,27 @@ let playerElixir = 6;
 let enemyElixir = 6;
 const maxElixir = 10;
 
+// Draw elixir bar
+function drawElixirBar() {
+  const barWidth = 200;   // full width of the bar
+  const barHeight = 20;
+  const x = 100;          // position on canvas
+  const y = canvas.height - 40; // 40 px from bottom
 
+  // Background of bar (optional)
+  ctx.fillStyle = "lightgray";
+  ctx.fillRect(x, y, barWidth, barHeight);
+
+  // Elixir fill (pink)
+  ctx.fillStyle = "pink";
+  const fillWidth = (playerElixir / maxElixir) * barWidth;
+  ctx.fillRect(x, y, fillWidth, barHeight);
+
+  // Numeric value
+  ctx.fillStyle = "pink";
+  ctx.font = "16px Arial";
+  ctx.fillText(playerElixir + " / " + maxElixir, x + barWidth + 10, y + barHeight - 4);
+}
   
 // Tower class
 class Tower {
@@ -77,14 +97,14 @@ function drawArena() {
   }
   
   for (let t of playerTowers) {
-    console.log("Drawing player tower object:", t); // DEBUG
     t.draw(ctx);
   }
 
   for (let t of enemyTowers) {
-    console.log("Drawing enemy tower object:", t); // DEBUG
     t.draw(ctx);
   }
+
+  drawElixirBar();
 
   requestAnimationFrame(drawArena);
 }
