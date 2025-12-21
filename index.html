@@ -6,7 +6,8 @@
 
 <script>
 const canvas = document.getElementById("arena");
-const ctx = canvas.getContext("2d");0.3
+const ctx = canvas.getContext("2d");
+const cardCosts = [3, 4, 2, 5]; // cost for each of the 4 cards
 const units = [];
 const bridges = [
   { x: 75, y: 600 / 2 },  // middle of first bridge
@@ -22,7 +23,7 @@ const PlacementType = {
 const cards = [
   { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Musketeer", cost: 4, placement: PlacementType.ANYWHERE },
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
 
@@ -35,6 +36,10 @@ const maxElixir = 10;
 let selectedCardIndex = null; // 0–3, or null if none selected
 const handCards = [];
 const ARENA_HEIGHT = 600;
+
+const ATTACK_RANGE = 20;
+const ATTACK_DAMAGE = 170;
+const ATTACK_COOLDOWN = 60; // frames (~1 second at 60fps)
 
 function sameSide(a, b) {
   // both above river
@@ -158,6 +163,33 @@ function drawHand() {
     ctx.strokeRect(x, y, cardWidth, cardHeight);
   }
 }
+  
+// In drawArena or a separate tower management function:
+function updateTowers() {
+  // Player towers
+  for (let i = playerTowers.length - 1; i >= 0; i--) {
+    const t = playerTowers[i];
+    t.update();
+    t.draw(ctx);
+
+    // Optional: draw attack line
+    if (t.target) {
+      ctx.strokeStyle = t.team === "player" ? "blue" : "red";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(t.x, t.y);
+      ctx.lineTo(t.target.x, t.target.y);
+      ctx.stroke();
+    }
+
+    if (!t.isKing && t.hp <= 0) {
+      playerTowers.splice(i, 1);
+    }
+    if (t.isKing && t.hp <= 0) {
+      alert("Enemy wins!");
+      location.reload(); // simple game over reset
+    }
+  }
 
   // Enemy towers
   for (let i = enemyTowers.length - 1; i >= 0; i--) {
@@ -262,17 +294,17 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 24;
-      this.attackRange = 25;
+      this.attackRange = 20;
       this.attackDamage = 175;
       this.attackCooldown = 60;
       this.targetsOnlyBuildings = false;
     } else if (type === "Archer") {
-      this.hp = 350;
+      this.hp = 300;
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 16;
-      this.attackRange = 135;  // longer range
-      this.attackDamage = 115;   // weaker per shot
+      this.attackRange = 125;  // longer range
+      this.attackDamage = 125;   // weaker per shot
       this.attackCooldown = 60;
       this.targetsOnlyBuildings = false;
     } else if (type === "Musketeer") {
@@ -280,7 +312,7 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 20;
-      this.attackRange = 155;  // very long range
+      this.attackRange = 150;  // very long range
       this.attackDamage = 225;   // strong per shot
       this.attackCooldown = 60;
       this.targetsOnlyBuildings = false;
@@ -289,8 +321,8 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.3;
       this.r = 36;
-      this.attackRange = 25;  // melee range
-      this.attackDamage = 250;
+      this.attackRange = 20;  // melee range
+      this.attackDamage = 175;
       this.attackCooldown = 90;  // slower attack speed
       this.targetsOnlyBuildings = true;  // Only targets towers!
     }
@@ -403,6 +435,7 @@ class Unit {
     if (this.type === "Musketeer") ctx.fillStyle = "purple";
     if (this.type === "Giant") ctx.fillStyle = "orange";
 
+
     ctx.fill();
     ctx.closePath();
 
@@ -416,6 +449,7 @@ class Unit {
     );
   }
 }
+
 // Function to generate elixir
 function generateElixir() {
   if (playerElixir < maxElixir) playerElixir += 1;
@@ -525,8 +559,6 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Giant") {
       units.push(new Unit(mouseX, mouseY, "player", "Giant"));
     }
-    
-    // You can add Musketeer or Giant similarly
 
     console.log("Spawned", card.name, "at", mouseX, mouseY);
 
