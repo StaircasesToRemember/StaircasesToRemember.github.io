@@ -42,6 +42,27 @@ function drawElixirBar() {
   );
 }
 
+// Draw hand
+function drawHand() {
+  const cardWidth = 70;
+  const cardHeight = 100;
+  const startX = 25;
+  const y = 700;
+  const spacing = 20;
+
+  ctx.fillStyle = "white";
+
+  for (let i = 0; i < 4; i++) {
+    const x = startX + i * (cardWidth + spacing);
+    ctx.fillRect(x, y, cardWidth, cardHeight);
+
+    // card border
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(x, y, cardWidth, cardHeight);
+  }
+}
+
+  
   
 // Tower class
 class Tower {
@@ -91,9 +112,10 @@ function drawArena() {
   ctx.fillStyle = "lightgreen";
   ctx.fillRect(0, 0, canvas.width, 600);
 
-  // Hand background
-ctx.fillStyle = "#ddd";
-ctx.fillRect(0, 700, canvas.width, 150);
+  // Hand 
+  ctx.fillStyle = "#ddd";
+  ctx.fillRect(0, 700, canvas.width, 150);
+  drawHand();
   
    // Draw river
   ctx.fillStyle = "#1E90FF"; // blue river
