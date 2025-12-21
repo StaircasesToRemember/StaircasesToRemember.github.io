@@ -15,25 +15,33 @@ const maxElixir = 10;
 
 // Draw elixir bar
 function drawElixirBar() {
-  const barWidth = 200;   // full width of the bar
+  const barWidth = 200;
   const barHeight = 20;
-  const x = 100;          // position on canvas
-  const y = 650; // 50 px below bottom
+  const x = 100;
+  const y = 650;
 
-  // Background of bar (optional)
+  // 🔴 CLEAR the elixir bar area first
+  ctx.clearRect(x - 5, y - 5, barWidth + 120, barHeight + 20);
+
+  // Background
   ctx.fillStyle = "lightgray";
   ctx.fillRect(x, y, barWidth, barHeight);
 
-  // Elixir fill (pink)
+  // Elixir fill
   ctx.fillStyle = "magenta";
   const fillWidth = (playerElixir / maxElixir) * barWidth;
   ctx.fillRect(x, y, fillWidth, barHeight);
 
-  // Numeric value
+  // Text
   ctx.fillStyle = "magenta";
   ctx.font = "16px Arial";
-  ctx.fillText(playerElixir + " / " + maxElixir, x + barWidth + 10, y + barHeight - 4);
+  ctx.fillText(
+    playerElixir + " / " + maxElixir,
+    x + barWidth + 10,
+    y + barHeight - 4
+  );
 }
+
   
 // Tower class
 class Tower {
