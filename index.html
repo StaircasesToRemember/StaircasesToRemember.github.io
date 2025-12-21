@@ -343,6 +343,7 @@ class Unit {
       this.attackDamage = 175;
       this.attackCooldown = 60;
       this.targetsOnlyBuildings = false;
+      this.sightRange = 170;
     } else if (type === "Archer") {
       this.hp = 300;
       this.maxHp = this.hp;
@@ -352,6 +353,7 @@ class Unit {
       this.attackDamage = 125;   // weaker per shot
       this.attackCooldown = 60;
       this.targetsOnlyBuildings = false;
+      this.sightRange = 170;
     } else if (type === "Musketeer") {
       this.hp = 700;
       this.maxHp = this.hp;
@@ -361,6 +363,7 @@ class Unit {
       this.attackDamage = 225;   // strong per shot
       this.attackCooldown = 60;
       this.targetsOnlyBuildings = false;
+      this.sightRange = 185;
     } else if (type === "Giant") {
       this.hp = 4000;
       this.maxHp = this.hp;
@@ -370,6 +373,8 @@ class Unit {
       this.attackDamage = 175;
       this.attackCooldown = 90;  // slower attack speed
       this.targetsOnlyBuildings = true;  // Only targets towers!
+      this.sightRange = 175;
+
     }
 
     this.sightRange = 150;
