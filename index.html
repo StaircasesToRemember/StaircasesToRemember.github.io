@@ -7,6 +7,8 @@
 <script>
 const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
+const cardCosts = [3, 4, 2, 5]; // cost for each of the 4 cards
+
 
 // Player elixir values
 let playerElixir = 6;
@@ -55,8 +57,6 @@ function drawHand() {
   const y = 725;
   const spacing = 24;
 
-  ctx.fillStyle = "white";
-
   for (let i = 0; i < 4; i++) {
     const x = startX + i * (cardWidth + spacing);
 
@@ -70,8 +70,16 @@ function drawHand() {
     }
 
     // card body
+    const cost = cardCosts[i];
+
+    if (playerElixir < cost) {
+      ctx.globalAlpha = 0.5;
+    }
+
     ctx.fillStyle = "white";
     ctx.fillRect(x, y, cardWidth, cardHeight);
+    ctx.globalAlpha = 1.0;
+
 
     // border
     ctx.strokeStyle = "black";
@@ -186,20 +194,30 @@ setInterval(generateElixir, 2800);
     }
   }
 
-  // 2️⃣ Check arena click
-  if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
-    console.log(
-      "Attempting to place card",
-      selectedCardIndex,
-      "at",
-      mouseX,
-      mouseY
-    );
+// 2️⃣ Check arena click
+if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
+  const cost = cardCosts[selectedCardIndex];
 
-    // TEMP: clear selection after attempt
-    selectedCardIndex = null;
+  if (playerElixir < cost) {
+    console.log("Not enough elixir!");
+    return;
   }
-});
+
+  // Successful placement
+  playerElixir -= cost;
+
+  console.log(
+    "Placed card",
+    selectedCardIndex,
+    "Cost:",
+    cost,
+    "Remaining elixir:",
+    playerElixir
+  );
+
+  selectedCardIndex = null;
+}
+
 
 </script>
 
