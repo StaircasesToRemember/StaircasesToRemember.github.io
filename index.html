@@ -661,6 +661,7 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX, mouseY, "player", "Minion"));
     } else if (card.name === "Mini Pekka") {
       units.push(new Unit(mouseX, mouseY, "player", "Mini Pekka"));
+    }
 
     console.log("Spawned", card.name, "at", mouseX, mouseY);
 
