@@ -193,110 +193,78 @@ class Unit {
     this.team = team;
     this.hp = 100;
     this.r = 24;
-    this.type = "knight";
-
     this.speed = 1.0;
     this.sightRange = 150;
     this.target = null;
-    this.attacking = false;
     this.attackCooldown = 0;
   }
 
-  draw(ctx) {
-    // Draw Knight
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fillStyle = this.team === "player" ? "yellow" : "yellow";
-    ctx.fill();
-    ctx.closePath();
+  update() {
+    if (this.attackCooldown > 0) this.attackCooldown--;
 
-    // Draw HP bar
-    ctx.fillStyle = this.team === "player" ? "blue" : "red";
-    ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / 100) * this.r * 2, 4);
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(this.x - this.r, this.y - this.r - 6, this.r * 2, 4);
-  }
+    const enemyUnits = units.filter(u => u.team !== this.team);
+    const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
 
-update() {
-  // Reduce cooldown
-  if (this.attackCooldown > 0) {
-    this.attackCooldown--;
-  }
+    if (this.target && this.target.hp <= 0) this.target = null;
 
-  // Determine enemies
-  const enemyUnits = units.filter(u => u.team !== this.team);
-  const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
+    if (!this.target) {
+      let closest = null;
+      let closestDist = Infinity;
 
-  // Remove dead target
-  if (this.target && this.target.hp <= 0) {
-    this.target = null;
-  }
-
-  // Acquire target if none
-  if (!this.target) {
-    let closest = null;
-    let closestDist = Infinity;
-
-    // Check enemy units
-    for (const u of enemyUnits) {
-      const d = distance(this, u);
-      if (d < closestDist && d <= this.sightRange) {
-        closest = u;
-        closestDist = d;
-      }
-    }
-
-    // If no unit target, check towers
-    if (!closest) {
-      for (const t of enemyTowersList) {
-        const d = distance(this, t);
-        if (d < closestDist) {
-          closest = t;
+      for (const u of enemyUnits) {
+        const d = distance(this, u);
+        if (d < closestDist && d <= this.sightRange) {
+          closest = u;
           closestDist = d;
         }
       }
+
+      if (!closest) {
+        for (const t of enemyTowersList) {
+          const d = distance(this, t);
+          if (d < closestDist) {
+            closest = t;
+            closestDist = d;
+          }
+        }
+      }
+
+      this.target = closest;
     }
 
-    this.target = closest;
-  }
+    if (!this.target) return;
 
-  if (!this.target) return;
+    const d = distance(this, this.target);
 
-  const d = distance(this, this.target);
-
-  // Attack
-  if (d <= ATTACK_RANGE) {
-    if (this.attackCooldown === 0) {
-      this.target.hp -= ATTACK_DAMAGE;
-      this.attackCooldown = ATTACK_COOLDOWN;
+    if (d <= ATTACK_RANGE) {
+      if (this.attackCooldown === 0) {
+        this.target.hp -= ATTACK_DAMAGE;
+        this.attackCooldown = ATTACK_COOLDOWN;
+      }
+      return;
     }
-    return;
-  }
 
-  // Move toward target
-  let moveTarget = this.target;
+    let moveTarget = this.target;
 
-  // Ground unit pathing: prevent river crossing
-  if (!sameSide(this, this.target)) {
-    moveTarget = this.closestBridge();
-  }
-  
-  const dx = moveTarget.x - this.x;
-  const dy = moveTarget.y - this.y;
-  const mag = Math.hypot(dx, dy);
-  
-  if (mag > 0) {
-    this.x += (dx / mag) * this.speed;
-    this.y += (dy / mag) * this.speed;
+    if (!sameSide(this, this.target)) {
+      moveTarget = this.closestBridge();
+    }
+
+    const dx = moveTarget.x - this.x;
+    const dy = moveTarget.y - this.y;
+    const mag = Math.hypot(dx, dy);
+
+    if (mag > 0) {
+      this.x += (dx / mag) * this.speed;
+      this.y += (dy / mag) * this.speed;
+    }
   }
 
   closestBridge() {
     let best = null;
     let minDist = Infinity;
     for (const b of bridges) {
-      const dx = b.x - this.x;
-      const dy = b.y - this.y;
-      const d = Math.hypot(dx, dy);
+      const d = Math.hypot(b.x - this.x, b.y - this.y);
       if (d < minDist) {
         minDist = d;
         best = b;
@@ -309,15 +277,28 @@ update() {
     let best = null;
     let minDist = Infinity;
     for (const t of towers) {
-      const dx = t.x - this.x;
-      const dy = t.y - this.y;
-      const d = Math.hypot(dx, dy);
+      const d = Math.hypot(t.x - this.x, t.y - this.y);
       if (d < minDist) {
         minDist = d;
         best = t;
       }
     }
     return best;
+  }
+
+    draw(ctx) {
+    // Draw Knight
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = this.team === "player" ? "yellow" : "yellow";
+    ctx.fill();
+    ctx.closePath();
+
+    // Draw HP bar
+    ctx.fillStyle = this.team === "player" ? "blue" : "red";
+    ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / 100) * this.r * 2, 4);
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(this.x - this.r, this.y - this.r - 6, this.r * 2, 4);
   }
 }
 
