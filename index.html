@@ -20,21 +20,53 @@ const PlacementType = {
 };
 
 const cards = [
+  { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
   { name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
 
-let enemyHand = [0, 1, 2, 3]; // indices into cards
+const playerDeck = [0, 1, 2, 3, 4, 5]; // indices into cards
+const enemyDeck = [0, 1, 2, 3, 4, 5]; // indices into cards
+  
+let playerHand = [];
+let enemyHand = []; // indices into cards
+function drawInitialHand() {
+  const deckCopy = [...playerDeck].sort(() => Math.random() - 0.5);
+  playerHand = deckCopy.slice(0, 4);
+  const deckCopy = [...playerDeck].sort(() => Math.random() - 0.5);
+  enemyHand = deckCopy.slice(0, 4);
+}
+
+drawInitialHand();
 
 // Player elixir values
 let playerElixir = 6;
 let enemyElixir = 6;
 const maxElixir = 10;
 
+function cyclePlayerCard(handIndex) {
+  const used = playerHand[handIndex];
+  playerHand.splice(handIndex, 1);
+
+  const remaining = playerDeck.filter(c => !playerHand.includes(c));
+  const next = remaining[Math.floor(Math.random() * remaining.length)];
+
+  playerHand.push(next);
+}
+
+function cycleEnemyCard(handIndex) {
+  const used = enemyHand[handIndex];
+  enemyHand.splice(handIndex, 1);
+
+  const remaining = enemyDeck.filter(c => !enemyHand.includes(c));
+  const next = remaining[Math.floor(Math.random() * remaining.length)];
+
+  enemyHand.push(next);
+}
+  
 // Card selected variables
 let selectedCardIndex = null; // 0–3, or null if none selected
 const handCards = [];
@@ -84,6 +116,7 @@ function enemyPlayCard() {
 
   // 6. Spawn units
   spawnEnemyUnit(card, x, y);
+  cycleEnemyCard(cardIndex);
 }
 
 function spawnEnemyUnit(card, x, y) {
@@ -101,8 +134,8 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Giant"));
   }
   else if (card.name === "Minions") {
-    units.push(new Unit(x - 15, y - 10, "enemy", "Minion"));
-    units.push(new Unit(x + 15, y - 10, "enemy", "Minion"));
+    units.push(new Unit(x - 15, y - 25, "enemy", "Minion"));
+    units.push(new Unit(x + 15, y - 25, "enemy", "Minion"));
     units.push(new Unit(x, y, "enemy", "Minion"));
   }
   else if (card.name === "Mini Pekka") {
@@ -165,7 +198,8 @@ function drawHand() {
 
   for (let i = 0; i < 4; i++) {
     const x = startX + i * (cardWidth + spacing);
-    const card = cards[i];
+    const cardIndex = playerHand[i];
+    const card = cards[cardIndex];
     const cost = card.cost;
 
     // store card bounds
@@ -656,8 +690,8 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Giant") {
       units.push(new Unit(mouseX, mouseY, "player", "Giant"));
     } else if (card.name === "Minions") {
-      units.push(new Unit(mouseX - 15, mouseY + 10, "player", "Minion"));
-      units.push(new Unit(mouseX + 15, mouseY + 10, "player", "Minion"));
+      units.push(new Unit(mouseX - 15, mouseY + 25, "player", "Minion"));
+      units.push(new Unit(mouseX + 15, mouseY + 25, "player", "Minion"));
       units.push(new Unit(mouseX, mouseY, "player", "Minion"));
     } else if (card.name === "Mini Pekka") {
       units.push(new Unit(mouseX, mouseY, "player", "Mini Pekka"));
@@ -665,6 +699,7 @@ canvas.addEventListener("click", function (e) {
 
     console.log("Spawned", card.name, "at", mouseX, mouseY);
 
+    cyclePlayerCard(selectedCardIndex);
     selectedCardIndex = null;
   }
 });
