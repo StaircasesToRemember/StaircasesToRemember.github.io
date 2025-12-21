@@ -22,9 +22,9 @@ const PlacementType = {
 
 const cards = [
   { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
   { name: "Musketeer", cost: 4, placement: PlacementType.ANYWHERE },
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
 
 // Player elixir values
@@ -492,7 +492,7 @@ canvas.addEventListener("click", function (e) {
     // Spawn cards
     if (card.name === "Knight") {
       units.push(new Unit(mouseX, mouseY, "player", "Knight"));
-    } else if (card.name === "Archer") {
+    } else if (card.name === "Archers") {
       units.push(new Unit(mouseX, mouseY, "player", "Archer"));
     }
 // You can add Musketeer or Giant similarly
