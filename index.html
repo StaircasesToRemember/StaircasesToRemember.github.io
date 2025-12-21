@@ -266,7 +266,7 @@ class Tower {
 
     if (closest && closestDist <= 175) { // attack range
       this.target = closest;
-      closest.hp -= 2; // tower damage
+      closest.hp -= 3; // tower damage
     } else {
       this.target = null;
     }
@@ -297,7 +297,7 @@ class Unit {
     if (type === "Knight") {
       this.hp = 1800;
       this.maxHp = this.hp;
-      this.speed = 0.3;
+      this.speed = 0.5;
       this.r = 24;
       this.attackRange = 20;
       this.attackDamage = 175;
@@ -306,7 +306,7 @@ class Unit {
     } else if (type === "Archer") {
       this.hp = 300;
       this.maxHp = this.hp;
-      this.speed = 0.3;
+      this.speed = 0.5;
       this.r = 16;
       this.attackRange = 145;  // longer range
       this.attackDamage = 125;   // weaker per shot
@@ -315,7 +315,7 @@ class Unit {
     } else if (type === "Musketeer") {
       this.hp = 700;
       this.maxHp = this.hp;
-      this.speed = 0.3;
+      this.speed = 0.5;
       this.r = 20;
       this.attackRange = 160;  // very long range
       this.attackDamage = 225;   // strong per shot
@@ -324,7 +324,7 @@ class Unit {
     } else if (type === "Giant") {
       this.hp = 4000;
       this.maxHp = this.hp;
-      this.speed = 0.2;
+      this.speed = 0.35;
       this.r = 36;
       this.attackRange = 20;  // melee range
       this.attackDamage = 175;
