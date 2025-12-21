@@ -121,6 +121,7 @@ function enemyPlayCard() {
   // 6. Spawn units
   spawnEnemyUnit(card, x, y);
   cycleCard(enemyHand, enemyDeck, handIndex);
+  console.log("Enemy hand:", enemyHand);
 }
 
 function spawnEnemyUnit(card, x, y) {
@@ -696,8 +697,6 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Mini Pekka") {
       units.push(new Unit(mouseX, mouseY, "player", "Mini Pekka"));
     }
-
-    console.log("Spawned", card.name, "at", mouseX, mouseY);
 
     cycleCard(playerHand, playerDeck, selectedCardIndex);
     selectedCardIndex = null;
