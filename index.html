@@ -27,6 +27,8 @@ const cards = [
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
 
+let enemyHand = [0, 1, 2, 3]; // indices into cards
+
 // Player elixir values
 let playerElixir = 6;
 let enemyElixir = 6;
@@ -59,6 +61,44 @@ function canPlaceCard(card, x, y, team) {
   }
 
   return true;
+}
+
+function enemyPlayCard() {
+  // 1. Pick a random card from hand
+  const cardIndex = enemyHand[Math.floor(Math.random() * enemyHand.length)];
+  const card = cards[cardIndex];
+
+  // 2. Check elixir
+  if (enemyElixir < card.cost) return;
+
+  // 3. Choose placement position
+  let x = Math.random() * (canvas.width);
+  let y = Math.random() * 275; // enemy side only
+
+  // 4. Placement legality
+  if (!canPlaceCard(card, x, y, "enemy")) return;
+
+  // 5. Spend elixir
+  enemyElixir -= card.cost;
+
+  // 6. Spawn units
+  spawnEnemyUnit(card, x, y);
+}
+
+function spawnEnemyUnit(card, x, y) {
+  if (card.name === "Knight") {
+    units.push(new Unit(x, y, "enemy", "Knight"));
+  } 
+  else if (card.name === "Archers") {
+    units.push(new Unit(x - 25, y, "enemy", "Archer"));
+    units.push(new Unit(x + 25, y, "enemy", "Archer"));
+  } 
+  else if (card.name === "Musketeer") {
+    units.push(new Unit(x, y, "enemy", "Musketeer"));
+  } 
+  else if (card.name === "Giant") {
+    units.push(new Unit(x, y, "enemy", "Giant"));
+  }
 }
   
 function drawUnits() {
@@ -512,6 +552,9 @@ drawArena();
 // Generate 1 elixir every 2.8 seconds
 setInterval(generateElixir, 2800);
 
+// Enemey AI makes decisions
+setInterval(enemyPlayCard, 1000);
+  
 // Event listener
 canvas.addEventListener("click", function (e) {
   const rect = canvas.getBoundingClientRect();
