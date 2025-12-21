@@ -21,11 +21,11 @@ const PlacementType = {
 
 const cards = [
   { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
+  { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
 
 const playerDeck = [0, 1, 2, 3, 4, 5]; // indices into cards
@@ -34,10 +34,11 @@ const enemyDeck = [0, 1, 2, 3, 4, 5]; // indices into cards
 let playerHand = [];
 let enemyHand = []; // indices into cards
 function drawInitialHand() {
-  const deckCopy = [...playerDeck].sort(() => Math.random() - 0.5);
-  playerHand = deckCopy.slice(0, 4);
-  const deckCopy = [...playerDeck].sort(() => Math.random() - 0.5);
-  enemyHand = deckCopy.slice(0, 4);
+  const playerDeckCopy = [...playerDeck].sort(() => Math.random() - 0.5);
+  playerHand = playerDeckCopy.slice(0, 4);
+
+  const enemyDeckCopy = [...enemyDeck].sort(() => Math.random() - 0.5);
+  enemyHand = enemyDeckCopy.slice(0, 4);
 }
 
 drawInitialHand();
@@ -98,7 +99,8 @@ function canPlaceCard(card, x, y, team) {
 
 function enemyPlayCard() {
   // 1. Pick a random card from hand
-  const cardIndex = enemyHand[Math.floor(Math.random() * enemyHand.length)];
+  const handIndex = Math.floor(Math.random() * enemyHand.length);
+  const cardIndex = enemyHand[handIndex];  
   const card = cards[cardIndex];
 
   // 2. Check elixir
