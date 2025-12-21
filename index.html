@@ -200,88 +200,79 @@ class Unit {
   }
 
   update() {
-    if (this.attackCooldown > 0) this.attackCooldown--;
-    const isLocked = this.attackCooldown > 0;
+  // Reduce attack cooldown
+  if (this.attackCooldown > 0) this.attackCooldown--;
 
+  // Remove target if dead
+  if (this.target && this.target.hp <= 0) {
+    this.target = null;
+  }
+
+  // Acquire target if none
+  if (!this.target) {
+    let closest = null;
+    let closestDist = Infinity;
+
+    // Enemy units
     const enemyUnits = units.filter(u => u.team !== this.team);
-    const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
-
-    // Drop target ONLY if dead
-    if (this.target && this.target.hp <= 0) {
-      this.target = null;
+    for (const u of enemyUnits) {
+      const d = distance(this, u);
+      if (d < closestDist && d <= this.sightRange) {
+        closest = u;
+        closestDist = d;
+      }
     }
-    
-    // Acquire target ONLY if we don't already have one
-    if (!this.target) {
-      let closest = null;
-      let closestDist = Infinity;
-    
-      // Enemy units first
-      for (const u of enemyUnits) {
-        const d = distance(this, u);
-        if (d <= this.sightRange && d < closestDist) {
-          closest = u;
+
+    // Enemy towers
+    const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
+    if (!closest) {
+      for (const t of enemyTowersList) {
+        const d = distance(this, t);
+        if (d < closestDist) {
+          closest = t;
           closestDist = d;
         }
       }
-    
-      // Then towers
-      if (!closest) {
-        for (const t of enemyTowersList) {
-          const d = distance(this, t);
-          if (d < closestDist) {
-            closest = t;
-            closestDist = d;
-          }
-        }
-      }
-
-  this.target = closest;
-}
-
-
-    if (!this.target) return;
-
-    const d = distance(this, this.target);
-
-    // Target escaped attack range → chase resumes
-    if (d > this.sightRange) {
-      this.target = null;
-      return;
     }
 
-    // Attack
-    if (d <= ATTACK_RANGE) {
-      if (this.attackCooldown === 0) {
-        this.target.hp -= ATTACK_DAMAGE;
-        this.attackCooldown = ATTACK_COOLDOWN;
-      }
-      // LOCK movement while attacking
-      return;
-    }
-
-
-    let moveTarget = this.target;
-
-    if (!sameSide(this, this.target)) {
-      moveTarget = this.closestBridge();
-    }
-
-    if (this.target) {
-  let targetX = this.target.x;
-  let targetY = this.target.y;
-
-  // Ground units cannot cross river
-  if ((this.team === "player" && this.y > 325 && targetY < 275) ||
-      (this.team === "enemy"  && this.y < 275 && targetY > 325)) {
-    // Redirect toward closest bridge
-    const bridge = this.closestBridge();
-    targetX = bridge.x;
-    targetY = bridge.y;
+    this.target = closest;
   }
 
-  const dx = targetX - this.x;
-  const dy = targetY - this.y;
+  // If no target, do nothing
+  if (!this.target) return;
+
+  const d = distance(this, this.target);
+
+  // Attack lock-in
+  if (d <= ATTACK_RANGE) {
+    if (this.attackCooldown === 0) {
+      this.target.hp -= ATTACK_DAMAGE;
+      this.attackCooldown = ATTACK_COOLDOWN;
+    }
+    return; // stop moving while attacking
+  }
+
+  // Determine movement target
+  let moveX = this.target.x;
+  let moveY = this.target.y;
+
+  // Bridge routing for ground units
+  // Player side: y > 325, Enemy side: y < 275
+  const riverTop = 275;
+  const riverBottom = 325;
+
+  const targetAcrossRiver = (this.team === "player" && moveY < riverTop) ||
+                            (this.team === "enemy" && moveY > riverBottom);
+
+  if (targetAcrossRiver) {
+    const bridge = this.closestBridge();
+    moveX = bridge.x;
+    moveY = bridge.y;
+  }
+
+  // Move toward moveX, moveY
+  const dx = moveX - this.x;
+  const dy = moveY - this.y;
   const mag = Math.hypot(dx, dy);
 
   if (mag > 0) {
@@ -289,8 +280,6 @@ class Unit {
     this.y += (dy / mag) * this.speed;
   }
 }
-
-  }
 
   closestBridge() {
     let best = null;
