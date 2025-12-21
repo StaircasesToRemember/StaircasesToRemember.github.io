@@ -274,8 +274,10 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 24;
-      this.attackRange = 25;
+      this.attackRange = 20;
       this.attackDamage = 175;
+      this.attackCooldown = 60;
+      this.targetsOnlyBuildings = false;
     } else if (type === "Archer") {
       this.hp = 300;
       this.maxHp = this.hp;
@@ -283,6 +285,8 @@ class Unit {
       this.r = 16;
       this.attackRange = 125;  // longer range
       this.attackDamage = 125;   // weaker per shot
+      this.attackCooldown = 60;
+      this.targetsOnlyBuildings = false;
     } else if (type === "Musketeer") {
       this.hp = 700;
       this.maxHp = this.hp;
@@ -290,22 +294,26 @@ class Unit {
       this.r = 20;
       this.attackRange = 150;  // very long range
       this.attackDamage = 225;   // strong per shot
+      this.attackCooldown = 60;
+      this.targetsOnlyBuildings = false;
     } else if (type === "Giant") {
       this.hp = 4000;
       this.maxHp = this.hp;
       this.speed = 0.3;
       this.r = 36;
-      this.attackRange = 25;  // very long range
-      this.attackDamage = 175;   // weaker per shot
+      this.attackRange = 20;  // melee range
+      this.attackDamage = 175;
+      this.attackCooldown = 90;  // slower attack speed
+      this.targetsOnlyBuildings = true;  // Only targets towers!
     }
 
     this.sightRange = 150;
     this.target = null;
-    this.attackCooldown = 0;
+    this.currentAttackCooldown = 0;
   }
 
   update() {
-    if (this.attackCooldown > 0) this.attackCooldown--;
+    if (this.currentAttackCooldown > 0) this.currentAttackCooldown--;
 
     if (this.target && this.target.hp <= 0) this.target = null;
 
@@ -313,17 +321,21 @@ class Unit {
       let closest = null;
       let closestDist = Infinity;
 
-      const enemyUnits = units.filter(u => u.team !== this.team);
-      for (const u of enemyUnits) {
-        const d = distance(this, u);
-        if (d < closestDist && d <= this.sightRange) {
-          closest = u;
-          closestDist = d;
+      // If unit targets only buildings (like Giant), skip enemy units
+      if (!this.targetsOnlyBuildings) {
+        const enemyUnits = units.filter(u => u.team !== this.team);
+        for (const u of enemyUnits) {
+          const d = distance(this, u);
+          if (d < closestDist && d <= this.sightRange) {
+            closest = u;
+            closestDist = d;
+          }
         }
       }
 
+      // Always check enemy towers
       const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
-      if (!closest) {
+      if (!closest || this.targetsOnlyBuildings) {
         for (const t of enemyTowersList) {
           const d = distance(this, t);
           if (d < closestDist) {
@@ -341,9 +353,9 @@ class Unit {
     const d = distance(this, this.target);
 
     if (d <= this.attackRange) {
-      if (this.attackCooldown === 0) {
+      if (this.currentAttackCooldown === 0) {
         this.target.hp -= this.attackDamage;
-        this.attackCooldown = ATTACK_COOLDOWN;
+        this.currentAttackCooldown = this.attackCooldown;
       }
       return; // stop moving while attacking
     }
@@ -416,7 +428,6 @@ class Unit {
     );
   }
 }
-
 // Function to generate elixir
 function generateElixir() {
   if (playerElixir < maxElixir) playerElixir += 1;
