@@ -595,11 +595,6 @@ function drawArena() {
   ctx.fillStyle = "lightgreen";
   ctx.fillRect(0, 0, canvas.width, 600);
 
-  // Draw hand 
-  ctx.fillStyle = "#ddd";
-  ctx.fillRect(0, 700, canvas.width, 150);
-  drawHand();
-
   // Draw river
   ctx.fillStyle = "#1E90FF"; // blue river
   ctx.fillRect(0, 275, canvas.width, 50);
@@ -633,6 +628,11 @@ function drawArena() {
   
   // Draw elixir bar
   drawElixirBar();
+
+  // Draw hand 
+  ctx.fillStyle = "#ddd";
+  ctx.fillRect(0, 700, canvas.width, 150);
+  drawHand();
   
   requestAnimationFrame(drawArena);
 }
