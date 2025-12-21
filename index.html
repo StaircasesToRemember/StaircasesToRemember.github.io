@@ -8,7 +8,7 @@
 const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
 const cardCosts = [3, 4, 2, 5]; // cost for each of the 4 cards
-
+const units = [];
 
 // Player elixir values
 let playerElixir = 6;
@@ -20,6 +20,28 @@ let selectedCardIndex = null; // 0–3, or null if none selected
 const handCards = [];
 const ARENA_HEIGHT = 600;
 
+function spawnUnit(x, y, team) {
+  units.push({
+    x: x,
+    y: y,
+    r: 10,
+    team: team,
+    hp: 100
+  });
+}
+
+function drawUnits() {
+  for (const u of units) {
+    ctx.beginPath();
+    ctx.arc(u.x, u.y, u.r, 0, Math.PI * 2);
+
+    ctx.fillStyle = u.team === "player" ? "blue" : "red";
+    ctx.fill();
+
+    ctx.closePath();
+  }
+}
+  
 // Draw elixir bar
 function drawElixirBar() {
   const barWidth = 200;
@@ -129,7 +151,7 @@ function generateElixir() {
   
   console.log("Player Elixir:", playerElixir, "Enemy Elixir:", enemyElixir);
 }
-  
+
 // Draw loop
 function drawArena() {
   ctx.fillStyle = "lightgreen";
@@ -203,20 +225,16 @@ if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
     return;
   }
 
-  // Successful placement
   playerElixir -= cost;
 
-  console.log(
-    "Placed card",
-    selectedCardIndex,
-    "Cost:",
-    cost,
-    "Remaining elixir:",
-    playerElixir
-  );
+  // SPAWN UNIT
+  spawnUnit(mouseX, mouseY, "player");
+
+  console.log("Spawned unit at", mouseX, mouseY);
 
   selectedCardIndex = null;
 }
+
 
 });
 
