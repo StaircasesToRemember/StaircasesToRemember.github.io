@@ -25,6 +25,7 @@ const cards = [
   { name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
+  { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
 
 let enemyHand = [0, 1, 2, 3]; // indices into cards
@@ -104,6 +105,9 @@ function spawnEnemyUnit(card, x, y) {
       units.push(new Unit(mouseX + 15, mouseY + 10, "enemy", "Minion"));
       units.push(new Unit(mouseX, mouseY, "enemy", "Minion"));
   }
+  else if (card.name === "Mini Pekka") {
+    units.push(new Unit(x, y, "enemy", "Mini Pekka"));
+  } 
 }
   
 function drawUnits() {
@@ -192,6 +196,7 @@ function drawHand() {
     if (card.name === "Musketeer") ctx.fillStyle = "blueviolet";
     if (card.name === "Giant") ctx.fillStyle = "orange";
     if (card.name === "Minions") ctx.fillStyle = "cornflowerblue";
+    if (card.name === "Mini Pekka") ctx.fillStyle = "navy";
     
     ctx.fill();
     ctx.closePath();
@@ -400,6 +405,18 @@ class Unit {
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
       this.sightRange = 170;
+    } else if (type === "Mini Pekka") {
+      this.hp = 1400;
+      this.maxHp = this.hp;
+      this.speed = 0.5;
+      this.r = 20;
+      this.attackRange = 25;
+      this.attackDamage = 800;
+      this.attackCooldown = 100;
+      this.isAir = false;
+      this.attacksAir = false;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 170;
     }
     
     this.target = null;
@@ -510,6 +527,7 @@ class Unit {
     else if (this.type === "Musketeer") ctx.fillStyle = "blueviolet";
     else if (this.type === "Giant") ctx.fillStyle = "orange";
     else if (this.type === "Minion") ctx.fillStyle = "cornflowerblue";
+    else if (this.type === "Mini Pekka") ctx.fillStyle = "navy";
 
     ctx.fill();
     ctx.closePath();
@@ -640,7 +658,8 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX - 15, mouseY - 10, "player", "Minion"));
       units.push(new Unit(mouseX + 15, mouseY - 10, "player", "Minion"));
       units.push(new Unit(mouseX, mouseY, "player", "Minion"));
-    }
+    } else if (card.name === "Mini Pekka") {
+      units.push(new Unit(mouseX, mouseY, "player", "Mini Pekka"));
 
     console.log("Spawned", card.name, "at", mouseX, mouseY);
 
