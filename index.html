@@ -157,32 +157,89 @@ function drawHand() {
   
 // Tower class
 class Tower {
-  constructor(x, y, hp, team) {
+  constructor(x, y, hp, team, isKing = false) {
     this.x = x;
     this.y = y;
     this.hp = hp;
     this.maxHp = hp;
     this.team = team;
+    this.isKing = isKing;
+
+    this.attackRange = 150;   // how far tower can shoot
+    this.attackDamage = 15;   // damage per shot
+    this.attackCooldownMax = 60; // frames
+    this.attackCooldown = 0;
+    this.target = null;
   }
 
   draw(ctx) {
     ctx.fillStyle = this.team === "player" ? "lightskyblue" : "lightpink";
     ctx.fillRect(this.x - 25, this.y - 25, 50, 50);
+
+    // Health bar
     ctx.fillStyle = this.team === "player" ? "blue" : "red";
     ctx.fillRect(this.x - 25, this.y - 35, 50 * (this.hp / this.maxHp), 5);
+
+    // King tower indicator
+    if (this.isKing) {
+      ctx.strokeStyle = "gold";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(this.x - 28, this.y - 28, 56, 56);
+    }
+  }
+
+  update() {
+    // Reduce cooldown
+    if (this.attackCooldown > 0) this.attackCooldown--;
+
+    // Remove dead target
+    if (this.target && this.target.hp <= 0) {
+      this.target = null;
+    }
+
+    // Acquire target if none
+    if (!this.target) {
+      let closest = null;
+      let closestDist = Infinity;
+
+      // Enemy units only
+      const enemyUnits = units.filter(u => u.team !== this.team);
+
+      for (const u of enemyUnits) {
+        const d = distance(this, u);
+        if (d < closestDist && d <= this.attackRange) {
+          closest = u;
+          closestDist = d;
+        }
+      }
+
+      this.target = closest;
+    }
+
+    // Attack if target exists and cooldown is 0
+    if (this.target && this.attackCooldown === 0) {
+      this.target.hp -= this.attackDamage;
+      this.attackCooldown = this.attackCooldownMax;
+    }
+
+    // Check king tower death
+    if (this.hp <= 0 && this.isKing) {
+      console.log(`${this.team} king tower destroyed! Game over.`);
+      // Optional: stop game loop, show end screen, etc.
+    }
   }
 }
 
 // Create towers
 const playerTowers = [
   new Tower(75, 500, 1000, "player"),
-  new Tower(200, 550, 2000, "player"),
+  new Tower(200, 550, 2000, "player", true), // King tower in center
   new Tower(325, 500, 1000, "player")
 ];
 
 const enemyTowers = [
   new Tower(75, 100, 1000, "enemy"),
-  new Tower(200, 50, 2000, "enemy"),
+  new Tower(200, 50, 2000, "enemy", true), // Enemy king tower
   new Tower(325, 100, 1000, "enemy")
 ];
 
@@ -329,8 +386,8 @@ function generateElixir() {
 }
 
 // Draw loop
-  // Draw grass
 function drawArena() {
+  // Draw grass
   ctx.fillStyle = "lightgreen";
   ctx.fillRect(0, 0, canvas.width, 600);
 
@@ -338,47 +395,68 @@ function drawArena() {
   ctx.fillStyle = "#ddd";
   ctx.fillRect(0, 700, canvas.width, 150);
   drawHand();
-  
-   // Draw river
+
+  // Draw river
   ctx.fillStyle = "#1E90FF"; // blue river
   ctx.fillRect(0, 275, canvas.width, 50);
 
-    // Draw bridges
+  // Draw bridges
   ctx.fillStyle = "#8B4513"; // brown
   const bridgeWidth = 50;
   const bridgeHeight = 100;
   const bridgeXs = [75, 325];
 
   for (let x of bridgeXs) {
-    ctx.fillRect(x - bridgeWidth/2, 275 - (bridgeHeight - 50)/2, bridgeWidth, bridgeHeight);
+    ctx.fillRect(x - bridgeWidth / 2, 275 - (bridgeHeight - 50) / 2, bridgeWidth, bridgeHeight);
   }
 
-  for (let t of playerTowers) {
+  // Update and draw towers
+  for (const t of playerTowers) {
+    t.update();
     t.draw(ctx);
+
+    // Optional: draw attack line if attacking
+    if (t.target) {
+      ctx.strokeStyle = t.team === "player" ? "blue" : "red";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(t.x, t.y);
+      ctx.lineTo(t.target.x, t.target.y);
+      ctx.stroke();
+    }
   }
 
-  for (let t of enemyTowers) {
+  for (const t of enemyTowers) {
+    t.update();
     t.draw(ctx);
+
+    if (t.target) {
+      ctx.strokeStyle = t.team === "player" ? "blue" : "red";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(t.x, t.y);
+      ctx.lineTo(t.target.x, t.target.y);
+      ctx.stroke();
+    }
   }
 
-  //draw units
+  // Update and draw units
   for (let i = units.length - 1; i >= 0; i--) {
-  const u = units[i];
-  u.update();
-  u.draw(ctx);
+    const u = units[i];
+    u.update();
+    u.draw(ctx);
 
-  if (u.hp <= 0) {
-    units.splice(i, 1);
+    if (u.hp <= 0) {
+      units.splice(i, 1);
+    }
   }
-}
 
-
-
-  //draw elixir bar
+  // Draw elixir bar
   drawElixirBar();
 
   requestAnimationFrame(drawArena);
 }
+
 
 drawArena();
   
