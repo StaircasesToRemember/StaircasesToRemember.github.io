@@ -4,7 +4,7 @@
 
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
-<script>c
+<script>
 const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
 const units = [];
@@ -118,7 +118,7 @@ function enemyPlayCard() {
 
   // 6. Spawn units
   spawnEnemyUnit(card, x, y);
-  cycleEnemyCard(cardIndex);
+  cycleEnemyCard(handindex);
 }
 
 function spawnEnemyUnit(card, x, y) {
