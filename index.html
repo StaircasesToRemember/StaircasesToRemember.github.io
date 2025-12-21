@@ -128,6 +128,11 @@ function drawHand() {
       ctx.fillRect(x - 4, y - 4, cardWidth + 8, cardHeight + 8);
     }
 
+    // Dim card if not enough elixir
+    if (playerElixir < cost) {
+      ctx.globalAlpha = 0.5;
+    }
+
     // card body
     ctx.fillStyle = "white";
     ctx.fillRect(x, y, cardWidth, cardHeight);
@@ -430,11 +435,8 @@ class Unit {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
 
-    if (this.type === "Knight") ctx.fillStyle = "yellow";
-    if (this.type === "Archer") ctx.fillStyle = "magenta";
-    if (this.type === "Musketeer") ctx.fillStyle = "purple";
-    if (this.type === "Giant") ctx.fillStyle = "orange";
-
+    if (this.type === "Knight") ctx.fillStyle = this.team === "player" ? "yellow" : "orange";
+    if (this.type === "Archer") ctx.fillStyle = this.team === "player" ? "green" : "darkgreen";
 
     ctx.fill();
     ctx.closePath();
