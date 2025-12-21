@@ -32,15 +32,10 @@ function spawnUnit(x, y, team) {
 
 function drawUnits() {
   for (const u of units) {
-    ctx.beginPath();
-    ctx.arc(u.x, u.y, u.r, 0, Math.PI * 2);
-
-    ctx.fillStyle = u.team === "player" ? "blue" : "red";
-    ctx.fill();
-
-    ctx.closePath();
+    u.draw(ctx);
   }
 }
+
   
 // Draw elixir bar
 function drawElixirBar() {
@@ -141,8 +136,32 @@ const enemyTowers = [
   new Tower(325, 100, 1000, "enemy")
 ];
 
-console.log("Player towers:", playerTowers);
-console.log("Enemy towers:", enemyTowers);
+class Unit {
+  constructor(x, y, team) {
+    this.x = x;
+    this.y = y;
+    this.team = team; // "player" or "opponent"
+    this.hp = 100;
+    this.r = 12; // radius for drawing
+    this.type = "knight";
+  }
+
+  draw(ctx) {
+    // Draw Knight as a blue/red circle depending on team
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = this.team === "player" ? "yellow" : "yellow";
+    ctx.fill();
+    ctx.closePath();
+
+    // Draw HP bar above unit
+    ctx.fillStyle = this.team === "player" ? "blue" : "red";
+    ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / 100) * this.r * 2, 4);
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(this.x - this.r, this.y - this.r - 6, this.r * 2, 4);
+  }
+}
+
 
 // Function to generate elixir
 function generateElixir() {
@@ -232,14 +251,13 @@ if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
 
   playerElixir -= cost;
 
-  // SPAWN UNIT
-  spawnUnit(mouseX, mouseY, "player");
+  // SPAWN KNIGHT
+  units.push(new Unit(mouseX, mouseY, "player"));
 
-  console.log("Spawned unit at", mouseX, mouseY);
+  console.log("Spawned Knight at", mouseX, mouseY);
 
   selectedCardIndex = null;
 }
-
 
 });
 
