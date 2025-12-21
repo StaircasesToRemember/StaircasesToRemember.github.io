@@ -36,10 +36,6 @@ let selectedCardIndex = null; // 0–3, or null if none selected
 const handCards = [];
 const ARENA_HEIGHT = 600;
 
-const ATTACK_RANGE = 20;
-const ATTACK_DAMAGE = 170;
-const ATTACK_COOLDOWN = 60; // frames (~1 second at 60fps)
-
 function sameSide(a, b) {
   // both above river
   if (a.y < RIVER_BOTTOM && b.y < RIVER_BOTTOM) return true;
@@ -267,7 +263,7 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 24;
-      this.attackRange = 20;
+      this.attackRange = 25;
       this.attackDamage = 175;
       this.attackCooldown = 60;
       this.targetsOnlyBuildings = false;
@@ -294,8 +290,8 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.4;
       this.r = 36;
-      this.attackRange = 20;  // melee range
-      this.attackDamage = 175;
+      this.attackRange = 25;  // melee range
+      this.attackDamage = 250;
       this.attackCooldown = 90;  // slower attack speed
       this.targetsOnlyBuildings = true;  // Only targets towers!
     }
