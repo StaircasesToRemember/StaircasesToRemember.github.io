@@ -207,8 +207,6 @@ class Tower {
     this.team = team;
     this.isKing = isKing; // true if this is the king tower
     this.target = null;
-    this.attackCooldown = 60;
-    this.totalCooldown = 60;
   }
 
   draw(ctx) {
@@ -245,10 +243,7 @@ class Tower {
 
     if (closest && closestDist <= 175) { // attack range
       this.target = closest;
-      if (this.attackCooldown == 0) {
-        closest.hp -= 140; // tower damage
-        this.attackCooldown = this.totalCooldown;
-      } 
+      closest.hp -= 5; // tower damage
     } else {
       this.target = null;
     }
