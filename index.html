@@ -69,7 +69,7 @@ function enemyPlayCard() {
   const card = cards[cardIndex];
 
   // 2. Check elixir
-  if (enemyElixir < card.cost) return;
+  if (enemyElixir < card.cost || enemyElixir < 7) return;
 
   // 3. Choose placement position
   let x = Math.random() * (canvas.width);
