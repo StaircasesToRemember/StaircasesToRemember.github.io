@@ -4,7 +4,7 @@
 
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
-<script>
+<script>c
 const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
 const units = [];
@@ -665,8 +665,9 @@ canvas.addEventListener("click", function (e) {
 
   // 2️⃣ Check arena click
   if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
-    const card = cards[selectedCardIndex];
-
+    const cardId = playerHand[selectedCardIndex];
+    const card = cards[cardId];
+    
     if (!canPlaceCard(card, mouseX, mouseY, "player")) {
       console.log("Illegal placement");
       return;
