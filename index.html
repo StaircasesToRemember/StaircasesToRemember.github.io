@@ -144,6 +144,34 @@ function drawHand() {
   }
 }
   
+// In drawArena or a separate tower management function:
+function updateTowers() {
+  // Player towers
+  for (let i = playerTowers.length - 1; i >= 0; i--) {
+    const t = playerTowers[i];
+    t.update();
+    if (!t.isKing && t.hp <= 0) {
+      playerTowers.splice(i, 1);
+    }
+    if (t.isKing && t.hp <= 0) {
+      alert("Enemy wins!");
+      location.reload(); // simple game over reset
+    }
+  }
+
+  // Enemy towers
+  for (let i = enemyTowers.length - 1; i >= 0; i--) {
+    const t = enemyTowers[i];
+    t.update();
+    if (!t.isKing && t.hp <= 0) {
+      enemyTowers.splice(i, 1);
+    }
+    if (t.isKing && t.hp <= 0) {
+      alert("Player wins!");
+      location.reload(); // simple game over reset
+    }
+  }
+}
   
 // Tower class
 class Tower {
@@ -153,48 +181,38 @@ class Tower {
     this.hp = hp;
     this.maxHp = hp;
     this.team = team;
-    this.isKing = isKing;
-    this.attackCooldown = 0;
-    this.target = null;
-    this.attackRange = 150;
-    this.attackDamage = 15;
-    this.attackRate = 60; // frames
+    this.isKing = isKing; // true if this is the king tower
   }
 
   draw(ctx) {
     ctx.fillStyle = this.team === "player" ? "lightskyblue" : "lightpink";
     ctx.fillRect(this.x - 25, this.y - 25, 50, 50);
+
     ctx.fillStyle = this.team === "player" ? "blue" : "red";
     ctx.fillRect(this.x - 25, this.y - 35, 50 * (this.hp / this.maxHp), 5);
   }
 
   update() {
-    if (this.attackCooldown > 0) this.attackCooldown--;
+    // King towers only attack if damaged
+    if (this.isKing && this.hp === this.maxHp) return;
 
-    // King towers only attack if below max HP
-    if (this.isKing && this.hp >= this.maxHp) return;
+    // Tower attack logic here (target nearest enemy unit, deal ranged damage)
+    const enemyUnits = units.filter(u => u.team !== this.team);
+    if (enemyUnits.length === 0) return;
 
-    // Acquire target if none or dead
-    if (!this.target || this.target.hp <= 0) {
-      const enemyUnits = units.filter(u => u.team !== this.team);
-      let closest = null;
-      let closestDist = Infinity;
-
-      for (const u of enemyUnits) {
-        const d = Math.hypot(u.x - this.x, u.y - this.y);
-        if (d < closestDist && d <= this.attackRange) {
-          closest = u;
-          closestDist = d;
-        }
+    // Find closest enemy
+    let closest = null;
+    let closestDist = Infinity;
+    for (const u of enemyUnits) {
+      const d = Math.hypot(u.x - this.x, u.y - this.y);
+      if (d < closestDist) {
+        closest = u;
+        closestDist = d;
       }
-
-      this.target = closest;
     }
 
-    // Attack target
-    if (this.target && this.attackCooldown === 0) {
-      this.target.hp -= this.attackDamage;
-      this.attackCooldown = this.attackRate;
+    if (closest && closestDist <= 150) { // attack range
+      closest.hp -= 5; // tower damage
     }
   }
 }
@@ -378,9 +396,7 @@ function drawArena() {
   }
 
   // Update and draw towers
-  for (const t of playerTowers) {
-    t.update();
-    t.draw(ctx);
+  updateTowers();
 
     // Optional: draw attack line if attacking
     if (t.target) {
