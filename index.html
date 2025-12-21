@@ -76,9 +76,9 @@ class Tower {
 
   draw(ctx) {
     console.log("Inside draw for", this.team, this.x, this.y); // DEBUG
-    ctx.fillStyle = this.team === "player" ? "blue" : "red";
+    ctx.fillStyle = this.team === "player" ? "burlywood" : "burlywood";
     ctx.fillRect(this.x - 25, this.y - 25, 50, 50);
-    ctx.fillStyle = "green";
+    ctx.fillStyle = this.team === "player" ? "blue" : "red";
     ctx.fillRect(this.x - 25, this.y - 35, 50 * (this.hp / this.maxHp), 5);
   }
 }
