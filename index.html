@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ow<!DOCTYPE html>
 <html>
 <body>
 
@@ -163,15 +163,13 @@ class Unit {
   draw(ctx) {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fillStyle = this.team === "player" ? "blue" : "red";
+    ctx.fillStyle = this.team === "player" ? "yellow" : "yellow";
     ctx.fill();
     ctx.closePath();
 
     // HP bar
-    ctx.fillStyle = "green";
+    ctx.fillStyle = this.team === "player" ? "blue" : "red";
     ctx.fillRect(this.x - this.r, this.y - this.r - 6, (this.hp / 100) * this.r * 2, 4);
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(this.x - this.r, this.y - this.r - 6, this.r * 2, 4);
   }
   
   update() {
