@@ -194,8 +194,8 @@ update() {
     const dist = Math.hypot(dx, dy);
 
     // same side: player > 300, enemy < 300
-    const sameSide = (this.team === "player" && this.y >= 300) || 
-                     (this.team === "opponent" && this.y <= 300);
+    const sameSide = (this.team === "player" && this.y >= 325) || 
+                     (this.team === "opponent" && this.y <= 275);
 
     if (dist <= this.sightRange && sameSide && dist < closestDist) {
       closestDist = dist;
@@ -219,7 +219,7 @@ update() {
 
   // 3️⃣ If still no target, decide where to move
   if (!closestTarget) {
-    if ((this.team === "player" && this.y >= 300) || (this.team === "opponent" && this.y <= 300)) {
+    if ((this.team === "player" && this.y >= 325) || (this.team === "opponent" && this.y <= 275)) {
       // Own side → move toward nearest bridge
       closestTarget = this.closestBridge();
     } else {
