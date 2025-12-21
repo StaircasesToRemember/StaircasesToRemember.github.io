@@ -31,17 +31,22 @@ const cards = [
 const playerDeck = [0, 1, 2, 3, 4, 5]; // indices into cards
 const enemyDeck = [0, 1, 2, 3, 4, 5]; // indices into cards
   
-let playerHand = [];
-let enemyHand = []; // indices into cards
-function drawInitialHand() {
-  const playerDeckCopy = [...playerDeck].sort(() => Math.random() - 0.5);
-  playerHand = playerDeckCopy.slice(0, 4);
-
-  const enemyDeckCopy = [...enemyDeck].sort(() => Math.random() - 0.5);
-  enemyHand = enemyDeckCopy.slice(0, 4);
+// Create a fresh shuffled deck for the player
+function initializeDeck(deckArray) {
+  const shuffled = [...deckArray].sort(() => Math.random() - 0.5);
+  const hand = shuffled.slice(0, 4);       // first 4 go to hand
+  const deck = shuffled.slice(4);          // rest stay in deck
+  return { hand, deck };
 }
 
-drawInitialHand();
+let playerState = initializeDeck(playerDeck);
+let enemyState = initializeDeck(enemyDeck);
+
+let playerHand = playerState.hand;
+playerDeck = playerState.deck;
+
+let enemyHand = enemyState.hand;
+enemyDeck = enemyState.deck;
 
 console.log("Player deck:", playerDeck);
 console.log("Player hand:", playerHand);
@@ -53,24 +58,15 @@ let playerElixir = 6;
 let enemyElixir = 6;
 const maxElixir = 10;
 
-function cyclePlayerCard(handIndex) {
-  const playedCard = playerHand.splice(handIndex, 1)[0];
+function cycleCard(handArray, deckArray, handIndex) {
+  const playedCard = handArray.splice(handIndex, 1)[0]; // remove from hand
 
-  // draw next card from deck
-  const nextCard = playerDeck.shift();
-  playerHand.push(nextCard);
+  // draw the next card from the deck
+  const nextCard = deckArray.shift();
+  handArray.push(nextCard);
 
-  // put played card at bottom of deck
-  playerDeck.push(playedCard);
-}
-
-function cycleEnemyCard(handIndex) {
-  const playedCard = enemyHand.splice(handIndex, 1)[0];
-
-  const nextCard = enemyDeck.shift();
-  enemyHand.push(nextCard);
-
-  enemyDeck.push(playedCard);
+  // put the played card at the bottom of the deck
+  deckArray.push(playedCard);
 }
 
   
@@ -124,7 +120,7 @@ function enemyPlayCard() {
 
   // 6. Spawn units
   spawnEnemyUnit(card, x, y);
-  cycleEnemyCard(handindex);
+  cycleCard(enemyHand, enemyDeck, handIndex);
 }
 
 function spawnEnemyUnit(card, x, y) {
@@ -590,8 +586,6 @@ class Unit {
 function generateElixir() {
   if (playerElixir < maxElixir) playerElixir += 1;
   if (enemyElixir < maxElixir) enemyElixir += 1;
-  
-  console.log("Player Elixir:", playerElixir, "Enemy Elixir:", enemyElixir);
 }
 
 // Draw loop
@@ -664,7 +658,6 @@ canvas.addEventListener("click", function (e) {
       mouseY <= c.y + c.h
     ) {
       selectedCardIndex = i;
-      console.log("Selected card:", i);
       return; // stop here
     }
   }
@@ -675,14 +668,12 @@ canvas.addEventListener("click", function (e) {
     const card = cards[cardId];
     
     if (!canPlaceCard(card, mouseX, mouseY, "player")) {
-      console.log("Illegal placement");
       return;
     }
 
     const cost = card.cost;
     
     if (playerElixir < cost) {
-      console.log("Not enough elixir!");
       return;
     }
 
@@ -708,7 +699,7 @@ canvas.addEventListener("click", function (e) {
 
     console.log("Spawned", card.name, "at", mouseX, mouseY);
 
-    cyclePlayerCard(selectedCardIndex);
+    cycleCard(playerHand, playerDeck, selectedCardIndex);
     selectedCardIndex = null;
   }
 });
