@@ -382,36 +382,34 @@ class Unit {
 
     if (this.target && this.target.hp <= 0) this.target = null;
 
-    if (!this.target) {
-      let closest = null;
-      let closestDist = Infinity;
-
-      // If unit targets only buildings (like Giant), skip enemy units
-      if (!this.targetsOnlyBuildings) {
-        const enemyUnits = units.filter(u => u.team !== this.team);
-        for (const u of enemyUnits) {
-          const d = distance(this, u);
-          if (d < closestDist && d <= this.sightRange) {
-            closest = u;
-            closestDist = d;
-          }
+    let closest = null;
+    
+    let closestDist = Infinity;
+    
+    // Enemy units
+    if (!this.targetsOnlyBuildings) {
+      for (const u of units) {
+        if (u.team === this.team) continue;
+        const d = distance(this, u);
+        if (d < closestDist && d <= this.sightRange) {
+          closest = u;
+          closestDist = d;
         }
       }
-
-      // Always check enemy towers
-      const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
-      if (!closest || this.targetsOnlyBuildings) {
-        for (const t of enemyTowersList) {
-          const d = distance(this, t);
-          if (d < closestDist) {
-            closest = t;
-            closestDist = d;
-          }
-        }
-      }
-
-      this.target = closest;
     }
+    
+    // Enemy towers
+    const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
+    for (const t of enemyTowersList) {
+      const d = distance(this, t);
+      if (d < closestDist) {
+        closest = t;
+        closestDist = d;
+      }
+    }
+    
+    this.target = closest;
+
 
     if (!this.target) return;
 
