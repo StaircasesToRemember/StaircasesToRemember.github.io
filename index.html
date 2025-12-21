@@ -6,7 +6,7 @@
 
 <script>
 const canvas = document.getElementById("arena");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d");0.3
 const units = [];
 const bridges = [
   { x: 75, y: 600 / 2 },  // middle of first bridge
@@ -292,7 +292,7 @@ class Unit {
     } else if (type === "Giant") {
       this.hp = 4000;
       this.maxHp = this.hp;
-      this.speed = 0.3;
+      this.speed = 0.4;
       this.r = 36;
       this.attackRange = 20;  // melee range
       this.attackDamage = 175;
