@@ -31,12 +31,13 @@ const cards = [
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 650}
+  { name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 650}
+  { name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 325}
 ];
 
   
-playerDeck = [0, 1, 2, 3, 4, 5, 6]; // indices into cards
-enemyDeck = [0, 1, 2, 3, 4, 5, 6]; // indices into cards
+playerDeck = [0, 1, 2, 3, 4, 5, 6, 7]; // indices into cards
+enemyDeck = [0, 1, 2, 3, 4, 5, 6, 7]; // indices into cards
   
 // Create a fresh shuffled deck for the player
 function initializeDeck(deckArray) {
@@ -152,7 +153,7 @@ function spawnEnemyUnit(card, x, y) {
 }
 
 function castSpell(card, x, y, team) {
-    if (card.name === "Fireball") {
+    if (card.name === "Fireball" || card.name === "Arrows") {
         for (const u of units) {
             if (u.team === team) continue;
             const d = distance({ x, y }, u);
@@ -165,8 +166,11 @@ function castSpell(card, x, y, team) {
             const d = distance({ x, y }, t);
             if (d <= card.radius) t.hp -= card.damage;
         }
-
+        if (card.name === "Fireball") {
         effects.push({ x, y, radius: card.radius, timer: 30, type: "fireball" });
+        } else if (card.name === "Arrows") {
+        effects.push({ x, y, radius: card.radius, timer: 50, type: "arrows" });
+        }
     }
 }
       
@@ -177,6 +181,7 @@ function drawEffects() {
         ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
 
         if (e.type === "fireball") ctx.fillStyle = `rgba(255,100,0,${e.timer / 30})`;
+        else if (e.type === "arrows") ctx.fillStyle = `rgba(255,0,0,0.2)`;
       
         ctx.fill();
         ctx.closePath();
