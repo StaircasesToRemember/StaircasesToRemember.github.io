@@ -741,6 +741,8 @@ update() {
     }
   }
 
+  this.currentAttackCooldown = this.attackCooldown;
+  
   // 🧠 Only NOW do we search for a new target
   let closest = null;
   let closestDist = Infinity;
