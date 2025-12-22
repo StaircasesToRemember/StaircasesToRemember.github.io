@@ -23,7 +23,7 @@ const PlacementType = {
 let playerElixir = 6;
 let enemyElixir = 6;
 const maxElixir = 10;
-
+const effects = [];
 const cards = [
   { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
@@ -34,6 +34,7 @@ const cards = [
   { name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 650}
 ];
 
+  
 playerDeck = [0, 1, 2, 3, 4, 5, 6]; // indices into cards
 enemyDeck = [0, 1, 2, 3, 4, 5, 6]; // indices into cards
   
@@ -122,7 +123,7 @@ function enemyPlayCard() {
         if (canPlaceCard(card, x, y, "enemy")) spawnEnemyUnit(card, x, y);
     }
 
-    cycleEnemyCard(handIndex);
+    cycleCard(enemyHand, enemyDeck, handIndex);
 }
 
 
@@ -163,7 +164,9 @@ function castSpell(card, x, y, team) {
         }
         // Optional: visual effect
         effects.push({ x, y, radius: card.radius, timer: 30, type: "fireball" });
-
+    }
+}
+      
 function drawEffects() {
     for (let i = effects.length - 1; i >= 0; i--) {
         const e = effects[i];
