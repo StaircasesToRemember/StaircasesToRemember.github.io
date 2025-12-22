@@ -716,10 +716,6 @@ class Unit {
   }
 
 update() {
-  // Cooldown tick
-  if (this.currentAttackCooldown > 0) {
-    this.currentAttackCooldown--;
-  }
 
   // Drop target if dead
   if (this.target && this.target.hp <= 0) {
@@ -732,6 +728,10 @@ update() {
     const d = distance(this, this.target);
 
     if (d <= this.attackRange) {
+      // Cooldown tick
+      if (this.currentAttackCooldown > 0) {
+        this.currentAttackCooldown--;
+      }
       // Attack
       if (this.currentAttackCooldown === 0) {
         this.target.hp -= this.attackDamage;
