@@ -131,13 +131,47 @@ function sameSide(a, b) {
   return false;
 }
 
+function sideHasPocket(team, side) {
+  const towers = team === "player" ? enemyTowers : playerTowers;
+  const midX = canvas.width / 2;
+
+  return !towers.some(t =>
+    !t.isKing &&
+    (side === "left" ? t.x < midX : t.x > midX)
+  );
+}
+
+function isInPocket(x, y, team) {
+  const midX = canvas.width / 2;
+  const pocketDepth = 150;
+
+  // Which side of arena?
+  const side = x < midX ? "left" : "right";
+
+  if (!sideHasPocket(team, side)) return false;
+
+  // Pocket Y range depends on team
+  if (team === "player") {
+    return y < RIVER_TOP && y >= RIVER_TOP - pocketDepth;
+  } else {
+    return y > RIVER_BOTTOM && y <= RIVER_BOTTOM + pocketDepth;
+  }
+}
+
 function canPlaceCard(card, x, y, team) {
-  // River
-  if (y >= 275 && y <= 325) return false;
+  // River is always blocked
+  if (y >= RIVER_TOP && y <= RIVER_BOTTOM) return false;
 
   if (card.placement === PlacementType.PLAYER_SIDE_ONLY) {
-    if (team === "player" && y < 325) return false;
-    if (team === "enemy" && y > 275) return false;
+
+    // Normal side restriction
+    if (team === "player" && y < RIVER_BOTTOM) {
+      if (!isInPocket(x, y, team)) return false;
+    }
+
+    if (team === "enemy" && y > RIVER_TOP) {
+      if (!isInPocket(x, y, team)) return false;
+    }
   }
 
   return true;
