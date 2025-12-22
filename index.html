@@ -177,19 +177,38 @@ function castSpell(card, x, y, team) {
 function drawEffects() {
     for (let i = effects.length - 1; i >= 0; i--) {
         const e = effects[i];
-        ctx.beginPath();
-        ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
 
-        if (e.type === "fireball") ctx.fillStyle = `rgba(255,100,0,${e.timer / 30})`;
-        else if (e.type === "arrows") ctx.fillStyle = `rgba(125,0,0,0.2)`;
-      
-        ctx.fill();
-        ctx.closePath();
+        if (e.type === "fireball") {
+            // Fireball stays the same
+            ctx.beginPath();
+            ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,100,0,${e.timer / 30})`;
+            ctx.fill();
+            ctx.closePath();
+        } 
+        else if (e.type === "arrows") {
+            // Draw many random maroon dots inside the radius
+            const dotCount = 50; // number of arrows
+            for (let j = 0; j < dotCount; j++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const r = Math.random() * e.radius;
+                const dotX = e.x + r * Math.cos(angle);
+                const dotY = e.y + r * Math.sin(angle);
 
+                ctx.beginPath();
+                ctx.arc(dotX, dotY, 2, 0, Math.PI * 2); // small dot radius
+                ctx.fillStyle = "maroon";
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        // Decrease timer and remove finished effect
         e.timer--;
         if (e.timer <= 0) effects.splice(i, 1);
     }
 }
+
 
 function drawUnits() {
   for (const u of units) {
