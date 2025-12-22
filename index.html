@@ -171,14 +171,6 @@ function lowestMaxHpEnemy(team) {
     }
   }
 
-  // enemy towers
-  const towers = team === "player" ? enemyTowers : playerTowers;
-  for (const t of towers) {
-    if (t.hp > 0) {
-      enemies.push(t);
-    }
-  }
-
   if (enemies.length === 0) return null;
 
   let lowest = enemies[0];
