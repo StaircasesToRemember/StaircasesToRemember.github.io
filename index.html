@@ -805,6 +805,7 @@ function drawArena() {
   
   // Draw elixir bar
   drawElixirBar();
+  console.log("Enemy elixir: ", enemyElixir);
 
   // Draw hand 
   ctx.fillStyle = "#ddd";
@@ -818,7 +819,6 @@ drawArena();
   
 // Generate 1 elixir every 2.8 seconds
 setInterval(generateElixir, 2800);
-console.log("Enemy elixir: ", enemyElixir);
 
 // Enemey AI makes decisions
 setInterval(enemyPlayCard, 1000);
