@@ -194,7 +194,7 @@ function lowestMaxHpEnemy(team) {
 
 function resolveEnemyPlacement(card, team) {
   const ai = cardAI[card.id];
-  if (card.type && card.type == "spell") {
+  if (card.type && card.type === "spell") {
     const threat = lowestMaxHpEnemy(team);
   } else {
     const threat = nearestEnemyOnOurSide(team);
