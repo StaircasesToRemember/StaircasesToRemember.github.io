@@ -477,11 +477,15 @@ function updateTowers() {
     }
 
     if (!t.isKing && t.hp <= 0) {
+      // Remove the dead tower
       playerTowers.splice(i, 1);
-      for (let i = playerTowers.length - 1; i >= 0; i--) {
-        playerTowers[i].hp--;
+    
+      // Apply 1 damage to all remaining towers
+      for (let j = 0; j < playerTowers.length; j++) {
+        playerTowers[j].hp--;
       }
     }
+
     if (t.isKing && t.hp <= 0) {
       alert("You lose!");
       location.reload(); // simple game over reset
