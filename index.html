@@ -180,8 +180,11 @@ function lowestMaxHpEnemy(team) {
       lowest = e;
     }
   }
-
-  return lowest;
+  if (lowest.maxHp < 1000) {
+    return lowest;
+  } else {
+    return null;
+  }
 }
 
 function resolveEnemyPlacement(card, team) {
