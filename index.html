@@ -472,7 +472,6 @@ function updateTowers() {
       }
     }
     if (t.isKing && t.hp <= 0) {
-      alert("Enemy wins!");
       location.reload(); // simple game over reset
     }
   }
@@ -496,7 +495,6 @@ function updateTowers() {
       enemyTowers.splice(i, 1);
     }
     if (t.isKing && t.hp <= 0) {
-      alert("Player wins!");
       location.reload(); // simple game over reset
     }
   }
