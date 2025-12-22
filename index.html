@@ -534,12 +534,21 @@ class Tower {
   }
 
   draw(ctx) {
-    ctx.fillStyle = this.team === "player" ? "lightskyblue" : "lightpink";
-    ctx.fillRect(this.x - 25, this.y - 25, 50, 50);
-
-    ctx.fillStyle = this.team === "player" ? "blue" : "red";
-    ctx.fillRect(this.x - 25, this.y - 35, 50 * (this.hp / this.maxHp), 5);
+  // Determine tower color
+  let fillColor;
+  if (this.isKing && this.hp === this.maxHp) {
+    fillColor = this.team === "player" ? "blue" : "red"; // full-health king towers
+  } else {
+    fillColor = this.team === "player" ? "lightskyblue" : "lightpink"; // normal towers
   }
+
+  ctx.fillStyle = fillColor;
+  ctx.fillRect(this.x - 25, this.y - 25, 50, 50);
+
+  // Draw HP bar
+  ctx.fillStyle = this.team === "player" ? "blue" : "red";
+  ctx.fillRect(this.x - 25, this.y - 35, 50 * (this.hp / this.maxHp), 5);
+}
 
 update() {
   if (this.hp <= 0) return;
