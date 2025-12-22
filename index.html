@@ -31,8 +31,8 @@ const cards = [
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 650},
-  { name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 325}
+  { name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 650},
+  { name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 90, damage: 325}
 ];
 
   
@@ -166,10 +166,22 @@ function castSpell(card, x, y, team) {
             const d = distance({ x, y }, t);
             if (d <= card.radius) t.hp -= card.damage;
         }
+
         if (card.name === "Fireball") {
-        effects.push({ x, y, radius: card.radius, timer: 30, type: "fireball" });
+            effects.push({ x, y, radius: card.radius, timer: 30, type: "fireball" });
         } else if (card.name === "Arrows") {
-        effects.push({ x, y, radius: card.radius, timer: 50, type: "arrows" });
+            // Generate arrow dots once
+            const dotCount = 50;
+            const dots = [];
+            for (let j = 0; j < dotCount; j++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const r = Math.random() * card.radius;
+                dots.push({ 
+                    x: x + r * Math.cos(angle), 
+                    y: y + r * Math.sin(angle) 
+                });
+            }
+            effects.push({ x, y, radius: card.radius, timer: 50, type: "arrows", dots });
         }
     }
 }
@@ -179,7 +191,6 @@ function drawEffects() {
         const e = effects[i];
 
         if (e.type === "fireball") {
-            // Fireball stays the same
             ctx.beginPath();
             ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(255,100,0,${e.timer / 30})`;
@@ -187,27 +198,20 @@ function drawEffects() {
             ctx.closePath();
         } 
         else if (e.type === "arrows") {
-            // Draw many random maroon dots inside the radius
-            const dotCount = 50; // number of arrows
-            for (let j = 0; j < dotCount; j++) {
-                const angle = Math.random() * 2 * Math.PI;
-                const r = Math.random() * e.radius;
-                const dotX = e.x + r * Math.cos(angle);
-                const dotY = e.y + r * Math.sin(angle);
-
+            for (const dot of e.dots) {
                 ctx.beginPath();
-                ctx.arc(dotX, dotY, 2, 0, Math.PI * 2); // small dot radius
+                ctx.arc(dot.x, dot.y, 2, 0, Math.PI * 2);
                 ctx.fillStyle = "maroon";
                 ctx.fill();
                 ctx.closePath();
             }
         }
 
-        // Decrease timer and remove finished effect
         e.timer--;
         if (e.timer <= 0) effects.splice(i, 1);
     }
 }
+
 
 
 function drawUnits() {
