@@ -25,14 +25,14 @@ let enemyElixir = 6;
 const maxElixir = 10;
 const effects = [];
 const cards = [
-  { name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 650},
-  { name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 90, damage: 325}
+  { name: id: "knight", "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: id: "archers", "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: id: "musketeer", "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: id: "giant", "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: id: "minions", "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: id: "mini_pekka", "Mini P.E.K.K.A", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: id: "fireball", "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 650},
+  { name: id: "arrows", "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 90, damage: 325}
 ];
 
   
@@ -72,6 +72,49 @@ function cycleCard(handArray, deckArray, handIndex) {
   deckArray.push(playedCard);
 }
 
+const cardAI = {
+  knight: {
+    reactiveOffset: { x: 0, y: 25 }, // spawn below enemy troop
+    investPos1: { x: 199, y: 0 }
+    investPos2: { x: 201, y: 0 }
+  },
+  archers: {
+    reactiveOffset: { x: 0, y: 145 },
+    investPos1: { x: 199, y: 0 }
+    investPos2: { x: 201, y: 0 }
+  },
+  musketeer: {
+    reactiveOffset: { x: 0, y: 160 },
+    investPos1: { x: 199, y: 0 }
+    investPos2: { x: 201, y: 0 }
+  },
+  giant: {
+    reactiveOffset: { x: 0, y: 160 },
+    investPos1: { x: 199, y: 0 }
+    investPos2: { x: 201, y: 0 }
+  },
+  mini_pekka: {
+    reactiveOffset: { x: 0, y: 0 },
+    investPos1: { x: 199, y: 0 }
+    investPos2: { x: 201, y: 0 }
+  },
+  minions: {
+    reactiveOffset: { x: 0, y: 75 },
+    investPos1: { x: 199, y: 0 }
+    investPos2: { x: 201, y: 0 }
+  },
+  fireball: {
+    reactiveOffset: { x: 0, y: 0 },
+    investPos1: { x: 75, y: 100 }
+    investPos2: { x: 325, y: 100 }
+  },
+  arrows: {
+    reactiveOffset: { x: 0, y: 0 },
+    investPos1: { x: 75, y: 100 }
+    investPos2: { x: 325, y: 100 }
+  }
+};
+
   
 // Card selected variables
 let selectedCardIndex = null; // 0–3, or null if none selected
@@ -102,30 +145,78 @@ function canPlaceCard(card, x, y, team) {
   return true;
 }
 
-function enemyPlayCard() {
-    const handIndex = Math.floor(Math.random() * enemyHand.length);
-    const cardIndex = enemyHand[handIndex];
-    const card = cards[cardIndex];
+function nearestEnemyOnOurSide(team) {
+  const candidates = units.filter(u =>
+    u.team !== team &&
+    sameSide(u, { y: team === "enemy" ? 100 : 500 })
+  );
 
-    if (enemyElixir < card.cost) return;
+  if (candidates.length === 0) return null;
 
-    enemyElixir -= card.cost;
-
-    if (card.type === "spell") {
-        // target a random player unit
-        let targetUnit = units.filter(u => u.team === "player")[Math.floor(Math.random() * units.filter(u => u.team === "player").length)];
-        if (targetUnit) {
-            castSpell(card, targetUnit.x, targetUnit.y, "enemy");
-        }
-    } else {
-        // spawn units as before
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * 275;
-        if (canPlaceCard(card, x, y, "enemy")) spawnEnemyUnit(card, x, y);
-    }
-
-    cycleCard(enemyHand, enemyDeck, handIndex);
+  return candidates.reduce((a, b) =>
+    distanceToEnemySide(a, team) < distanceToEnemySide(b, team) ? a : b
+  );
 }
+
+function distanceToEnemySide(unit, team) {
+  return team === "enemy" ? unit.y : canvas.height - unit.y;
+}
+
+function resolveEnemyPlacement(card, team) {
+  const enemy = nearestEnemyOnOurSide(team);
+  const ai = cardAI[card.id];
+
+  // 1️⃣ Reactive placement
+  if (enemy && ai?.reactiveOffset) {
+    return {
+      x: enemy.x + ai.reactiveOffset.x,
+      y: enemy.y + ai.reactiveOffset.y
+    };
+  }
+
+  // 2️⃣ Investing move at 10 elixir
+  if (!enemy && enemyElixir === 10 && ai?.investPos) {
+    if (Math.random() > 0.5) {
+      return ai.investPos1;
+    } else {
+      return ai.investPos2;
+    }
+  }
+
+  // 3️⃣ Otherwise do nothing
+  return null;
+}
+  
+function enemyPlayCard() {
+  // 1️⃣ Randomly select a playable card
+  const playable = enemyHand
+    .map(i => cards[i])
+    .filter(c => enemyElixir >= c.cost);
+
+  if (playable.length === 0) return;
+
+  const card = playable[Math.floor(Math.random() * playable.length)];
+  const handIndex = enemyHand.indexOf(cards.indexOf(card));
+
+  // 2️⃣ Determine placement
+  const pos = resolveEnemyPlacement(card, "enemy");
+
+  // 3️⃣ Do nothing if no valid placement
+  if (!pos) return;
+
+  enemyElixir -= card.cost;
+
+  if (card.type === "spell") {
+    castSpell(card, pos.x, pos.y, "enemy");
+  } else {
+    if (canPlaceCard(card, pos.x, pos.y, "enemy")) {
+      spawnEnemyUnit(card, pos.x, pos.y);
+    }
+  }
+
+  cycleCard(enemyHand, enemyDeck, handIndex);
+}
+
 
 
 function spawnEnemyUnit(card, x, y) {
