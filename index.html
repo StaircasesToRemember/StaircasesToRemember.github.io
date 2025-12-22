@@ -206,7 +206,7 @@ function resolveEnemyPlacement(card, team) {
   }
 
   // 2️⃣ Investing move at 10 elixir
-  if (!threat && enemyElixir === 10) {
+  if (!threat && enemyElixir >= 9) {
     return Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
   }
 
@@ -662,12 +662,10 @@ class Unit {
     }
     
     this.target = null;
-    this.currentAttackCooldown = 0;
+    this.currentAttackCooldown = 10;
   }
 
   update() {
-    if (this.currentAttackCooldown > 0) this.currentAttackCooldown--;
-
     if (this.target && this.target.hp <= 0) this.target = null;
 
     let closest = null;
@@ -707,6 +705,7 @@ class Unit {
     const d = distance(this, this.target);
 
     if (d <= this.attackRange) {
+      this.currentAttackCooldown--;
       if (this.currentAttackCooldown === 0) {
         this.target.hp -= this.attackDamage;
         this.currentAttackCooldown = this.attackCooldown;
@@ -715,6 +714,8 @@ class Unit {
     }
 
     // Move logic
+    // Reset cooldown
+    this.currentAttackCooldown = this.attackCooldown;
     let moveX, moveY;
     if (!this.isAir && !sameSide(this, this.target)) {
       const bridge = this.closestBridge();
