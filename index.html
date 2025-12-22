@@ -147,7 +147,7 @@ function canPlaceCard(card, x, y, team) {
 function nearestEnemyOnOurSide(team) {
   const candidates = units.filter(u => {
     if (u.team === team) return false;
-    return team === "enemy" ? u.y < RIVER_TOP : u.y > RIVER_BOTTOM;
+    return team === "enemy" ? u.y < RIVER_TOP - 5 : u.y > RIVER_BOTTOM + 5;
   });
 
   if (candidates.length === 0) return null;
