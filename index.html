@@ -388,8 +388,14 @@ class Tower {
     this.hp = hp;
     this.maxHp = hp;
     this.team = team;
-    this.isKing = isKing; // true if this is the king tower
-    this.target = null;
+    this.isKing = isKing;
+
+    this.range = 175;
+    this.damage = 140;
+    this.attackCooldown = 60;
+    this.cooldown = 0;
+
+    this.target = null; // 👈 sticky target
   }
 
   draw(ctx) {
@@ -400,35 +406,44 @@ class Tower {
     ctx.fillRect(this.x - 25, this.y - 35, 50 * (this.hp / this.maxHp), 5);
   }
 
-  update() {
-    // King towers only attack if damaged
-    if (this.isKing && this.hp === this.maxHp) return;
+update() {
+  if (this.hp <= 0) return;
 
-    // Tower attack logic here (target nearest enemy unit, deal ranged damage)
-    const enemyUnits = units.filter(u => u.team !== this.team);
-    if (enemyUnits.length === 0) {
-      this.target = null;
-      return;
-    }
+  // King tower rule (only attacks after damaged)
+  if (this.isKing && this.hp === this.maxHp) return;
 
-    // Find closest enemy
-    let closest = null;
-    let closestDist = Infinity;
-    for (const u of enemyUnits) {
-      const d = Math.hypot(u.x - this.x, u.y - this.y);
-      if (d < closestDist) {
-        closest = u;
-        closestDist = d;
-      }
-    }
+  // If we have a target, check if it's still valid
+  if (this.target) {
+    const d = distance(this, this.target);
 
-    if (closest && closestDist <= 175) { // attack range
-      this.target = closest;
-      closest.hp -= 3; // tower damage
-    } else {
-      this.target = null;
+    if (this.target.hp <= 0 || d > this.range) {
+      this.target = null; // ❌ drop target
     }
   }
+
+  // Acquire target ONLY if none
+  if (!this.target) {
+    const enemies = units.filter(u =>
+      u.team !== this.team &&
+      distance(this, u) <= this.range
+    );
+
+    if (enemies.length > 0) {
+      this.target = enemies[0]; // or closest if you want
+    }
+  }
+
+  // Attack if possible
+  if (this.target) {
+    this.cooldown--;
+
+    if (this.cooldown <= 0) {
+      this.target.hp -= this.damage;
+      this.cooldown = this.attackCooldown;
+    }
+  }
+}
+
 }
 
 // Create towers
