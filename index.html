@@ -194,10 +194,12 @@ function lowestMaxHpEnemy(team) {
 
 function resolveEnemyPlacement(card, team) {
   const ai = cardAI[card.id];
-  if (card.type && card.type === "spell") {
-    const threat = lowestMaxHpEnemy(team);
+  let threat = null;
+
+  if (card.type === "spell") {
+    threat = lowestMaxHpEnemy(team);
   } else {
-    const threat = nearestEnemyOnOurSide(team);
+    threat = nearestEnemyOnOurSide(team);
   }
 
   // 1️⃣ Reactive placement
@@ -210,16 +212,13 @@ function resolveEnemyPlacement(card, team) {
 
   // 2️⃣ Investing move at 10 elixir
   if (!threat && enemyElixir === 10) {
-    if (Math.random() > 0.5) {
-      return ai.investPos1;
-    } else {
-      return ai.investPos2;
-    }
+    return Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
   }
 
   // 3️⃣ Otherwise do nothing
   return null;
 }
+
   
 function enemyPlayCard() {
   // 1️⃣ Randomly select a playable card
