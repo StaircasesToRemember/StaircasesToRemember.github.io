@@ -104,13 +104,9 @@ const cardAI = {
   },
   fireball: {
     reactiveOffset: { x: 25, y: 0 },
-    investPos1: { x: 199, y: 550 },
-    investPos2: { x: 201, y: 550 }
   },
   arrows: {
     reactiveOffset: { x: 25, y: 0 },
-    investPos1: { x: 199, y: 550 },
-    investPos2: { x: 201, y: 550 }
   }
 };
 
@@ -206,7 +202,7 @@ function resolveEnemyPlacement(card, team) {
   }
 
   // 2️⃣ Investing move at 10 elixir
-  if (!threat && enemyElixir >= 9) {
+  if (!threat && enemyElixir >= 9 && ai.investPos1) {
     return Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
   }
 
