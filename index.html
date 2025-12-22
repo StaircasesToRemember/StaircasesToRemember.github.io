@@ -154,15 +154,18 @@ function spawnEnemyUnit(card, x, y) {
 function castSpell(card, x, y, team) {
     if (card.name === "Fireball") {
         for (const u of units) {
-            // only affect the enemy team
             if (u.team === team) continue;
-
             const d = distance({ x, y }, u);
-            if (d <= card.radius) {
-                u.hp -= card.damage;
-            }
+            if (d <= card.radius) u.hp -= card.damage;
         }
-        // Optional: visual effect
+
+        // damage towers too
+        const targetTowers = team === "player" ? enemyTowers : playerTowers;
+        for (const t of targetTowers) {
+            const d = distance({ x, y }, t);
+            if (d <= card.radius) t.hp -= card.damage;
+        }
+
         effects.push({ x, y, radius: card.radius, timer: 30, type: "fireball" });
     }
 }
