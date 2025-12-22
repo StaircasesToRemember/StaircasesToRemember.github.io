@@ -161,20 +161,55 @@ function distanceToEnemySide(unit, team) {
   return team === "enemy" ? unit.y : canvas.height - unit.y;
 }
 
+function lowestMaxHpEnemy(team) {
+  const enemies = [];
+
+  // enemy troops
+  for (const u of units) {
+    if (u.team !== team && u.hp > 0) {
+      enemies.push(u);
+    }
+  }
+
+  // enemy towers
+  const towers = team === "player" ? enemyTowers : playerTowers;
+  for (const t of towers) {
+    if (t.hp > 0) {
+      enemies.push(t);
+    }
+  }
+
+  if (enemies.length === 0) return null;
+
+  let lowest = enemies[0];
+
+  for (const e of enemies) {
+    if (e.maxHp < lowest.maxHp) {
+      lowest = e;
+    }
+  }
+
+  return lowest;
+}
+
 function resolveEnemyPlacement(card, team) {
-  const enemy = nearestEnemyOnOurSide(team);
   const ai = cardAI[card.id];
+  if (card.type && card.type == "spell") {
+    const threat = lowestMaxHpEnemy(team);
+  } else {
+    const threat = nearestEnemyOnOurSide(team);
+  }
 
   // 1️⃣ Reactive placement
-  if (enemy && ai?.reactiveOffset) {
+  if (threat && ai?.reactiveOffset) {
     return {
-      x: enemy.x + ai.reactiveOffset.x,
-      y: Math.max(enemy.y + ai.reactiveOffset.y, 0)
+      x: threat.x + ai.reactiveOffset.x,
+      y: Math.max(threat.y + ai.reactiveOffset.y, 0)
     };
   }
 
   // 2️⃣ Investing move at 10 elixir
-  if (!enemy && enemyElixir === 10) {
+  if (!threat && enemyElixir === 10) {
     if (Math.random() > 0.5) {
       return ai.investPos1;
     } else {
