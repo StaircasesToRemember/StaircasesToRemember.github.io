@@ -5,6 +5,7 @@
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
 <script>
+let timeLeft = 180; // 3 minutes in seconds
 const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
 const units = [];
@@ -328,7 +329,16 @@ function drawEffects() {
     }
 }
 
+function drawTimer() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const text = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
+  ctx.fillStyle = "magenta";
+  ctx.font = "24px Arial";
+  ctx.textAlign = "right";
+  ctx.fillText(text, canvas.width - 20, 30);
+}
 
 function drawUnits() {
   for (const u of units) {
@@ -442,7 +452,7 @@ function drawHand() {
     ctx.strokeRect(x, y, cardWidth, cardHeight);
   }
 }
-  
+
 // In drawArena or a separate tower management function:
 function updateTowers() {
   // Player towers
@@ -468,6 +478,7 @@ function updateTowers() {
       }
     }
     if (t.isKing && t.hp <= 0) {
+      alert("Enemy wins!");
       location.reload(); // simple game over reset
     }
   }
@@ -491,7 +502,9 @@ function updateTowers() {
       enemyTowers.splice(i, 1);
     }
     if (t.isKing && t.hp <= 0) {
+      alert("Player wins!");
       location.reload(); // simple game over reset
+      
     }
   }
 }
@@ -560,9 +573,22 @@ update() {
     }
   }
 }
-
 }
 
+function endGameByTowers() {
+  const playerTowerCount = playerTowers.length;
+  const enemyTowerCount = enemyTowers.length;
+
+  let message;
+  if (playerTowerCount > enemyTowerCount) message = "Player wins!";
+  else if (enemyTowerCount > playerTowerCount) message = "Enemy wins!";
+  else message = "Draw!";
+
+  alert(message);
+  location.reload(); // simple reset
+}
+
+  
 // Create towers
 const playerTowers = [
   new Tower(75, 500, 3000, "player"),
@@ -784,6 +810,14 @@ class Unit {
 }
 }
 
+setInterval(() => {
+  if (timeLeft > 0) {
+    timeLeft--;
+  } else {
+    endGameByTowers();
+  }
+}, 1000);
+  
 // Function to generate elixir
 function generateElixir() {
   if (playerElixir < maxElixir) playerElixir += 1;
@@ -823,12 +857,16 @@ function drawArena() {
       units.splice(i, 1);
     }
   }
-
+  
+  // Draw effects
   drawEffects()
   
   // Clear margin
   ctx.fillStyle = "white";
   ctx.fillRect(0, 600, canvas.width, 650);
+
+  // Draw timer
+  drawTimer();
   
   // Draw elixir bar
   drawElixirBar();
