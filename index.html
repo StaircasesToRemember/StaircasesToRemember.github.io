@@ -143,7 +143,7 @@ function sideHasPocket(team, side) {
 
 function isInPocket(x, y, team) {
   const midX = canvas.width / 2;
-  const pocketDepth = 150;
+  const pocketDepth = 75;
 
   // Which side of arena?
   const side = x < midX ? "left" : "right";
@@ -394,7 +394,7 @@ function drawPockets() {
   ctx.lineWidth = 3;
 
   const midX = canvas.width / 2;
-  const pocketDepth = 150;
+  const pocketDepth = 75;
 
   // PLAYER pockets (enemy tower destroyed)
   if (sideHasPocket("player", "left")) {
