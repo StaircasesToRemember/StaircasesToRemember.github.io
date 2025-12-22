@@ -169,7 +169,7 @@ function resolveEnemyPlacement(card, team) {
   if (enemy && ai?.reactiveOffset) {
     return {
       x: enemy.x + ai.reactiveOffset.x,
-      y: enemy.y + ai.reactiveOffset.y
+      y: Math.max(enemy.y + ai.reactiveOffset.y, 0)
     };
   }
 
