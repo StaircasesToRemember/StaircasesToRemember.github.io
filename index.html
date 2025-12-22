@@ -389,6 +389,52 @@ function getEnemyUnits(unit) {
   return units.filter(u => u.team !== unit.team);
 }
 
+function drawPockets() {
+  ctx.strokeStyle = "magenta";
+  ctx.lineWidth = 3;
+
+  const midX = canvas.width / 2;
+  const pocketDepth = 150;
+
+  // PLAYER pockets (enemy tower destroyed)
+  if (sideHasPocket("player", "left")) {
+    ctx.strokeRect(
+      0,
+      RIVER_TOP - pocketDepth,
+      midX,
+      pocketDepth
+    );
+  }
+
+  if (sideHasPocket("player", "right")) {
+    ctx.strokeRect(
+      midX,
+      RIVER_TOP - pocketDepth,
+      midX,
+      pocketDepth
+    );
+  }
+
+  // ENEMY pockets (player tower destroyed)
+  if (sideHasPocket("enemy", "left")) {
+    ctx.strokeRect(
+      0,
+      RIVER_BOTTOM,
+      midX,
+      pocketDepth
+    );
+  }
+
+  if (sideHasPocket("enemy", "right")) {
+    ctx.strokeRect(
+      midX,
+      RIVER_BOTTOM,
+      midX,
+      pocketDepth
+    );
+  }
+}
+
   
 // Draw elixir bar
 function drawElixirBar() {
@@ -904,6 +950,9 @@ function drawArena() {
   for (let x of bridgeXs) {
     ctx.fillRect(x - bridgeWidth / 2, 275 - (bridgeHeight - 50) / 2, bridgeWidth, bridgeHeight);
   }
+
+  // Draw pockets
+   drawPockets();
 
   // Update and draw towers
   updateTowers();
