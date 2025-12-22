@@ -200,7 +200,7 @@ function resolveEnemyPlacement(card, team) {
   // 1️⃣ Reactive placement
   if (threat && ai?.reactiveOffset && enemyElixir >= playerElixir) {
     return {
-      x: threat.x + Math.floor((Math.random() - 0.5) * ai.reactiveOffset.x),
+      x: threat.x + Math.floor((Math.random() * 2 - 1) * ai.reactiveOffset.x),
       y: Math.max(threat.y + ai.reactiveOffset.y, 0)
     };
   }
