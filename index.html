@@ -6,7 +6,9 @@
 
 <script>
 let timeLeft = 180; // 3 minutes in seconds
-const canvas = document.getElementById("arena");
+let normalInterval = 2800; // 1 elixir every 2.8s
+let doubleElixir = false;
+let elixirIntervalId;const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
 const units = [];
 const bridges = [
@@ -332,12 +334,15 @@ function drawEffects() {
 function drawTimer() {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
-  const text = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-
   ctx.fillStyle = "magenta";
   ctx.font = "24px Arial";
   ctx.textAlign = "right";
-  ctx.fillText(text, canvas.width - 20, 30);
+  ctx.fillText(`${minutes}:${seconds.toString().padStart(2,'0')}`, canvas.width - 20, 30);
+
+  if (doubleElixir) {
+    ctx.font = "20px Arial";
+    ctx.fillText("x2", canvas.width - 60, 60);
+  }
 }
 
 function drawUnits() {
@@ -478,7 +483,7 @@ function updateTowers() {
       }
     }
     if (t.isKing && t.hp <= 0) {
-      alert("Enemy wins!");
+      alert("You lose!");
       location.reload(); // simple game over reset
     }
   }
@@ -502,7 +507,7 @@ function updateTowers() {
       enemyTowers.splice(i, 1);
     }
     if (t.isKing && t.hp <= 0) {
-      alert("Player wins!");
+      alert("You win!");
       location.reload(); // simple game over reset
       
     }
@@ -575,13 +580,19 @@ update() {
 }
 }
 
+function startElixirInterval() {
+  const interval = doubleElixir ? normalInterval / 2 : normalInterval;
+  clearInterval(elixirIntervalId); // clear previous interval
+  elixirIntervalId = setInterval(generateElixir, interval);
+}
+  
 function endGameByTowers() {
   const playerTowerCount = playerTowers.length;
   const enemyTowerCount = enemyTowers.length;
 
   let message;
-  if (playerTowerCount > enemyTowerCount) message = "Player wins!";
-  else if (enemyTowerCount > playerTowerCount) message = "Enemy wins!";
+  if (playerTowerCount > enemyTowerCount) message = "You win!";
+  else if (enemyTowerCount > playerTowerCount) message = "You lose!";
   else message = "Draw!";
 
   alert(message);
@@ -809,14 +820,6 @@ class Unit {
     );
 }
 }
-
-setInterval(() => {
-  if (timeLeft > 0) {
-    timeLeft--;
-  } else {
-    endGameByTowers();
-  }
-}, 1000);
   
 // Function to generate elixir
 function generateElixir() {
@@ -882,10 +885,23 @@ function drawArena() {
 
 drawArena();
   
-// Generate 1 elixir every 2.8 seconds
-setInterval(generateElixir, 2800);
+// Generate elixir
+setInterval(() => {
+  if (timeLeft > 0) {
+    timeLeft--;
 
-// Enemey AI makes decisions
+    if (timeLeft === 59) {
+      doubleElixir = true;
+      startElixirInterval(); // restart interval at half the time
+    }
+
+  } else {
+    endGameByTowers();
+  }
+}, 1000);
+
+
+// Enemy AI makes decisions
 setInterval(enemyPlayCard, 1000);
   
 // Event listener
