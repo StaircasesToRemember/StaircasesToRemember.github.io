@@ -30,11 +30,12 @@ const cards = [
   { name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY }
+  { name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 650}
 ];
 
-playerDeck = [0, 1, 2, 3, 4, 5]; // indices into cards
-enemyDeck = [0, 1, 2, 3, 4, 5]; // indices into cards
+playerDeck = [0, 1, 2, 3, 4, 5, 6]; // indices into cards
+enemyDeck = [0, 1, 2, 3, 4, 5, 6]; // indices into cards
   
 // Create a fresh shuffled deck for the player
 function initializeDeck(deckArray) {
@@ -100,29 +101,30 @@ function canPlaceCard(card, x, y, team) {
 }
 
 function enemyPlayCard() {
-  // 1. Pick a random card from hand
-  const handIndex = Math.floor(Math.random() * enemyHand.length);
-  const cardIndex = enemyHand[handIndex];  
-  const card = cards[cardIndex];
+    const handIndex = Math.floor(Math.random() * enemyHand.length);
+    const cardIndex = enemyHand[handIndex];
+    const card = cards[cardIndex];
 
-  // 2. Check elixir
-  if (enemyElixir < card.cost || enemyElixir < 7) return;
+    if (enemyElixir < card.cost) return;
 
-  // 3. Choose placement position
-  let x = Math.random() * (canvas.width);
-  let y = Math.random() * 275; // enemy side only
+    enemyElixir -= card.cost;
 
-  // 4. Placement legality
-  if (!canPlaceCard(card, x, y, "enemy")) return;
+    if (card.type === "spell") {
+        // target a random player unit
+        let targetUnit = units.filter(u => u.team === "player")[Math.floor(Math.random() * units.filter(u => u.team === "player").length)];
+        if (targetUnit) {
+            castSpell(card, targetUnit.x, targetUnit.y, "enemy");
+        }
+    } else {
+        // spawn units as before
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * 275;
+        if (canPlaceCard(card, x, y, "enemy")) spawnEnemyUnit(card, x, y);
+    }
 
-  // 5. Spend elixir
-  enemyElixir -= card.cost;
-
-  // 6. Spawn units
-  spawnEnemyUnit(card, x, y);
-  cycleCard(enemyHand, enemyDeck, handIndex);
-  console.log("Enemy hand:", enemyHand);
+    cycleEnemyCard(handIndex);
 }
+
 
 function spawnEnemyUnit(card, x, y) {
   if (card.name === "Knight") {
@@ -147,7 +149,37 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Mini Pekka"));
   } 
 }
-  
+
+function castSpell(card, x, y, team) {
+    if (card.name === "Fireball") {
+        for (const u of units) {
+            // only affect the enemy team
+            if (u.team === team) continue;
+
+            const d = distance({ x, y }, u);
+            if (d <= card.radius) {
+                u.hp -= card.damage;
+            }
+        }
+        // Optional: visual effect
+        effects.push({ x, y, radius: card.radius, timer: 30, type: "fireball" });
+
+function drawEffects() {
+    for (let i = effects.length - 1; i >= 0; i--) {
+        const e = effects[i];
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+
+        if (e.type === "fireball") ctx.fillStyle = `rgba(255,100,0,${e.timer / 30})`;
+      
+        ctx.fill();
+        ctx.closePath();
+
+        e.timer--;
+        if (e.timer <= 0) effects.splice(i, 1);
+    }
+}
+
 function drawUnits() {
   for (const u of units) {
     u.draw(ctx);
@@ -622,6 +654,9 @@ function drawArena() {
       units.splice(i, 1);
     }
   }
+
+  drawEffects()
+  
   // Clear margin
   ctx.fillStyle = "white";
   ctx.fillRect(0, 600, canvas.width, 650);
@@ -670,7 +705,7 @@ canvas.addEventListener("click", function (e) {
   if (selectedCardIndex !== null && mouseY <= ARENA_HEIGHT) {
     const cardId = playerHand[selectedCardIndex];
     const card = cards[cardId];
-    
+        
     if (!canPlaceCard(card, mouseX, mouseY, "player")) {
       return;
     }
@@ -683,8 +718,9 @@ canvas.addEventListener("click", function (e) {
 
     playerElixir -= cost;
 
-    // Spawn cards
-    if (card.name === "Knight") {
+      if (card.type === "spell") {
+      castSpell(card, mouseX, mouseY, "player");
+    } else if (card.name === "Knight") {
       units.push(new Unit(mouseX, mouseY, "player", "Knight"));
     } else if (card.name === "Archers") {
       units.push(new Unit(mouseX - 15, mouseY, "player", "Archer"));
