@@ -467,6 +467,9 @@ function updateTowers() {
 
     if (!t.isKing && t.hp <= 0) {
       playerTowers.splice(i, 1);
+      for (let i = playerTowers.length - 1; i >= 0; i--) {
+        playerTowers[i].hp--;
+      }
     }
     if (t.isKing && t.hp <= 0) {
       alert("Enemy wins!");
