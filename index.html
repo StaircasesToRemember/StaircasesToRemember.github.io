@@ -181,7 +181,7 @@ function drawEffects() {
         ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
 
         if (e.type === "fireball") ctx.fillStyle = `rgba(255,100,0,${e.timer / 30})`;
-        else if (e.type === "arrows") ctx.fillStyle = `rgba(255,0,0,0.2)`;
+        else if (e.type === "arrows") ctx.fillStyle = `rgba(125,0,0,0.2)`;
       
         ctx.fill();
         ctx.closePath();
@@ -280,6 +280,7 @@ function drawHand() {
     if (card.name === "Minions") ctx.fillStyle = "cornflowerblue";
     if (card.name === "Mini Pekka") ctx.fillStyle = "navy";
     if (card.name === "Fireball") ctx.fillStyle = "red";
+    if (card.name === "Arrows") ctx.fillStyle = "Maroon";
 
     ctx.fill();
     ctx.closePath();
