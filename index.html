@@ -145,10 +145,10 @@ function canPlaceCard(card, x, y, team) {
 }
 
 function nearestEnemyOnOurSide(team) {
-  const candidates = units.filter(u =>
-    u.team !== team &&
-    sameSide(u, { y: team === "enemy" ? 100 : 500 })
-  );
+  const candidates = units.filter(u => {
+    if (u.team === team) return false;
+    return team === "enemy" ? u.y < RIVER_TOP : u.y > RIVER_BOTTOM;
+  });
 
   if (candidates.length === 0) return null;
 
@@ -174,7 +174,7 @@ function resolveEnemyPlacement(card, team) {
   }
 
   // 2️⃣ Investing move at 10 elixir
-  if (!enemy && enemyElixir === 10 && ai?.investPos) {
+  if (!enemy && enemyElixir === 10) {
     if (Math.random() > 0.5) {
       return ai.investPos1;
     } else {
@@ -195,7 +195,8 @@ function enemyPlayCard() {
   if (playable.length === 0) return;
 
   const card = playable[Math.floor(Math.random() * playable.length)];
-  const handIndex = enemyHand.indexOf(cards.indexOf(card));
+  const cardIndex = cards.indexOf(card);
+  const handIndex = enemyHand.indexOf(cardIndex);
 
   // 2️⃣ Determine placement
   const pos = resolveEnemyPlacement(card, "enemy");
