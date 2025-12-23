@@ -37,7 +37,7 @@ const cards = [
   { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 650 },
   { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 325 },
   { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "skeleton_army", name: "Skeletons Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
+  { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
   
 playerDeck = [0, 8, 2, 3, 4, 5, 6, 7]; // indices into cards
@@ -589,6 +589,7 @@ function drawHand() {
     if (card.name === "Fireball") ctx.fillStyle = "red";
     if (card.name === "Arrows") ctx.fillStyle = "maroon";
     if (card.name === "Skeletons") ctx.fillStyle = "floralwhite";
+    if (card.name === "Skeleton Army") ctx.fillStyle = "floralwhite";
 
     ctx.fill();
     ctx.closePath();
@@ -1158,6 +1159,23 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX - 15, mouseY + 25, "player", "Skeleton"));
       units.push(new Unit(mouseX + 15, mouseY + 25, "player", "Skeleton"));
       units.push(new Unit(mouseX, mouseY, "player", "Skeleton"));
+    }   else if (card.name === "Skeleton Army") {
+      units.push(new Unit(x - 30, y - 30, "player", "Skeleton"));
+      units.push(new Unit(x - 30, y - 10, "player", "Skeleton"));
+      units.push(new Unit(x - 30, y + 10, "player", "Skeleton"));
+      units.push(new Unit(x - 30, y + 30, "player", "Skeleton"));
+      units.push(new Unit(x - 10, y - 30, "player", "Skeleton"));
+      units.push(new Unit(x - 10, y - 10, "player", "Skeleton"));
+      units.push(new Unit(x - 10, y + 10, "player", "Skeleton"));
+      units.push(new Unit(x - 10, y + 30, "player", "Skeleton"));
+      units.push(new Unit(x + 10, y - 30, "player", "Skeleton"));
+      units.push(new Unit(x + 10, y - 10, "player", "Skeleton"));
+      units.push(new Unit(x + 10, y + 10, "player", "Skeleton"));
+      units.push(new Unit(x + 10, y + 30, "player", "Skeleton"));
+      units.push(new Unit(x + 30, y - 30, "player", "Skeleton"));
+      units.push(new Unit(x + 30, y - 10, "player", "Skeleton"));
+      units.push(new Unit(x + 30, y + 10, "player", "Skeleton"));
+      units.push(new Unit(x + 30, y + 30, "player", "Skeleton"));
     }
 
     cycleCard(playerHand, playerDeck, selectedCardIndex);
