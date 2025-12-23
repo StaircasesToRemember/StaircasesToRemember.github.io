@@ -721,7 +721,7 @@ function endGameByTowers() {
   let message;
   if (playerTowerCount > enemyTowerCount) message = "You win!";
   else if (enemyTowerCount > playerTowerCount) message = "You lose!";
-  else message = "Draw!";
+  else return;
 
   alert(message);
   location.reload(); // simple reset
