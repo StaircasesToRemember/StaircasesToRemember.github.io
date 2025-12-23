@@ -882,102 +882,119 @@ class Unit {
   }
 
 update() {
-    // Drop target if dead
-    if (this.target && this.target.hp <= 0) {
-        this.target = null;
+
+  // Drop target if dead
+  if (this.target && this.target.hp <= 0) {
+    this.target = null;
+  }
+
+  /* ======================================================
+     ANTI-CROWDING (ALWAYS APPLIES)
+     Air ↔ Air only, Ground ↔ Ground only
+  ====================================================== */
+  let sepX = 0;
+  let sepY = 0;
+  const separationRadius = this.r;
+
+  for (const other of units) {
+    if (other === this) continue;
+
+    // 🚫 Separate air & ground layers
+    if (this.isAir !== other.isAir) continue;
+
+    const dist = distance(this, other);
+    if (dist > 0 && dist < separationRadius) {
+      const repulse = (separationRadius - dist) / separationRadius;
+      sepX -= ((other.x - this.x) / dist) * repulse;
+      sepY -= ((other.y - this.y) / dist) * repulse;
     }
+  }
 
-    // --- Anti-crowding: always apply ---
-    let sepX = 0;
-    let sepY = 0;
-    const separationRadius = this.r;
+  // Apply anti-crowding movement
+  const sepMag = Math.hypot(sepX, sepY);
+  if (sepMag > 0) {
+    this.x += (sepX / sepMag) * this.speed;
+    this.y += (sepY / sepMag) * this.speed;
+  }
 
-    for (const other of units) {
-        if (other === this) continue;
-        const dist = distance(this, other);
-        if (dist < separationRadius && dist > 0) {
-            const repulse = (separationRadius - dist) / separationRadius;
-            sepX -= ((other.x - this.x) / dist) * repulse;
-            sepY -= ((other.y - this.y) / dist) * repulse;
-        }
+  /* ======================================================
+     ATTACKING (STICKY)
+  ====================================================== */
+  if (this.target) {
+    const d = distance(this, this.target);
+
+    if (d <= this.attackRange) {
+      if (this.currentAttackCooldown > 0) {
+        this.currentAttackCooldown--;
+      }
+
+      if (this.currentAttackCooldown === 0) {
+        this.target.hp -= this.attackDamage;
+        this.currentAttackCooldown = this.attackCooldown;
+      }
+
+      // No forward movement while attacking
+      return;
     }
+  }
 
-    // Apply anti-crowding movement immediately
-    const sepMag = Math.hypot(sepX, sepY);
-    if (sepMag > 0) {
-        this.x += (sepX / sepMag) * this.speed;
-        this.y += (sepY / sepMag) * this.speed;
+  this.currentAttackCooldown = this.attackCooldown;
+
+  /* ======================================================
+     TARGET ACQUISITION
+  ====================================================== */
+  let closest = null;
+  let closestDist = Infinity;
+
+  // Enemy units
+  if (!this.targetsOnlyBuildings) {
+    for (const u of units) {
+      if (u.team === this.team) continue;
+      if (u.isAir && !this.attacksAir) continue;
+
+      const d = distance(this, u);
+      if (d < closestDist && d <= this.sightRange) {
+        closest = u;
+        closestDist = d;
+      }
     }
+  }
 
-    // 🔒 Sticky attacking:
-    if (this.target) {
-        const d = distance(this, this.target);
-        if (d <= this.attackRange) {
-            if (this.currentAttackCooldown > 0) this.currentAttackCooldown--;
-            if (this.currentAttackCooldown === 0) {
-                this.target.hp -= this.attackDamage;
-                this.currentAttackCooldown = this.attackCooldown;
-            }
-            // Do NOT move toward target while attacking, but anti-crowding already applied
-            return;
-        }
+  // Enemy towers
+  const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
+  for (const t of enemyTowersList) {
+    const d = distance(this, t);
+    if (d < closestDist) {
+      closest = t;
+      closestDist = d;
     }
+  }
 
-    // Reset cooldown if not attacking
-    this.currentAttackCooldown = this.attackCooldown;
+  this.target = closest;
+  if (!this.target) return;
 
-    // 🧠 Target acquisition
-    let closest = null;
-    let closestDist = Infinity;
+  /* ======================================================
+     MOVEMENT TOWARD TARGET
+  ====================================================== */
+  let moveX, moveY;
 
-    if (!this.targetsOnlyBuildings) {
-        for (const u of units) {
-            if (u.team === this.team) continue;
-            if (u.isAir && !this.attacksAir) continue;
+  if (!this.isAir && !sameSide(this, this.target)) {
+    const bridge = this.closestBridge();
+    moveX = bridge.x;
+    moveY = bridge.y;
+  } else {
+    moveX = this.target.x;
+    moveY = this.target.y;
+  }
 
-            const d = distance(this, u);
-            if (d < closestDist && d <= this.sightRange) {
-                closest = u;
-                closestDist = d;
-            }
-        }
-    }
+  let dx = moveX - this.x;
+  let dy = moveY - this.y;
 
-    const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
-    for (const t of enemyTowersList) {
-        const d = distance(this, t);
-        if (d < closestDist) {
-            closest = t;
-            closestDist = d;
-        }
-    }
-
-    this.target = closest;
-    if (!this.target) return;
-
-    // Move toward target
-    let moveX, moveY;
-    if (!this.isAir && !sameSide(this, this.target)) {
-        const bridge = this.closestBridge();
-        moveX = bridge.x;
-        moveY = bridge.y;
-    } else {
-        moveX = this.target.x;
-        moveY = this.target.y;
-    }
-
-    let dx = moveX - this.x;
-    let dy = moveY - this.y;
-
-    // Apply anti-crowding effect again if desired (optional)
-    dx += sepX;
-    dy += sepY;
-
-    const mag = Math.hypot(dx, dy);
-    if (mag > 0) {
-        this.x += (dx / mag) * this.speed;
-        this.y += (dy / mag) * this.speed;
-    }
+  const mag = Math.hypot(dx, dy);
+  if (mag > 0) {
+    this.x += (dx / mag) * this.speed;
+    this.y += (dy / mag) * this.speed;
+  }
 }
 
   closestBridge() {
