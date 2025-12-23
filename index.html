@@ -953,6 +953,8 @@ update() {
   }
 
     // --- Anti-crowding ---
+    let dx = moveX - this.x;
+    let dy = moveY - this.y;
     const separationRadius = this.r; // distance to keep from other units
     let sepX = 0;
     let sepY = 0;
