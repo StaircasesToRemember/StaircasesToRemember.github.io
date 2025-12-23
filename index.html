@@ -952,13 +952,31 @@ update() {
     moveY = this.target.y;
   }
 
-  const dx = moveX - this.x;
-  const dy = moveY - this.y;
-  const mag = Math.hypot(dx, dy);
-  if (mag > 0) {
-    this.x += (dx / mag) * this.speed;
-    this.y += (dy / mag) * this.speed;
-  }
+    // --- Anti-crowding ---
+    const separationRadius = this.r * 2; // distance to keep from other units
+    let sepX = 0;
+    let sepY = 0;
+
+    for (const other of units) {
+        if (other === this) continue;
+        const dist = distance(this, other);
+        if (dist < separationRadius && dist > 0) {
+            const repulse = (separationRadius - dist) / separationRadius;
+            sepX -= ((other.x - this.x) / dist) * repulse;
+            sepY -= ((other.y - this.y) / dist) * repulse;
+        }
+    }
+
+    // Combine target movement + separation
+    dx += sepX * 0.5; // adjust strength
+    dy += sepY * 0.5;
+
+    // Normalize movement
+    const mag = Math.hypot(dx, dy);
+    if (mag > 0) {
+        this.x += (dx / mag) * this.speed;
+        this.y += (dy / mag) * this.speed;
+    }
 }
 
   closestBridge() {
