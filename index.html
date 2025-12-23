@@ -106,13 +106,38 @@ const cardAI = {
     investPos2: { x: 201, y: 0 }
   },
   fireball: {
-    reactiveOffset: { x: 25, y: 0 },
+    reactiveOffset: { x: 0, y: 0 },
   },
   arrows: {
-    reactiveOffset: { x: 25, y: 0 },
+    reactiveOffset: { x: 0, y: 0 },
   }
 };
 
+const SPELL_UNIT_VALUES = {
+  Fireball: {
+    Knight: 1,
+    Archer: 1.5,
+    Musketeer: 2,
+    Giant: 0.5,
+    Minion: 1,
+    "Mini Pekka": 1,
+
+    tower: 2,
+    kingTower: -5
+  },
+
+  Arrows: {
+    Knight: 0.5,
+    Archer: 1.5,
+    Musketeer: 1,
+    Giant: 0.25,
+    Minion: 1,
+    "Mini Pekka": 0.5,
+
+    tower: 1,
+    kingTower: -5
+  }
+};
   
 // Card selected variables
 let selectedCardIndex = null; // 0–3, or null if none selected
@@ -177,7 +202,7 @@ function canPlaceCard(card, x, y, team) {
   return true;
 }
 
-function nearestEnemyOnOurSide(team) {
+function furthestEnemyOnOurSide(team) {
   const candidates = units.filter(u => {
     if (u.team === team) return false;
     return team === "enemy" ? u.y < RIVER_TOP - 5 : u.y > RIVER_BOTTOM + 5;
@@ -186,7 +211,7 @@ function nearestEnemyOnOurSide(team) {
   if (candidates.length === 0) return null;
 
   return candidates.reduce((a, b) =>
-    distanceToEnemySide(a, team) < distanceToEnemySide(b, team) ? a : b
+    distanceToEnemySide(a, team) > distanceToEnemySide(b, team) ? a : b
   );
 }
 
@@ -194,60 +219,67 @@ function distanceToEnemySide(unit, team) {
   return team === "enemy" ? unit.y : canvas.height - unit.y;
 }
 
-function lowestMaxHpEnemy(team) {
-  const enemies = [];
+function spellUnitValue(card, target) {
+  const table = SPELL_UNIT_VALUES[card.name];
+  if (!table) return 0;
 
-  // enemy troops
-  for (const u of units) {
-    if (u.team !== team && u.hp > 0) {
-      enemies.push(u);
+  if (target instanceof Tower) {
+    return target.isKing
+      ? table.kingTower ?? 0
+      : table.tower ?? 0;
+  }
+
+  return table[target.type] ?? 0;
+}
+
+function bestSpellTarget(card, team) {
+  let bestTarget = null;
+  let bestValue = 0;
+
+  const enemies = [
+    ...units.filter(u => u.team !== team),
+    ...(team === "player" ? enemyTowers : playerTowers)
+  ];
+
+  for (const candidate of enemies) {
+    let value = 0;
+
+    for (const e of enemies) {
+      if (distance(candidate, e) <= card.radius) {
+        value += spellUnitValue(card, e);
+      }
+    }
+
+    if (value > bestValue) {
+      bestValue = value;
+      bestTarget = candidate;
     }
   }
 
-  if (enemies.length === 0) return null;
-
-  let lowest = enemies[0];
-
-  for (const e of enemies) {
-    if (e.maxHp < lowest.maxHp) {
-      lowest = e;
-    }
-  }
-  if (lowest.maxHp < 500) {
-    return lowest;
-  } else {
-    return null;
-  }
+  return bestValue > 0 ? bestTarget : null;
 }
 
 function resolveEnemyPlacement(card, team) {
   const ai = cardAI[card.id];
-  let threat = null;
 
-  if (card.type === "spell") {
-    threat = lowestMaxHpEnemy(team);
-  } else {
-    threat = nearestEnemyOnOurSide(team);
-  }
+  const threat = card.type === "spell"
+    ? bestSpellTarget(card, team)
+    : furthestEnemyOnOurSide(team);
 
-  // 1️⃣ Reactive placement
-  if (threat && ai?.reactiveOffset && enemyElixir >= playerElixir) {
+  if (threat && ai?.reactiveOffset) {
     return {
-      x: threat.x + Math.floor((Math.random() * 2 - 1) * ai.reactiveOffset.x),
+      x: threat.x + ai.reactiveOffset.x,
       y: Math.max(threat.y + ai.reactiveOffset.y, 0)
     };
   }
 
-  // 2️⃣ Investing move at 10 elixir
-  if (!threat && enemyElixir >= 9 && ai.investPos1) {
+  if (!threat && enemyElixir === 10) {
     return Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
   }
 
-  // 3️⃣ Otherwise do nothing
   return null;
 }
-
-  
+ 
 function enemyPlayCard() {
   // 1️⃣ Randomly select a playable card
   const playable = enemyHand
