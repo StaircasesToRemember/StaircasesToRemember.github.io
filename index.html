@@ -36,7 +36,8 @@ const cards = [
   { id: "mini_pekka", name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 650 },
   { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 325 },
-  { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY }
+  { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "skeleton_army", name: "Skeletons Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
   
 playerDeck = [0, 8, 2, 3, 4, 5, 6, 7]; // indices into cards
@@ -113,6 +114,11 @@ const cardAI = {
     reactiveOffset: { x: 0, y: 0 },
   },
   skeletons: {
+    reactiveOffset: { x: 25, y: 0 },
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
+  },
+  skeleton_army: {
     reactiveOffset: { x: 25, y: 0 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
@@ -343,10 +349,28 @@ function spawnEnemyUnit(card, x, y) {
   else if (card.name === "Mini Pekka") {
     units.push(new Unit(x, y, "enemy", "Mini Pekka"));
   } 
-    else if (card.name === "Skeletons") {
+  else if (card.name === "Skeletons") {
     units.push(new Unit(x - 15, y - 25, "enemy", "Skeleton"));
     units.push(new Unit(x + 15, y - 25, "enemy", "Skeleton"));
     units.push(new Unit(x, y, "enemy", "Skeleton"));
+  }
+  else if (card.name === "Skeleton Army") {
+    units.push(new Unit(x - 30, y - 30, "enemy", "Skeleton"));
+    units.push(new Unit(x - 30, y - 10, "enemy", "Skeleton"));
+    units.push(new Unit(x - 30, y + 10, "enemy", "Skeleton"));
+    units.push(new Unit(x - 30, y + 30, "enemy", "Skeleton"));
+    units.push(new Unit(x - 10, y - 30, "enemy", "Skeleton"));
+    units.push(new Unit(x - 10, y - 10, "enemy", "Skeleton"));
+    units.push(new Unit(x - 10, y + 10, "enemy", "Skeleton"));
+    units.push(new Unit(x - 10, y + 30, "enemy", "Skeleton"));
+    units.push(new Unit(x + 10, y - 30, "enemy", "Skeleton"));
+    units.push(new Unit(x + 10, y - 10, "enemy", "Skeleton"));
+    units.push(new Unit(x + 10, y + 10, "enemy", "Skeleton"));
+    units.push(new Unit(x + 10, y + 30, "enemy", "Skeleton"));
+    units.push(new Unit(x + 30, y - 30, "enemy", "Skeleton"));
+    units.push(new Unit(x + 30, y - 10, "enemy", "Skeleton"));
+    units.push(new Unit(x + 30, y + 10, "enemy", "Skeleton"));
+    units.push(new Unit(x + 30, y + 30, "enemy", "Skeleton"));
   }
 }
 
