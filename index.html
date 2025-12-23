@@ -409,6 +409,10 @@ function drawTimer() {
     ctx.font = "20px Arial";
     ctx.fillText("x2", canvas.width - 60, 60);
   }
+  if (timeLeft < 0) {
+    ctx.font = "20px Arial";
+    ctx.fillText("SUDDEN DEATH", canvas.width - 60, 100);
+  }
 }
 
 function drawUnits() {
