@@ -256,7 +256,7 @@ function bestSpellTarget(card, team) {
     }
   }
 
-  return bestValue > 0 ? bestTarget : null;
+  return bestValue > card.cost ? bestTarget : null;
 }
 
 function resolveEnemyPlacement(card, team) {
