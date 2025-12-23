@@ -1159,24 +1159,25 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX - 15, mouseY + 25, "player", "Skeleton"));
       units.push(new Unit(mouseX + 15, mouseY + 25, "player", "Skeleton"));
       units.push(new Unit(mouseX, mouseY, "player", "Skeleton"));
-    }   else if (card.name === "Skeleton Army") {
-      units.push(new Unit(x - 30, y - 30, "player", "Skeleton"));
-      units.push(new Unit(x - 30, y - 10, "player", "Skeleton"));
-      units.push(new Unit(x - 30, y + 10, "player", "Skeleton"));
-      units.push(new Unit(x - 30, y + 30, "player", "Skeleton"));
-      units.push(new Unit(x - 10, y - 30, "player", "Skeleton"));
-      units.push(new Unit(x - 10, y - 10, "player", "Skeleton"));
-      units.push(new Unit(x - 10, y + 10, "player", "Skeleton"));
-      units.push(new Unit(x - 10, y + 30, "player", "Skeleton"));
-      units.push(new Unit(x + 10, y - 30, "player", "Skeleton"));
-      units.push(new Unit(x + 10, y - 10, "player", "Skeleton"));
-      units.push(new Unit(x + 10, y + 10, "player", "Skeleton"));
-      units.push(new Unit(x + 10, y + 30, "player", "Skeleton"));
-      units.push(new Unit(x + 30, y - 30, "player", "Skeleton"));
-      units.push(new Unit(x + 30, y - 10, "player", "Skeleton"));
-      units.push(new Unit(x + 30, y + 10, "player", "Skeleton"));
-      units.push(new Unit(x + 30, y + 30, "player", "Skeleton"));
+    } else if (card.name === "Skeleton Army") {
+      units.push(new Unit(mouseX - 30, mouseY - 30, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 30, mouseY - 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 30, mouseY + 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 30, mouseY + 30, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 10, mouseY - 30, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 10, mouseY - 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 10, mouseY + 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 10, mouseY + 30, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 10, mouseY - 30, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 10, mouseY - 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 10, mouseY + 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 10, mouseY + 30, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 30, mouseY - 30, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 30, mouseY - 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 30, mouseY + 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 30, mouseY + 30, "player", "Skeleton"));
     }
+
 
     cycleCard(playerHand, playerDeck, selectedCardIndex);
     selectedCardIndex = null;
