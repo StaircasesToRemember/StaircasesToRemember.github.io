@@ -913,8 +913,8 @@ update() {
   // Apply anti-crowding movement
   const sepMag = Math.hypot(sepX, sepY);
   if (sepMag > 0) {
-    this.x += (sepX / sepMag) * this.speed;
-    this.y += (sepY / sepMag) * this.speed;
+    this.x += (sepX / sepMag) * this.speed * 0.25;
+    this.y += (sepY / sepMag) * this.speed * 0.25;
   }
 
   /* ======================================================
