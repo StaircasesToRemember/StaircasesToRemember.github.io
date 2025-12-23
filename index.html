@@ -970,8 +970,8 @@ update() {
     }
 
     // Combine target movement + separation
-    dx += sepX * 0.5; // adjust strength
-    dy += sepY * 0.5;
+    dx += sepX * 1; // adjust strength
+    dy += sepY * 1;
 
     // Normalize movement
     const mag = Math.hypot(dx, dy);
