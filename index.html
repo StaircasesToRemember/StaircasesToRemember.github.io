@@ -266,14 +266,14 @@ function resolveEnemyPlacement(card, team) {
     ? bestSpellTarget(card, team)
     : furthestEnemyOnOurSide(team);
 
-  if (threat && ai?.reactiveOffset && enemyElixir > playerElixir) {
+  if (threat && ai?.reactiveOffset && enemyElixir >= playerElixir) {
     return {
       x: threat.x + ai.reactiveOffset.x,
       y: Math.max(threat.y + ai.reactiveOffset.y, 0)
     };
   }
 
-  if (!threat && enemyElixir >= 9) {
+  if (!threat && ai.investPos1 && enemyElixir >= 9) {
     return Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
   }
 
