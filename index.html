@@ -157,32 +157,32 @@ function cycleCard(handArray, deckArray, handIndex) {
 
 const cardAI = {
   knight: {
-    reactiveOffset: { x: 25, y: -25 }, // spawn below enemy troop
+    reactiveOffset: { x: 0, y: -25 }, // spawn below enemy troop
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
   archers: {
-    reactiveOffset: { x: 25, y: -145 },
+    reactiveOffset: { x: 0, y: -145 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
   musketeer: {
-    reactiveOffset: { x: 25, y: -160 },
+    reactiveOffset: { x: 0, y: -160 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
   giant: {
-    reactiveOffset: { x: 25, y: -160 },
+    reactiveOffset: { x: 0, y: -160 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
   mini_pekka: {
-    reactiveOffset: { x: 25, y: -25 },
+    reactiveOffset: { x: 0, y: -25 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
   minions: {
-    reactiveOffset: { x: 25, y: -75 },
+    reactiveOffset: { x: 0, y: -75 },
     investPos1: { x: 50, y: 0 },
     investPos2: { x: 350, y: 0 }
   },
@@ -193,14 +193,17 @@ const cardAI = {
     reactiveOffset: { x: 0, y: 0 },
   },
   skeletons: {
-    reactiveOffset: { x: 25, y: 0 },
+    reactiveOffset: { x: 0, y: 0 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
   skeleton_army: {
-    reactiveOffset: { x: 25, y: 0 },
+    reactiveOffset: { x: 0, y: 0 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
+  },
+  cannon: {
+    reactivePos: { x: 200, y: 120 }
   }
 };
 
@@ -365,6 +368,13 @@ function resolveEnemyPlacement(card, team) {
     return {
       x: threat.x + ai.reactiveOffset.x,
       y: Math.max(threat.y + ai.reactiveOffset.y, 0)
+    };
+  }
+
+  if (threat && ai?.reactivePos && enemyElixir >= playerElixir) {
+    return {
+      x: ai.reactivePos.x,
+      y: ai.reactivePos.y
     };
   }
 
@@ -1056,8 +1066,6 @@ update() {
     }
   }
 
-  this.currentAttackCooldown = this.attackCooldown;
-
   /* ======================================================
      TARGET ACQUISITION
   ====================================================== */
@@ -1093,6 +1101,9 @@ update() {
   /* ======================================================
      MOVEMENT TOWARD TARGET
   ====================================================== */
+  if (this.currentAttackCooldown < this.attackCooldown) {
+    this.currentAttackCooldown++;
+  }
   let moveX, moveY;
 
   if (!this.isAir && !sameSide(this, this.target)) {
