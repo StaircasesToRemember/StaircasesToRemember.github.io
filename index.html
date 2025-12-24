@@ -577,13 +577,14 @@ function resolveSpell(card, x, y, team) {
             if (u.team === team) continue;
             const d = distance({ x, y }, u);
             if (d <= card.radius) {
-              u.hp -= card.damage;
-              if (card.name === "Zap") {
-                u.target = null;
-                u.currentAttackCooldown = u.attackCooldown;
+                u.hp -= card.damage;
+                if (card.name === "Zap") {
+                    u.target = null;
+                    u.currentAttackCooldown = u.attackCooldown;
               }
             }
         }
+    }
 
         // damage towers too
         const targetTowers = team === "player" ? enemyTowers : playerTowers;
@@ -616,7 +617,6 @@ function resolveSpell(card, x, y, team) {
                 bolts: generateZapBolts(x, y, card.radius)
             });
         }
-    }
 }
 
 function generateZapBolts(x, y, radius) {
@@ -869,8 +869,8 @@ function drawHand() {
   
       ctx.fill();
       ctx.closePath();
+    }
   }
-
 }
 
 // In drawArena or a separate tower management function:
