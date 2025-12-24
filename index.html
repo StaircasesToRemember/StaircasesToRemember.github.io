@@ -24,6 +24,7 @@ const cards = [
   { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 20 },
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 60 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
@@ -240,6 +241,11 @@ const cardAI = {
   }, 
   zap: {
     reactiveOffset: { x: 0, y: 0 }
+  },
+  fire_spirit: {
+    reactivePos: { x: 200, y: 200 },
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
   }
   };
 
@@ -257,6 +263,7 @@ const SPELL_UNIT_VALUES = {
     Wizard: 2.5,
     "Baby Dragon": 1,
     Pekka: 0.5,
+    "Fire Spirit": 1,
 
     tower: 2,
     kingTower: -5
@@ -275,6 +282,7 @@ const SPELL_UNIT_VALUES = {
     Wizard: 1.25,
     "Baby Dragon": 0.5,
     Pekka: 0.25,
+    "Fire Spirit": 1,
 
     tower: 1,
     kingTower: -5
@@ -293,7 +301,8 @@ const SPELL_UNIT_VALUES = {
     Wizard: 0.75,
     "Baby Dragon": 0.25,
     Pekka: 0.25,
-
+    "Fire Spirit": 0,
+    
     tower: 0.5,
     kingTower: -5
   },
@@ -546,6 +555,9 @@ function spawnEnemyUnit(card, x, y) {
   }
   else if (card.name === "Pekka") {
     units.push(new Unit(x, y, "enemy", "Pekka"));
+  } 
+  else if (card.name === "Fire Spirit") {
+    units.push(new Unit(x, y, "enemy", "Fire Spirit"));
   } 
 }
 
@@ -865,6 +877,8 @@ function drawHand() {
       if (card.name === "Baby Dragon") ctx.fillStyle = "lime";
       if (card.name === "Minion Horde") ctx.fillStyle = "cornflowerblue";
       if (card.name === "Pekka") ctx.fillStyle = "midnightblue";
+      if (card.name === "Fire Spirit") {ctx.globalAlpha = 0.5; ctx.fillStyle = "red";}
+      
 
       ctx.fill();
       ctx.closePath();
@@ -1140,7 +1154,7 @@ class Unit {
     } else if (type === "Mini Pekka") {
       this.hp = 1433;
       this.maxHp = this.hp;
-      this.speed = 0.6;
+      this.speed = 0.65;
       this.r = 20;
       this.attackRange = 25;
       this.attackDamage = 755;
@@ -1211,7 +1225,7 @@ class Unit {
     } else if (type === "Baby Dragon") {
       this.hp = 1152;
       this.maxHp = this.hp;
-      this.speed = 0.6;
+      this.speed = 0.65;
       this.r = 24;
       this.attackRange = 100;  
       this.attackDamage = 161;   
@@ -1237,6 +1251,21 @@ class Unit {
       this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
+    } else if (type === "Fire Spirit") {
+      this.hp = 230;
+      this.maxHp = this.hp;
+      this.speed = 0.65;
+      this.r = 12;
+      this.attackRange = 75;  
+      this.attackDamage = 207;   
+      this.attackCooldown = 60;
+      this.isAir = false;
+      this.attacksAir = true;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 160;
+      this.isBuilding = false;
+      this.decay = 0;
+      this.splashRadius = 40;
     } 
 
     this.type = type;
@@ -1316,43 +1345,65 @@ update() {
               }
   
               this.currentAttackCooldown = this.attackCooldown;
+              if (this.type === "Fire Spirit") {
+                  this.hp -= 1000;
+              }
           }
   
           return;
       }
   }
 
-  /* ======================================================
-     TARGET ACQUISITION
-  ====================================================== */
-  let closest = null;
-  let closestDist = Infinity;
+/* ======================================================
+   ATTACKING (STICKY)
+====================================================== */
+if (this.target) {
+    const d = distance(this, this.target);
 
-  // Enemy units
-  for (const u of units) {
-    if (u.team === this.team) continue;
-    if (u.isAir && !this.attacksAir) continue;
-    if (!u.isBuilding && this.targetsOnlyBuildings) continue;
-    
-    const d = distance(this, u);
-    if (d < closestDist && d <= this.sightRange) {
-      closest = u;
-      closestDist = d;
+    if (d <= this.attackRange) {
+        if (this.currentAttackCooldown > 0) {
+            this.currentAttackCooldown--;
+        }
+
+        if (this.currentAttackCooldown === 0) {
+
+            // Main target takes damage once
+            this.target.hp -= this.attackDamage;
+
+            // Splash damage (centered on target)
+            if (this.splashRadius > 0) {
+
+                // --- splash units ---
+                for (const u of units) {
+                    if (u === this.target) continue;            // no double damage
+                    if (u.team === this.team) continue;         // no friendly fire
+                    if (u.isAir && !this.attacksAir) continue;  // air check
+
+                    const sd = distance(this.target, u);
+                    if (sd <= this.splashRadius) {
+                        u.hp -= this.attackDamage;
+                    }
+                }
+
+                // --- splash towers ---
+                const spashTowers =
+                    this.team === "player" ? enemyTowers : playerTowers;
+
+                for (const t of splashTowers) {
+                    if (t === this.target) continue; // if main target is a tower
+                    const sd = distance(this.target, t);
+                    if (sd <= this.splashRadius) {
+                        t.hp -= this.attackDamage;
+                    }
+                }
+            }
+
+            this.currentAttackCooldown = this.attackCooldown;
+        }
+
+        return;
     }
-  }
-
-  // Enemy towers
-  const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
-  for (const t of enemyTowersList) {
-    const d = distance(this, t);
-    if (d < closestDist) {
-      closest = t;
-      closestDist = d;
-    }
-  }
-
-  this.target = closest;
-  if (!this.target) return;
+}
 
   /* ======================================================
      MOVEMENT TOWARD TARGET
@@ -1423,6 +1474,7 @@ update() {
     else if (this.type === "Wizard") ctx.fillStyle = "dodgerblue";
     else if (this.type === "Baby Dragon") ctx.fillStyle = "lime";
     else if (this.type === "Pekka") ctx.fillStyle = "midnightblue";
+    else if (this.type === "Fire Spirit") {ctx.globalAlpha = 0.5; ctx.fillStyle = "red";}
 
     ctx.fill();
     ctx.closePath();
@@ -1613,6 +1665,8 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX, mouseY - 40, "player", "Minion"));
     } else if (card.name === "Pekka") {
       units.push(new Unit(mouseX, mouseY, "player", "Pekka"));
+    } else if (card.name === "Fire Spirit") {
+      units.push(new Unit(mouseX, mouseY, "player", "Fire Spirit"));
     } 
     
     cycleCard(playerHand, playerDeck, selectedCardIndex);
