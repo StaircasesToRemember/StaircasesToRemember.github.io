@@ -131,11 +131,6 @@ function initializeDeck(deckArray) {
   return { hand, deck };
 }
 
-console.log("Player deck:", playerDeck);
-console.log("Player hand:", playerHand);
-console.log("Enemy deck:", enemyDeck);
-console.log("Enemy hand:", enemyHand);
-
 function cycleCard(handArray, deckArray, handIndex) {
   const playedCard = handArray.splice(handIndex, 1)[0]; // remove from hand
 
