@@ -12,6 +12,11 @@
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
 <script>
+const PlacementType = {
+  PLAYER_SIDE_ONLY: "player",
+  ANYWHERE: "anywhere"
+};
+
 const cards = [
   { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
@@ -86,10 +91,6 @@ const bridges = [
 ];
 const RIVER_TOP = 275;
 const RIVER_BOTTOM = 325;
-const PlacementType = {
-  PLAYER_SIDE_ONLY: "player",
-  ANYWHERE: "anywhere"
-};
 
 // Player elixir values
 let playerElixir = 6;
