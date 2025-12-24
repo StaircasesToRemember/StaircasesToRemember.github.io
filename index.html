@@ -799,6 +799,7 @@ function distance(a, b) {
 // Draw hand
 function drawHand() {
   handCards.length = 0;
+
   const cardWidth = 70;
   const cardHeight = 100;
   const startX = 25;
@@ -821,35 +822,33 @@ function drawHand() {
     }
 
     // Dim card if not enough elixir
-    if (playerElixir < cost) {
-      ctx.globalAlpha = 0.5;
-    }
+    ctx.globalAlpha = playerElixir < cost ? 0.5 : 1.0;
 
     // card body
     ctx.fillStyle = "white";
     ctx.fillRect(x, y, cardWidth, cardHeight);
 
-  // draw icon
- ctx.globalAlpha = 1.0;
+    // ---------- ICON ----------
+    ctx.globalAlpha = 1.0;
 
-  if (card.name === "Zap") {
+    if (card.name === "Zap") {
       // skinny lightning rectangle
       ctx.fillStyle = "deepskyblue";
-  
+
       const boltWidth = 6;
       const boltHeight = 32;
-  
+
       ctx.fillRect(
-          x + cardWidth / 2 - boltWidth / 2,
-          y + 35 - boltHeight / 2,
-          boltWidth,
-          boltHeight
+        x + cardWidth / 2 - boltWidth / 2,
+        y + 35 - boltHeight / 2,
+        boltWidth,
+        boltHeight
       );
-  } else {
+    } else {
       // normal circle icons
       ctx.beginPath();
       ctx.arc(x + cardWidth / 2, y + 35, 20, 0, Math.PI * 2);
-  
+
       if (card.name === "Knight") ctx.fillStyle = "yellow";
       if (card.name === "Archers") ctx.fillStyle = "magenta";
       if (card.name === "Musketeer") ctx.fillStyle = "blueviolet";
@@ -866,10 +865,26 @@ function drawHand() {
       if (card.name === "Baby Dragon") ctx.fillStyle = "lime";
       if (card.name === "Minion Horde") ctx.fillStyle = "cornflowerblue";
       if (card.name === "Pekka") ctx.fillStyle = "midnightblue";
-  
+
       ctx.fill();
       ctx.closePath();
     }
+
+    // ---------- CARD NAME ----------
+    ctx.fillStyle = "black";
+    ctx.font = "10px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(card.name, x + cardWidth / 2, y + 70);
+
+    // ---------- ELIXIR COST ----------
+    ctx.fillStyle = "magenta";
+    ctx.font = "bold 16px Arial";
+    ctx.fillText(cost, x + cardWidth / 2, y + 90);
+
+    // ---------- BORDER ----------
+    ctx.globalAlpha = 1.0;
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(x, y, cardWidth, cardHeight);
   }
 }
 
