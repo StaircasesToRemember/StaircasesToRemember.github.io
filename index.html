@@ -12,6 +12,19 @@
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
 <script>
+const cards = [
+  { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "musketeer", name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "minions", name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "mini_pekka", name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366 },
+  { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
+];
+  
 const cardPoolDiv = document.getElementById("card-pool");
 const deckCount = document.getElementById("deck-count");
 const startButton = document.getElementById("start-game");
@@ -83,18 +96,6 @@ let playerElixir = 6;
 let enemyElixir = 6;
 const maxElixir = 10;
 const effects = [];
-const cards = [
-  { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "musketeer", name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "minions", name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "mini_pekka", name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688 },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366 },
-  { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
-];
   
 playerDeck = [];
 const MAX_DECK_SIZE = 8;
