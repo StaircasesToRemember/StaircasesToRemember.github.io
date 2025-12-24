@@ -973,6 +973,7 @@ class Unit {
       this.targetsOnlyBuildings = false;
       this.sightRange = 145;
       this.isBuilding = true;
+      this.decay = 0.4;
     }
     
     this.target = null;
@@ -981,6 +982,10 @@ class Unit {
 
 update() {
 
+  if (this.decay) {
+    this.hp -= decay;
+  }
+  
   // Drop target if dead
   if (this.target && this.target.hp <= 0) {
     this.target = null;
@@ -1001,7 +1006,7 @@ update() {
     if (this.isAir !== other.isAir) continue;
 
     // Not for buildlings
-    if (this.isBuildling) continue;
+    if (this.isBuilding) continue;
 
     const dist = distance(this, other);
     if (dist > 0 && dist < separationRadius) {
