@@ -464,17 +464,17 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Giant"));
   }
   else if (card.name === "Minions") {
-    units.push(new Unit(x - 15, y - 25, "enemy", "Minion"));
-    units.push(new Unit(x + 15, y - 25, "enemy", "Minion"));
-    units.push(new Unit(x, y, "enemy", "Minion"));
+    units.push(new Unit(x - 15, y - 10, "enemy", "Minion"));
+    units.push(new Unit(x + 15, y - 10, "enemy", "Minion"));
+    units.push(new Unit(x, y + 15, "enemy", "Minion"));
   }
   else if (card.name === "Mini Pekka") {
     units.push(new Unit(x, y, "enemy", "Mini Pekka"));
   } 
   else if (card.name === "Skeletons") {
-    units.push(new Unit(x - 15, y - 25, "enemy", "Skeleton"));
-    units.push(new Unit(x + 15, y - 25, "enemy", "Skeleton"));
-    units.push(new Unit(x, y, "enemy", "Skeleton"));
+    units.push(new Unit(x - 15, y - 10, "enemy", "Skeleton"));
+    units.push(new Unit(x + 15, y - 10, "enemy", "Skeleton"));
+    units.push(new Unit(x, y + 15, "enemy", "Skeleton"));
   }
   else if (card.name === "Skeleton Army") {
     units.push(new Unit(x - 30, y - 30, "enemy", "Skeleton"));
@@ -506,12 +506,12 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Baby Dragon"));
   } 
   else if (card.name === "Minion Horde") {
-    units.push(new Unit(x - 15, y - 50, "enemy", "Minion"));
-    units.push(new Unit(x + 15, y - 50, "enemy", "Minion"));
-    units.push(new Unit(x, y - 75, "enemy", "Minion"));
-    units.push(new Unit(x - 15, y - 25, "enemy", "Minion"));
-    units.push(new Unit(x + 15, y - 25, "enemy", "Minion"));
-    units.push(new Unit(x, y, "enemy", "Minion"));
+    units.push(new Unit(x - 15, y + 15, "enemy", "Minion"));
+    units.push(new Unit(x + 15, y + 15, "enemy", "Minion"));
+    units.push(new Unit(x, y + 40, "enemy", "Minion"));
+    units.push(new Unit(x - 15, y - 10, "enemy", "Minion"));
+    units.push(new Unit(x + 15, y - 10, "enemy", "Minion"));
+    units.push(new Unit(x, y - 35, "enemy", "Minion"));
   }
 }
 
@@ -1448,15 +1448,15 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Giant") {
       units.push(new Unit(mouseX, mouseY, "player", "Giant"));
     } else if (card.name === "Minions") {
-      units.push(new Unit(mouseX - 15, mouseY + 25, "player", "Minion"));
-      units.push(new Unit(mouseX + 15, mouseY + 25, "player", "Minion"));
-      units.push(new Unit(mouseX, mouseY, "player", "Minion"));
+      units.push(new Unit(mouseX - 15, mouseY + 10, "player", "Minion"));
+      units.push(new Unit(mouseX + 15, mouseY + 10, "player", "Minion"));
+      units.push(new Unit(mouseX, mouseY - 15, "player", "Minion"));
     } else if (card.name === "Mini Pekka") {
       units.push(new Unit(mouseX, mouseY, "player", "Mini Pekka"));
     } else if (card.name === "Skeletons") {
-      units.push(new Unit(mouseX - 15, mouseY + 25, "player", "Skeleton"));
-      units.push(new Unit(mouseX + 15, mouseY + 25, "player", "Skeleton"));
-      units.push(new Unit(mouseX, mouseY, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 15, mouseY + 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 15, mouseY + 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX, mouseY - 15, "player", "Skeleton"));
     } else if (card.name === "Skeleton Army") {
       units.push(new Unit(mouseX - 30, mouseY - 10, "player", "Skeleton"));
       units.push(new Unit(mouseX - 30, mouseY + 10, "player", "Skeleton"));
@@ -1482,12 +1482,12 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Baby Dragon") {
       units.push(new Unit(mouseX, mouseY, "player", "Baby Dragon"));
     } else if (card.name === "Minion Horde") {
-      units.push(new Unit(mouseX - 15, mouseY + 50, "player", "Minion"));
-      units.push(new Unit(mouseX + 15, mouseY + 50, "player", "Minion"));
-      units.push(new Unit(mouseX, mouseY + 75, "player", "Minion"));
-      units.push(new Unit(mouseX - 15, mouseY + 25, "player", "Minion"));
-      units.push(new Unit(mouseX + 15, mouseY + 25, "player", "Minion"));
-      units.push(new Unit(mouseX, mouseY, "player", "Minion"));
+      units.push(new Unit(mouseX - 15, mouseY + 10, "player", "Minion"));
+      units.push(new Unit(mouseX + 15, mouseY + 10, "player", "Minion"));
+      units.push(new Unit(mouseX, mouseY + 35, "player", "Minion"));
+      units.push(new Unit(mouseX - 15, mouseY - 15, "player", "Minion"));
+      units.push(new Unit(mouseX + 15, mouseY - 15, "player", "Minion"));
+      units.push(new Unit(mouseX, mouseY - 40, "player", "Minion"));
     }
     
     cycleCard(playerHand, playerDeck, selectedCardIndex);
