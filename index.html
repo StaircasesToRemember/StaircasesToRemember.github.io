@@ -33,6 +33,7 @@ const cards = [
   { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
 ];
   
 const cardPoolDiv = document.getElementById("card-pool");
@@ -218,6 +219,11 @@ const cardAI = {
     reactiveOffset: { x: 0, y: -145 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
+  },
+  baby_dragon: {
+    reactiveOffset: { x: 0, y: -100 },
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
   }
 };
 
@@ -233,6 +239,7 @@ const SPELL_UNIT_VALUES = {
     Cannon: 1.5,
     "Hog Rider": 1,
     Wizard: 2.5,
+    "Baby Dragon": 1,
 
     tower: 2,
     kingTower: -5
@@ -249,6 +256,7 @@ const SPELL_UNIT_VALUES = {
     Cannon: 0.75,
     "Hog Rider": 0.5,
     Wizard: 1.25,
+    "Baby Dragon": 0.5,
 
     tower: 1,
     kingTower: -5
@@ -488,6 +496,9 @@ function spawnEnemyUnit(card, x, y) {
   } 
   else if (card.name === "Wizard") {
     units.push(new Unit(x, y, "enemy", "Wizard"));
+  } 
+  else if (card.name === "Baby Dragon") {
+    units.push(new Unit(x, y, "enemy", "Baby Dragon"));
   } 
 }
 
@@ -731,6 +742,7 @@ function drawHand() {
     if (card.name === "Cannon") ctx.fillStyle = "black";
     if (card.name === "Hog Rider") ctx.fillStyle = "saddlebrown";
     if (card.name === "Wizard") ctx.fillStyle = "dodgerblue";
+    if (card.name === "Baby Dragon") ctx.fillStyle = "lime";
 
     ctx.fill();
     ctx.closePath();
@@ -1074,6 +1086,21 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
       this.splashRadius = 40;
+    } else if (type === "Baby Dragon") {
+      this.hp = 1152;
+      this.maxHp = this.hp;
+      this.speed = 0.6;
+      this.r = 30;
+      this.attackRange = 100;  
+      this.attackDamage = 161;   
+      this.attackCooldown = 90;
+      this.isAir = true;
+      this.attacksAir = true;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 160;
+      this.isBuilding = false;
+      this.decay = 0;
+      this.splashRadius = 40;
     } 
 
     this.type = type;
@@ -1258,6 +1285,7 @@ update() {
     else if (this.type === "Cannon") ctx.fillStyle = "black";
     else if (this.type === "Hog Rider") ctx.fillStyle = "saddlebrown";
     else if (this.type === "Wizard") ctx.fillStyle = "dodgerblue";
+    else if (this.type === "Baby Dragon") ctx.fillStyle = "lime";
 
     ctx.fill();
     ctx.closePath();
@@ -1437,6 +1465,8 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX, mouseY, "player", "Hog Rider"));
     } else if (card.name === "Wizard") {
       units.push(new Unit(mouseX, mouseY, "player", "Wizard"));
+    } else if (card.name === "Baby Dragon") {
+      units.push(new Unit(mouseX, mouseY, "player", "Baby Dragon"));
     }
     cycleCard(playerHand, playerDeck, selectedCardIndex);
     selectedCardIndex = null;
