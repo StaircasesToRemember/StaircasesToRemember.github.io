@@ -2,9 +2,65 @@
 <html>
 <body>
 
+<div id="deck-builder">
+  <h3>Choose 8 Cards</h3>
+  <div id="card-pool"></div>
+  <p id="deck-count">0 / 8</p>
+  <button id="start-game" disabled>Start Game</button>
+</div> 
+  
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
 <script>
+const cardPoolDiv = document.getElementById("card-pool");
+const deckCount = document.getElementById("deck-count");
+const startButton = document.getElementById("start-game");
+
+function renderCardPool() {
+  cardPoolDiv.innerHTML = "";
+
+  for (const card of allCards) {
+    const btn = document.createElement("button");
+    btn.textContent = card.name;
+    btn.style.margin = "4px";
+
+    btn.onclick = () => toggleCard(card.id, btn);
+    cardPoolDiv.appendChild(btn);
+  }
+}
+
+renderCardPool();
+
+function toggleCard(cardId, button) {
+  const index = playerDeck.indexOf(cardId);
+
+  if (index !== -1) {
+    // Remove
+    playerDeck.splice(index, 1);
+    button.style.background = "";
+  } else {
+    if (playerDeck.length >= MAX_DECK_SIZE) return;
+    playerDeck.push(cardId);
+    button.style.background = "lightgreen";
+  }
+
+  deckCount.textContent = `${playerDeck.length} / 8`;
+  startButton.disabled = playerDeck.length !== MAX_DECK_SIZE;
+}
+
+startButton.onclick = () => {
+  startGame(playerDeck);
+};
+
+function startGame(deck) {
+  console.log("Player deck:", deck);
+
+  // Example: restrict hand draw
+  playerHand = [...deck]; // or shuffled(deck)
+
+  document.getElementById("deck-builder").style.display = "none";
+}
+  
 let timeLeft = 180; // 3 minutes in seconds
 let normalInterval = 2800; // 1 elixir every 2.8s
 let doubleElixir = false;
@@ -40,8 +96,9 @@ const cards = [
   { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
 ];
   
-playerDeck = [9, 8, 2, 3, 4, 5, 6, 7]; // indices into cards
-enemyDeck = [9, 8, 2, 3, 4, 5, 6, 7]; // indices into cards
+playerDeck = [];
+const MAX_DECK_SIZE = 8;
+enemyDeck = [0, 1, 2, 3, 4, 5, 6, 7]; // indices into cards
   
 // Create a fresh shuffled deck for the player
 function initializeDeck(deckArray) {
