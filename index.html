@@ -888,6 +888,8 @@ class Unit {
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
       this.sightRange = 170;
+      this.isBuilding = false;
+      this.decay = 0;
     } else if (type === "Archer") {
       this.hp = 304;
       this.maxHp = this.hp;
@@ -900,6 +902,8 @@ class Unit {
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
       this.sightRange = 170;
+      this.isBuilding = false;
+      this.decay = 0;
     } else if (type === "Musketeer") {
       this.hp = 721;
       this.maxHp = this.hp;
@@ -912,6 +916,8 @@ class Unit {
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
       this.sightRange = 185;
+      this.isBuilding = false;
+      this.decay = 0;
     } else if (type === "Giant") {
       this.hp = 4090;
       this.maxHp = this.hp;
@@ -924,6 +930,8 @@ class Unit {
       this.attacksAir = false;
       this.targetsOnlyBuildings = true;  // Only targets towers!
       this.sightRange = 200;
+      this.isBuilding = false;
+      this.decay = 0;
     } else if (type === "Minion") {
       this.hp = 230;
       this.maxHp = this.hp;
@@ -936,6 +944,8 @@ class Unit {
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
       this.sightRange = 170;
+      this.isBuilding = false;
+      this.decay = 0;
     } else if (type === "Mini Pekka") {
       this.hp = 1433;
       this.maxHp = this.hp;
@@ -948,6 +958,8 @@ class Unit {
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
       this.sightRange = 170;
+      this.isBuilding = false;
+      this.decay = 0;
     } else if (type === "Skeleton") {
       this.hp = 81;
       this.maxHp = this.hp;
@@ -960,6 +972,8 @@ class Unit {
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
       this.sightRange = 170;
+      this.isBuilding = false;
+      this.decay = 0;
     } else if (type === "Cannon") {
       this.hp = 824;
       this.maxHp = this.hp;
@@ -982,9 +996,7 @@ class Unit {
 
 update() {
 
-  if (this?.decay) {
-    this.hp -= decay;
-  }
+  this.hp -= decay;
   
   // Drop target if dead
   if (this.target && this.target.hp <= 0) {
@@ -1006,7 +1018,7 @@ update() {
     if (this.isAir !== other.isAir) continue;
 
     // Not for buildlings
-    if (this?.isBuilding) continue;
+    if (this.isBuilding) continue;
 
     const dist = distance(this, other);
     if (dist > 0 && dist < separationRadius) {
