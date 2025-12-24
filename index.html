@@ -32,6 +32,7 @@ const cards = [
   { id: "musketeer", name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
 ];
   
 const cardPoolDiv = document.getElementById("card-pool");
@@ -212,6 +213,11 @@ const cardAI = {
   hog_rider: {
     investPos1: { x: 0, y: 274 },
     investPos2: { x: 400, y: 274 }
+  },
+  wizard: {
+    reactiveOffset: { x: 0, y: -145 },
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
   }
 };
 
@@ -226,6 +232,7 @@ const SPELL_UNIT_VALUES = {
     Skeleton: 0.25,
     Cannon: 1.5,
     "Hog Rider": 1,
+    Wizard: 2.5,
 
     tower: 2,
     kingTower: -5
@@ -241,6 +248,7 @@ const SPELL_UNIT_VALUES = {
     Skeleton: 0.25,
     Cannon: 0.75,
     "Hog Rider": 0.5,
+    Wizard: 1.25,
 
     tower: 1,
     kingTower: -5
@@ -477,7 +485,10 @@ function spawnEnemyUnit(card, x, y) {
   } 
   else if (card.name === "Hog Rider") {
     units.push(new Unit(x, y, "enemy", "Hog Rider"));
-  }
+  } 
+  else if (card.name === "Wizard") {
+    units.push(new Unit(x, y, "enemy", "Wizard"));
+  } 
 }
 
 function castSpell(card, x, y, team) {
@@ -719,6 +730,7 @@ function drawHand() {
     if (card.name === "Skeleton Army") ctx.fillStyle = "floralwhite";
     if (card.name === "Cannon") ctx.fillStyle = "black";
     if (card.name === "Hog Rider") ctx.fillStyle = "saddlebrown";
+    if (card.name === "Wizard") ctx.fillStyle = "dodgerblue";
 
     ctx.fill();
     ctx.closePath();
@@ -1047,6 +1059,21 @@ class Unit {
       this.sightRange = 200;
       this.isBuilding = false;
       this.decay = 0;
+    } else if (type === "Wizard") {
+      this.hp = 755;
+      this.maxHp = this.hp;
+      this.speed = 0.5;
+      this.r = 20;
+      this.attackRange = 145;  
+      this.attackDamage = 281;   
+      this.attackCooldown = 84;
+      this.isAir = false;
+      this.attacksAir = true;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 160;
+      this.isBuilding = false;
+      this.decay = 0;
+      this.splashRadius = 25;
     } 
 
     this.type = type;
@@ -1099,21 +1126,37 @@ update() {
      ATTACKING (STICKY)
   ====================================================== */
   if (this.target) {
-    const d = distance(this, this.target);
-
-    if (d <= this.attackRange) {
-      if (this.currentAttackCooldown > 0) {
-        this.currentAttackCooldown--;
+      const d = distance(this, this.target);
+  
+      if (d <= this.attackRange) {
+          if (this.currentAttackCooldown > 0) {
+              this.currentAttackCooldown--;
+          }
+  
+          if (this.currentAttackCooldown === 0) {
+  
+              // Main target takes damage once
+              this.target.hp -= this.attackDamage;
+  
+              // Splash damage (centered on target)
+              if (this.splashRadius > 0) {
+                  for (const u of units) {
+                      if (u === this.target) continue;          // no double damage
+                      if (u.team === this.team) continue;       // no friendly fire
+                      if (u.isAir && !this.attacksAir) continue; // air check
+  
+                      const sd = distance(this.target, u);
+                      if (sd <= this.splashRadius) {
+                          u.hp -= this.attackDamage;
+                      }
+                  }
+              }
+  
+              this.currentAttackCooldown = this.attackCooldown;
+          }
+  
+          return;
       }
-
-      if (this.currentAttackCooldown === 0) {
-        this.target.hp -= this.attackDamage;
-        this.currentAttackCooldown = this.attackCooldown;
-      }
-
-      // No forward movement while attacking
-      return;
-    }
   }
 
   /* ======================================================
@@ -1214,6 +1257,7 @@ update() {
     else if (this.type === "Skeleton") ctx.fillStyle = "floralwhite";
     else if (this.type === "Cannon") ctx.fillStyle = "black";
     else if (this.type === "Hog Rider") ctx.fillStyle = "saddlebrown";
+    else if (this.type === "Wizard") ctx.fillStyle = "dodgerblue";
 
     ctx.fill();
     ctx.closePath();
@@ -1391,8 +1435,9 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX, mouseY, "player", "Cannon"));
     } else if (card.name === "Hog Rider") {
       units.push(new Unit(mouseX, mouseY, "player", "Hog Rider"));
-    } 
-
+    } else if (card.name === "Wizard") {
+      units.push(new Unit(mouseX, mouseY, "player", "Wizard"));
+    }
     cycleCard(playerHand, playerDeck, selectedCardIndex);
     selectedCardIndex = null;
   }
