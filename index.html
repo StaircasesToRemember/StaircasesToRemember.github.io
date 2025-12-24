@@ -996,7 +996,7 @@ class Unit {
 
 update() {
 
-  this.hp -= decay;
+  this.hp -= this.decay;
   
   // Drop target if dead
   if (this.target && this.target.hp <= 0) {
