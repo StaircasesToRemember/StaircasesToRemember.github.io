@@ -1026,7 +1026,8 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
     } 
-    
+
+    this.type = type;
     this.target = null;
     this.currentAttackCooldown = 10;
   }
@@ -1133,7 +1134,7 @@ update() {
   }
   let moveX, moveY;
 
-  if (!this.isAir && !sameSide(this, this.target)) {
+  if (!this.isAir && !(this.type === "Hog Rider") && !sameSide(this, this.target)) {
     const bridge = this.closestBridge();
     moveX = bridge.x;
     moveY = bridge.y;
