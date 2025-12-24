@@ -736,7 +736,7 @@ function updateTowers() {
     }
 
     if (t.isKing && t.hp <= 0) {
-      alert("You lose!");
+      alert("You lost!");
       location.reload(); // simple game over reset
     }
   }
@@ -857,7 +857,7 @@ function endGameByTowers() {
 
   let message;
   if (playerTowerCount > enemyTowerCount) message = "You win!";
-  else if (enemyTowerCount > playerTowerCount) message = "You lose!";
+  else if (enemyTowerCount > playerTowerCount) message = "You lost!";
   else return;
 
   alert(message);
