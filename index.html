@@ -318,6 +318,7 @@ const ATTACK_DAMAGE = 170;
 const ATTACK_COOLDOWN = 60; // frames (~1 second at 60fps)
 
 function sameSide(a, b) {
+  if (!a || !b) return false;
   // both above river
   if (a.y < RIVER_BOTTOM && b.y < RIVER_BOTTOM) return true;
   // both below river
