@@ -35,7 +35,8 @@ const cards = [
   { id: "pekka", name: "Pekka", cost: 7, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY }
+  { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 192, delay: 1 }
 ];
   
 const cardPoolDiv = document.getElementById("card-pool");
@@ -236,6 +237,9 @@ const cardAI = {
     reactiveOffset: { x: 0, y: -25 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
+  }, 
+    zap: {
+    reactiveOffset: { x: 0, y: 0 }
   }
   };
 
@@ -274,7 +278,25 @@ const SPELL_UNIT_VALUES = {
 
     tower: 1,
     kingTower: -5
-  }
+  },
+
+  Zap: {
+    Knight: 0.25,
+    Archer: 0.5,
+    Musketeer: 0.5,
+    Giant: 0.25,
+    Minion: 0.25,
+    "Mini Pekka": 0.25,
+    Skeleton: 0.25,
+    Cannon: 0.25,
+    "Hog Rider": 0.25,
+    Wizard: 0.75,
+    "Baby Dragon": 0.25,
+    Pekka: 0.25,
+
+    tower: 0.5,
+    kingTower: -5
+  },
 };
   
 // Card selected variables
@@ -550,11 +572,17 @@ function updateSpells() {
 }
 
 function resolveSpell(card, x, y, team) {
-    if (card.name === "Fireball" || card.name === "Arrows") {
+    if (card.name === "Fireball" || card.name === "Arrows" || card.name === "Zap") {
         for (const u of units) {
             if (u.team === team) continue;
             const d = distance({ x, y }, u);
-            if (d <= card.radius) u.hp -= card.damage;
+            if (d <= card.radius) {
+              u.hp -= card.damage;
+              if (card.name === "Zap") {
+                u.target = null;
+                u.currentAttackCooldown = u.attackCooldown;
+              }
+            }
         }
 
         // damage towers too
@@ -578,10 +606,43 @@ function resolveSpell(card, x, y, team) {
                 });
             }
             effects.push({ x, y, radius: card.radius, timer: 50, type: "arrows", dots });
+        } else if (card.name === "Zap") {
+            effects.push({
+                x,
+                y,
+                radius: card.radius,
+                timer: 12,
+                type: "zap",
+                bolts: generateZapBolts(x, y, card.radius)
+            });
         }
     }
 }
-      
+
+function generateZapBolts(x, y, radius) {
+    const bolts = [];
+    const boltCount = 6;
+
+    for (let i = 0; i < boltCount; i++) {
+        const segments = [];
+        const angle = Math.random() * Math.PI * 2;
+        const steps = 6;
+
+        for (let j = 0; j <= steps; j++) {
+            const t = j / steps;
+            const jitter = (Math.random() - 0.5) * 10;
+            segments.push({
+                x: x + Math.cos(angle) * radius * t + jitter,
+                y: y + Math.sin(angle) * radius * t + jitter
+            });
+        }
+
+        bolts.push(segments);
+    }
+
+    return bolts;
+}
+
 function drawEffects() {
     for (let i = effects.length - 1; i >= 0; i--) {
         const e = effects[i];
@@ -601,7 +662,26 @@ function drawEffects() {
                 ctx.fill();
                 ctx.closePath();
             }
-        }
+        } 
+      else if (e.type === "zap") {
+          ctx.strokeStyle = `rgba(255,255,255,${e.timer / 12})`;
+          ctx.lineWidth = 2;
+      
+          for (const bolt of e.bolts) {
+              ctx.beginPath();
+              ctx.moveTo(bolt[0].x, bolt[0].y);
+              for (let i = 1; i < bolt.length; i++) {
+                  ctx.lineTo(bolt[i].x, bolt[i].y);
+              }
+              ctx.stroke();
+          }
+      
+          // quick flash
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${e.timer / 30})`;
+          ctx.fill();
+      }
 
         e.timer--;
         if (e.timer <= 0) effects.splice(i, 1);
