@@ -115,10 +115,8 @@ let elixirIntervalId;const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
 const units = [];
 const bridges = [
-  { x: 75, y: 280 },  // middle of first bridge
-  { x: 75, y: 320 },  // middle of first bridge
-  { x: 325, y: 280 },  // middle of second bridge
-  { x: 325, y: 320 }  // middle of second bridge
+  { x: 75, y: 300 },  // middle of first bridge
+  { x: 325, y: 300 },  // middle of second bridge
 ];
 const RIVER_TOP = 275;
 const RIVER_BOTTOM = 325;
@@ -883,6 +881,8 @@ function drawHand() {
 
       ctx.fill();
       ctx.closePath();
+      ctx.globalAlpha = 1;
+
     }
 
     // ---------- CARD NAME ----------
@@ -1476,10 +1476,11 @@ if (this.target) {
     else if (this.type === "Baby Dragon") ctx.fillStyle = "lime";
     else if (this.type === "Pekka") ctx.fillStyle = "midnightblue";
     else if (this.type === "Fire Spirit") {ctx.globalAlpha = 0.5; ctx.fillStyle = "red";}
-
+    
     ctx.fill();
     ctx.closePath();
-
+    ctx.globalAlpha = 1;
+    
     // HP bar
     ctx.fillStyle = this.team === "player" ? "blue" : "red";
     ctx.fillRect(
