@@ -21,9 +21,9 @@ const PlacementType = {
 
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 20 },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688 },
+  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 60 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
@@ -122,6 +122,7 @@ let playerElixir = 6;
 let enemyElixir = 6;
 const maxElixir = 10;
 const effects = [];
+const pendingSpells = [];
   
 playerDeck = [];
 const MAX_DECK_SIZE = 8;
@@ -480,6 +481,28 @@ function spawnEnemyUnit(card, x, y) {
 }
 
 function castSpell(card, x, y, team) {
+    pendingSpells.push({
+        card,
+        x,
+        y,
+        team,
+        timer: card.delay
+    });
+}
+
+function updateSpells() {
+    for (let i = pendingSpells.length - 1; i >= 0; i--) {
+        const s = pendingSpells[i];
+        s.timer--;
+
+        if (s.timer <= 0) {
+            resolveSpell(s.card, s.x, s.y, s.team);
+            pendingSpells.splice(i, 1);
+        }
+    }
+}
+
+function resolveSpell(card, x, y, team) {
     if (card.name === "Fireball" || card.name === "Arrows") {
         for (const u of units) {
             if (u.team === team) continue;
@@ -497,15 +520,14 @@ function castSpell(card, x, y, team) {
         if (card.name === "Fireball") {
             effects.push({ x, y, radius: card.radius, timer: 30, type: "fireball" });
         } else if (card.name === "Arrows") {
-            // Generate arrow dots once
             const dotCount = 50;
             const dots = [];
             for (let j = 0; j < dotCount; j++) {
                 const angle = Math.random() * 2 * Math.PI;
                 const r = Math.random() * card.radius;
-                dots.push({ 
-                    x: x + r * Math.cos(angle), 
-                    y: y + r * Math.sin(angle) 
+                dots.push({
+                    x: x + r * Math.cos(angle),
+                    y: y + r * Math.sin(angle)
                 });
             }
             effects.push({ x, y, radius: card.radius, timer: 50, type: "arrows", dots });
