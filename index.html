@@ -1068,7 +1068,7 @@ update() {
   for (const u of units) {
     if (u.team === this.team) continue;
     if (u.isAir && !this.attacksAir) continue;
-    if (!u.isBuildling && this.targetsOnlyBuildings) continue;
+    if (!u.isBuilding && this.targetsOnlyBuildings) continue;
     
     const d = distance(this, u);
     if (d < closestDist && d <= this.sightRange) {
