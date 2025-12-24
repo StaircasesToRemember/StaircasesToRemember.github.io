@@ -162,17 +162,17 @@ const cardAI = {
     investPos2: { x: 201, y: 0 }
   },
   archers: {
-    reactiveOffset: { x: 0, y: -160 },
+    reactiveOffset: { x: 0, y: -145 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
   musketeer: {
-    reactiveOffset: { x: 0, y: -180 },
+    reactiveOffset: { x: 0, y: -160 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
   giant: {
-    reactiveOffset: { x: 0, y: -180 },
+    reactiveOffset: { x: 0, y: -160 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
@@ -781,7 +781,7 @@ class Tower {
     this.team = team;
     this.isKing = isKing;
 
-    this.range = 200;
+    this.range = 175;
     this.damage = 109;
     this.attackCooldown = 48;
     this.cooldown = 0;
@@ -897,7 +897,7 @@ class Unit {
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
-      this.sightRange = 180;
+      this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Archer") {
@@ -905,13 +905,13 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 16;
-      this.attackRange = 160; 
+      this.attackRange = 145; 
       this.attackDamage = 112;  
       this.attackCooldown = 54;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
-      this.sightRange = 180;
+      this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Musketeer") {
@@ -919,13 +919,13 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 20;
-      this.attackRange = 180;  
+      this.attackRange = 160;  
       this.attackDamage = 217;   
       this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
-      this.sightRange = 200;
+      this.sightRange = 185;
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Giant") {
@@ -939,7 +939,7 @@ class Unit {
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = true;  // Only targets towers!
-      this.sightRange = 220;
+      this.sightRange = 200;
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Minion") {
@@ -953,7 +953,7 @@ class Unit {
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
-      this.sightRange = 180;
+      this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Mini Pekka") {
@@ -967,7 +967,7 @@ class Unit {
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
-      this.sightRange = 180;
+      this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Skeleton") {
@@ -981,7 +981,7 @@ class Unit {
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
-      this.sightRange = 180;
+      this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Cannon") {
@@ -989,13 +989,13 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0;
       this.r = 24;
-      this.attackRange = 160;
+      this.attackRange = 145;
       this.attackDamage = 212;
       this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
-      this.sightRange = 160;
+      this.sightRange = 145;
       this.isBuilding = true;
       this.decay = 0.4;
     }
