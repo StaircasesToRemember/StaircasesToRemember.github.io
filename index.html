@@ -233,12 +233,12 @@ const cardAI = {
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
-    pekka: {
+  pekka: {
     reactiveOffset: { x: 0, y: -25 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   }, 
-    zap: {
+  zap: {
     reactiveOffset: { x: 0, y: 0 }
   }
   };
@@ -829,48 +829,48 @@ function drawHand() {
     ctx.fillStyle = "white";
     ctx.fillRect(x, y, cardWidth, cardHeight);
 
-    // Draw unit icon/circle in the middle
-    ctx.globalAlpha = 1.0;
-    ctx.beginPath();
-    ctx.arc(x + cardWidth / 2, y + 35, 20, 0, Math.PI * 2);
-    
-    if (card.name === "Knight") ctx.fillStyle = "yellow";
-    if (card.name === "Archers") ctx.fillStyle = "magenta";
-    if (card.name === "Musketeer") ctx.fillStyle = "blueviolet";
-    if (card.name === "Giant") ctx.fillStyle = "orange";
-    if (card.name === "Minions") ctx.fillStyle = "cornflowerblue";
-    if (card.name === "Mini Pekka") ctx.fillStyle = "navy";
-    if (card.name === "Fireball") ctx.fillStyle = "red";
-    if (card.name === "Arrows") ctx.fillStyle = "maroon";
-    if (card.name === "Skeletons") ctx.fillStyle = "floralwhite";
-    if (card.name === "Skeleton Army") ctx.fillStyle = "floralwhite";
-    if (card.name === "Cannon") ctx.fillStyle = "black";
-    if (card.name === "Hog Rider") ctx.fillStyle = "saddlebrown";
-    if (card.name === "Wizard") ctx.fillStyle = "dodgerblue";
-    if (card.name === "Baby Dragon") ctx.fillStyle = "lime";
-    if (card.name === "Minion Horde") ctx.fillStyle = "cornflowerblue";
-    if (card.name === "Pekka") ctx.fillStyle = "midnightblue";
+  // draw icon
+ ctx.globalAlpha = 1.0;
 
-    ctx.fill();
-    ctx.closePath();
-
-    // Draw unit name
-    ctx.fillStyle = "black";
-    ctx.font = "10px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText(card.name, x + cardWidth / 2, y + 70);
-
-    // Draw elixir cost in magenta at bottom
-    ctx.fillStyle = "magenta";
-    ctx.font = "bold 16px Arial";
-    ctx.fillText(cost, x + cardWidth / 2, y + 90);
-
-    ctx.globalAlpha = 1.0;
-
-    // border
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(x, y, cardWidth, cardHeight);
+  if (card.name === "Zap") {
+      // skinny lightning rectangle
+      ctx.fillStyle = "deepskyblue";
+  
+      const boltWidth = 6;
+      const boltHeight = 32;
+  
+      ctx.fillRect(
+          x + cardWidth / 2 - boltWidth / 2,
+          y + 35 - boltHeight / 2,
+          boltWidth,
+          boltHeight
+      );
+  } else {
+      // normal circle icons
+      ctx.beginPath();
+      ctx.arc(x + cardWidth / 2, y + 35, 20, 0, Math.PI * 2);
+  
+      if (card.name === "Knight") ctx.fillStyle = "yellow";
+      if (card.name === "Archers") ctx.fillStyle = "magenta";
+      if (card.name === "Musketeer") ctx.fillStyle = "blueviolet";
+      if (card.name === "Giant") ctx.fillStyle = "orange";
+      if (card.name === "Minions") ctx.fillStyle = "cornflowerblue";
+      if (card.name === "Mini Pekka") ctx.fillStyle = "navy";
+      if (card.name === "Fireball") ctx.fillStyle = "red";
+      if (card.name === "Arrows") ctx.fillStyle = "maroon";
+      if (card.name === "Skeletons") ctx.fillStyle = "floralwhite";
+      if (card.name === "Skeleton Army") ctx.fillStyle = "floralwhite";
+      if (card.name === "Cannon") ctx.fillStyle = "black";
+      if (card.name === "Hog Rider") ctx.fillStyle = "saddlebrown";
+      if (card.name === "Wizard") ctx.fillStyle = "dodgerblue";
+      if (card.name === "Baby Dragon") ctx.fillStyle = "lime";
+      if (card.name === "Minion Horde") ctx.fillStyle = "cornflowerblue";
+      if (card.name === "Pekka") ctx.fillStyle = "midnightblue";
+  
+      ctx.fill();
+      ctx.closePath();
   }
+
 }
 
 // In drawArena or a separate tower management function:
