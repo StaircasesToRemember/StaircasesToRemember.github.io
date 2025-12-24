@@ -19,7 +19,7 @@ const startButton = document.getElementById("start-game");
 function renderCardPool() {
   cardPoolDiv.innerHTML = "";
 
-  for (const card of allCards) {
+  for (const card of cards) {
     const btn = document.createElement("button");
     btn.textContent = card.name;
     btn.style.margin = "4px";
