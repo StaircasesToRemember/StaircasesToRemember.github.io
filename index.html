@@ -1,3 +1,5 @@
+look at this at make sure it really starts the game:
+
 <!DOCTYPE html>
 <html>
 <body>
@@ -12,6 +14,8 @@
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
 <script>
+let gameStarted = false;
+
 const PlacementType = {
   PLAYER_SIDE_ONLY: "player",
   ANYWHERE: "anywhere"
@@ -42,7 +46,7 @@ function renderCardPool() {
     btn.textContent = card.name;
     btn.style.margin = "4px";
 
-    btn.onclick = () => toggleCard(card.id, btn);
+    btn.onclick = () => toggleCard(cards.indexOf(card), btn);
     cardPoolDiv.appendChild(btn);
   }
 }
@@ -71,12 +75,31 @@ startButton.onclick = () => {
 };
 
 function startGame(deck) {
-  console.log("Player deck:", deck);
+  gameStarted = true;
 
-  // Example: restrict hand draw
-  playerHand = [...deck]; // or shuffled(deck)
+  // Initialize player deck properly
+  const playerState = initializeDeck(deck);
+  playerHand = playerState.hand;
+  playerDeck = playerState.deck;
 
+  // Initialize enemy
+  const enemyState = initializeDeck(enemyDeck);
+  enemyHand = enemyState.hand;
+  enemyDeck = enemyState.deck;
+
+  // Reset resources
+  playerElixir = 6;
+  enemyElixir = 6;
+  timeLeft = 180;
+  doubleElixir = false;
+
+  // Hide deck builder
   document.getElementById("deck-builder").style.display = "none";
+
+  // START GAME SYSTEMS
+  drawArena();
+  startElixirInterval();
+  setInterval(enemyPlayCard, 1000);
 }
   
 let timeLeft = 180; // 3 minutes in seconds
@@ -109,15 +132,6 @@ function initializeDeck(deckArray) {
   const deck = shuffled.slice(4);          // rest stay in deck
   return { hand, deck };
 }
-
-let playerState = initializeDeck(playerDeck);
-let enemyState = initializeDeck(enemyDeck);
-
-let playerHand = playerState.hand;
-playerDeck = playerState.deck;
-
-let enemyHand = enemyState.hand;
-enemyDeck = enemyState.deck;
 
 console.log("Player deck:", playerDeck);
 console.log("Player hand:", playerHand);
@@ -1172,11 +1186,8 @@ function drawArena() {
   
   requestAnimationFrame(drawArena);
 }
-
-drawArena();
   
 // Generate elixir
-startElixirInterval();  
 setInterval(() => {
   if (timeLeft > 0) {
     timeLeft--;
@@ -1190,13 +1201,10 @@ setInterval(() => {
     endGameByTowers();
   }
 }, 1000);
-
-
-// Enemy AI makes decisions
-setInterval(enemyPlayCard, 1000);
   
 // Event listener
 canvas.addEventListener("click", function (e) {
+  if (!gameStarted) return;
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
   const mouseY = e.clientY - rect.top;
