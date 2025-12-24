@@ -29,7 +29,8 @@ const cards = [
   { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688 },
   { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366 },
   { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY }
+  { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
 ];
   
 const cardPoolDiv = document.getElementById("card-pool");
@@ -212,6 +213,7 @@ const SPELL_UNIT_VALUES = {
     Minion: 1,
     "Mini Pekka": 1,
     Skeleton: 0.25,
+    Cannon: 1.5
 
     tower: 2,
     kingTower: -5
@@ -224,7 +226,8 @@ const SPELL_UNIT_VALUES = {
     Giant: 0.25,
     Minion: 1,
     "Mini Pekka": 0.5,
-    Skeleton: 0.3,
+    Skeleton: 0.25,
+    Cannon: 0.75
 
     tower: 1,
     kingTower: -5
@@ -449,6 +452,9 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x + 30, y - 10, "enemy", "Skeleton"));
     units.push(new Unit(x + 30, y + 10, "enemy", "Skeleton"));
   }
+  else if (card.name === Cannon") {
+    units.push(new Unit(x, y, "enemy", "Cannon"));
+  } 
 }
 
 function castSpell(card, x, y, team) {
@@ -667,6 +673,7 @@ function drawHand() {
     if (card.name === "Arrows") ctx.fillStyle = "maroon";
     if (card.name === "Skeletons") ctx.fillStyle = "floralwhite";
     if (card.name === "Skeleton Army") ctx.fillStyle = "floralwhite";
+    if (card.name === "Cannon") ctx.fillStyle = "black";
 
     ctx.fill();
     ctx.closePath();
@@ -953,6 +960,19 @@ class Unit {
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
       this.sightRange = 170;
+    } else if (type === "Cannon") {
+      this.hp = 824;
+      this.maxHp = this.hp;
+      this.speed = 0;
+      this.r = 24;
+      this.attackRange = 145;
+      this.attackDamage = 212;
+      this.attackCooldown = 60;
+      this.isAir = false;
+      this.attacksAir = false;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 145;
+      this.isBuilding = true;
     }
     
     this.target = null;
@@ -979,6 +999,9 @@ update() {
 
     // 🚫 Separate air & ground layers
     if (this.isAir !== other.isAir) continue;
+
+    // Not for buildlings
+    if (this.isBuildling) continue;
 
     const dist = distance(this, other);
     if (dist > 0 && dist < separationRadius) {
@@ -1025,16 +1048,15 @@ update() {
   let closestDist = Infinity;
 
   // Enemy units
-  if (!this.targetsOnlyBuildings) {
-    for (const u of units) {
-      if (u.team === this.team) continue;
-      if (u.isAir && !this.attacksAir) continue;
-
-      const d = distance(this, u);
-      if (d < closestDist && d <= this.sightRange) {
-        closest = u;
-        closestDist = d;
-      }
+  for (const u of units) {
+    if (u.team === this.team) continue;
+    if (u.isAir && !this.attacksAir) continue;
+    if (!u.isBuildling && this.targetsOnlyBuildings) continue;
+    
+    const d = distance(this, u);
+    if (d < closestDist && d <= this.sightRange) {
+      closest = u;
+      closestDist = d;
     }
   }
 
@@ -1112,6 +1134,7 @@ update() {
     else if (this.type === "Minion") ctx.fillStyle = "cornflowerblue";
     else if (this.type === "Mini Pekka") ctx.fillStyle = "navy";
     else if (this.type === "Skeleton") ctx.fillStyle = "floralwhite";
+    else if (this.type === "Cannon") ctx.fillStyle = "black";
 
     ctx.fill();
     ctx.closePath();
@@ -1283,8 +1306,9 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX + 30, mouseY - 10, "player", "Skeleton"));
       units.push(new Unit(mouseX + 30, mouseY + 10, "player", "Skeleton"));
       units.push(new Unit(mouseX + 30, mouseY + 30, "player", "Skeleton"));
-    }
-
+    } else if (card.name === "Cannon") {
+      units.push(new Unit(mouseX, mouseY, "player", "Cannon"));
+    } 
 
     cycleCard(playerHand, playerDeck, selectedCardIndex);
     selectedCardIndex = null;
