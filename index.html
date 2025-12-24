@@ -982,7 +982,7 @@ class Unit {
 
 update() {
 
-  if (this.decay) {
+  if (this?.decay) {
     this.hp -= decay;
   }
   
@@ -1006,7 +1006,7 @@ update() {
     if (this.isAir !== other.isAir) continue;
 
     // Not for buildlings
-    if (this.isBuilding) continue;
+    if (this?.isBuilding) continue;
 
     const dist = distance(this, other);
     if (dist > 0 && dist < separationRadius) {
