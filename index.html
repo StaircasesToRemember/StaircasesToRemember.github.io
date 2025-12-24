@@ -1355,56 +1355,37 @@ update() {
       }
   }
 
-/* ======================================================
-   ATTACKING (STICKY)
-====================================================== */
-if (this.target) {
-    const d = distance(this, this.target);
+  /* ======================================================
+     TARGET ACQUISITION
+  ====================================================== */
+  let closest = null;
+  let closestDist = Infinity;
 
-    if (d <= this.attackRange) {
-        if (this.currentAttackCooldown > 0) {
-            this.currentAttackCooldown--;
-        }
+  // Enemy units
+  for (const u of units) {
+    if (u.team === this.team) continue;
+    if (u.isAir && !this.attacksAir) continue;
+    if (!u.isBuilding && this.targetsOnlyBuildings) continue;
 
-        if (this.currentAttackCooldown === 0) {
-
-            // Main target takes damage once
-            this.target.hp -= this.attackDamage;
-
-            // Splash damage (centered on target)
-            if (this.splashRadius > 0) {
-
-                // --- splash units ---
-                for (const u of units) {
-                    if (u === this.target) continue;            // no double damage
-                    if (u.team === this.team) continue;         // no friendly fire
-                    if (u.isAir && !this.attacksAir) continue;  // air check
-
-                    const sd = distance(this.target, u);
-                    if (sd <= this.splashRadius) {
-                        u.hp -= this.attackDamage;
-                    }
-                }
-
-                // --- splash towers ---
-                const spashTowers =
-                    this.team === "player" ? enemyTowers : playerTowers;
-
-                for (const t of splashTowers) {
-                    if (t === this.target) continue; // if main target is a tower
-                    const sd = distance(this.target, t);
-                    if (sd <= this.splashRadius) {
-                        t.hp -= this.attackDamage;
-                    }
-                }
-            }
-
-            this.currentAttackCooldown = this.attackCooldown;
-        }
-
-        return;
+    const d = distance(this, u);
+    if (d < closestDist && d <= this.sightRange) {
+      closest = u;
+      closestDist = d;
     }
-}
+  }
+
+  // Enemy towers
+  const enemyTowersList = this.team === "player" ? enemyTowers : playerTowers;
+  for (const t of enemyTowersList) {
+    const d = distance(this, t);
+    if (d < closestDist) {
+      closest = t;
+      closestDist = d;
+    }
+  }
+
+  this.target = closest;
+  if (!this.target) return;
 
   /* ======================================================
      MOVEMENT TOWARD TARGET
