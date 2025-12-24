@@ -22,6 +22,7 @@ const PlacementType = {
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 20 },
+  { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 60 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
@@ -33,7 +34,7 @@ const cards = [
   { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "minion_horde", name: "Minion Horde", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
 ];
   
 const cardPoolDiv = document.getElementById("card-pool");
@@ -188,7 +189,7 @@ const cardAI = {
     investPos2: { x: 201, y: 0 }
   },
   minions: {
-    reactiveOffset: { x: 0, y: -75 },
+    reactiveOffset: { x: 0, y: -50 },
     investPos1: { x: 50, y: 0 },
     investPos2: { x: 350, y: 0 }
   },
@@ -225,7 +226,11 @@ const cardAI = {
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   }
-};
+  minion_horde: {
+    reactiveOffset: { x: 0, y: 0 },
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
+  };
 
 const SPELL_UNIT_VALUES = {
   Fireball: {
@@ -500,6 +505,14 @@ function spawnEnemyUnit(card, x, y) {
   else if (card.name === "Baby Dragon") {
     units.push(new Unit(x, y, "enemy", "Baby Dragon"));
   } 
+  else if (card.name === "Minion Horde") {
+    units.push(new Unit(x - 15, y - 50, "enemy", "Minion"));
+    units.push(new Unit(x + 15, y - 50, "enemy", "Minion"));
+    units.push(new Unit(x, y - 75, "enemy", "Minion"));
+    units.push(new Unit(x - 15, y - 25, "enemy", "Minion"));
+    units.push(new Unit(x + 15, y - 25, "enemy", "Minion"));
+    units.push(new Unit(x, y, "enemy", "Minion"));
+  }
 }
 
 function castSpell(card, x, y, team) {
@@ -743,6 +756,7 @@ function drawHand() {
     if (card.name === "Hog Rider") ctx.fillStyle = "saddlebrown";
     if (card.name === "Wizard") ctx.fillStyle = "dodgerblue";
     if (card.name === "Baby Dragon") ctx.fillStyle = "lime";
+    if (card.name === "Minion Horde") ctx.fillStyle = "cornflowerblue";
 
     ctx.fill();
     ctx.closePath();
@@ -1090,7 +1104,7 @@ class Unit {
       this.hp = 1152;
       this.maxHp = this.hp;
       this.speed = 0.6;
-      this.r = 30;
+      this.r = 24;
       this.attackRange = 100;  
       this.attackDamage = 161;   
       this.attackCooldown = 90;
@@ -1467,7 +1481,15 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX, mouseY, "player", "Wizard"));
     } else if (card.name === "Baby Dragon") {
       units.push(new Unit(mouseX, mouseY, "player", "Baby Dragon"));
+    } else if (card.name === "Minion Horde") {
+      units.push(new Unit(mouseX - 15, mouseY + 50, "player", "Minion"));
+      units.push(new Unit(mouseX + 15, mouseY + 50, "player", "Minion"));
+      units.push(new Unit(mouseX, mouseY + 75, "player", "Minion"));
+      units.push(new Unit(mouseX - 15, mouseY + 25, "player", "Minion"));
+      units.push(new Unit(mouseX + 15, mouseY + 25, "player", "Minion"));
+      units.push(new Unit(mouseX, mouseY, "player", "Minion"));
     }
+    
     cycleCard(playerHand, playerDeck, selectedCardIndex);
     selectedCardIndex = null;
   }
