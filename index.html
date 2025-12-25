@@ -1310,10 +1310,10 @@ update() {
 
   if (this.type === "Witch") {
       if (this.spawnSkeletons === frameClock % 420) {
-          units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
-          units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
-          units.push(new Unit(this.x, this.y + 25, this.team, "Skeleton"));
-          units.push(new Unit(this.x, this.y - 25, this.team, "Skeleton"));
+          units.push(new Unit(this.x + 50, this.y, this.team, "Skeleton"));
+          units.push(new Unit(this.x - 50, this.y, this.team, "Skeleton"));
+          units.push(new Unit(this.x, this.y + 50, this.team, "Skeleton"));
+          units.push(new Unit(this.x, this.y - 50, this.team, "Skeleton"));
       }
   }
   
