@@ -1309,7 +1309,7 @@ update() {
   this.hp -= this.decay;
 
   if (this.type === "Witch") {
-      if (this.spawnSkeletons = frameClock % 300) {
+      if (this.spawnSkeletons === frameClock % 300) {
           units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x, this.y + 25, this.team, "Skeleton"));
