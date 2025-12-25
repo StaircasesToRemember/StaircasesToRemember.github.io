@@ -13,6 +13,7 @@
 
 <script>
 let gameStarted = false;
+let frameClock = 0;
 
 const PlacementType = {
   PLAYER_SIDE_ONLY: "player",
@@ -36,6 +37,7 @@ const cards = [
   { id: "pekka", name: "Pekka", cost: 7, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 192, delay: 1 }
 ];
@@ -244,7 +246,12 @@ const cardAI = {
     reactivePos: { x: 200, y: 200 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
-  }
+  },
+  witch: {
+    reactiveOffset: { x: 0, y: -145 },
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
+  },
   };
 
 const SPELL_UNIT_VALUES = {
@@ -262,6 +269,7 @@ const SPELL_UNIT_VALUES = {
     "Baby Dragon": 1,
     Pekka: 0.5,
     "Fire Spirit": 1,
+    Witch: 2.5,
 
     tower: 2,
     kingTower: -5
@@ -281,6 +289,7 @@ const SPELL_UNIT_VALUES = {
     "Baby Dragon": 0.5,
     Pekka: 0.25,
     "Fire Spirit": 1,
+    Witch: 1.25,
 
     tower: 1,
     kingTower: -5
@@ -300,6 +309,7 @@ const SPELL_UNIT_VALUES = {
     "Baby Dragon": 0.25,
     Pekka: 0.25,
     "Fire Spirit": 0,
+    Witch: 0.75
     
     tower: 0.5,
     kingTower: -5
@@ -557,6 +567,9 @@ function spawnEnemyUnit(card, x, y) {
   } 
   else if (card.name === "Fire Spirit") {
     units.push(new Unit(x, y, "enemy", "Fire Spirit"));
+  } 
+  else if (card.name === "Witch") {
+    units.push(new Unit(x, y, "enemy", "Witch"));
   } 
 }
 
@@ -877,6 +890,7 @@ function drawHand() {
       if (card.name === "Minion Horde") ctx.fillStyle = "cornflowerblue";
       if (card.name === "Pekka") ctx.fillStyle = "midnightblue";
       if (card.name === "Fire Spirit") {ctx.globalAlpha = 0.5; ctx.fillStyle = "red";}
+      if (card.name === "Witch") ctx.fillStyle = "indigo";
       
 
       ctx.fill();
@@ -1267,6 +1281,22 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
       this.splashRadius = 40;
+    } else if (type === "Witch") {
+      this.hp = 839;
+      this.maxHp = this.hp;
+      this.speed = 0.5;
+      this.r = 20;
+      this.attackRange = 145;  
+      this.attackDamage = 135;   
+      this.attackCooldown = 66;
+      this.isAir = false;
+      this.attacksAir = true;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 160;
+      this.isBuilding = false;
+      this.decay = 0;
+      this.splashRadius = 40;
+      this.spawnSkeletons = frameClock % 500 - 1;
     } 
 
     this.type = type;
@@ -1275,8 +1305,17 @@ class Unit {
   }
 
 update() {
-
+  
   this.hp -= this.decay;
+
+  if (this.type === "Witch") {
+      if (this.spawnSkeletons = frameClock % 500) {
+          units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
+          units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
+          units.push(new Unit(this.x, this.y + 25, this.team, "Skeleton"));
+          units.push(new Unit(this.x, this.y - 25, this.team, "Skeleton"));
+      }
+  }
   
   // Drop target if dead
   if (this.target && this.target.hp <= 0) {
@@ -1457,6 +1496,7 @@ update() {
     else if (this.type === "Baby Dragon") ctx.fillStyle = "lime";
     else if (this.type === "Pekka") ctx.fillStyle = "midnightblue";
     else if (this.type === "Fire Spirit") {ctx.globalAlpha = 0.5; ctx.fillStyle = "red";}
+    else if (this.type === "Witch") ctx.fillStyle = "indigo";
     
     ctx.fill();
     ctx.closePath();
@@ -1481,6 +1521,7 @@ function generateElixir() {
 
 // Draw loop
 function drawArena() {
+  frameClock++;
   // Draw grass
   ctx.fillStyle = "lightgreen";
   ctx.fillRect(0, 0, canvas.width, 600);
@@ -1650,6 +1691,8 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX, mouseY, "player", "Pekka"));
     } else if (card.name === "Fire Spirit") {
       units.push(new Unit(mouseX, mouseY, "player", "Fire Spirit"));
+    } else if (card.name === "Witch") {
+      units.push(new Unit(mouseX, mouseY, "player", "Witch"));
     } 
     
     cycleCard(playerHand, playerDeck, selectedCardIndex);
