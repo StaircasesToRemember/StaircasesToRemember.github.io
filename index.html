@@ -1296,7 +1296,7 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
       this.splashRadius = 40;
-      this.spawnSkeletons = frameClock % 300 - 1;
+      this.spawnSkeletons = (frameClock - 1) % 300;
     } 
 
     this.type = type;
