@@ -24,6 +24,7 @@ const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 20 },
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
+  { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
   { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 60 },
@@ -252,6 +253,11 @@ const cardAI = {
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
+  barbarians: {
+    reactiveOffset: { x: 0, y: 0 },
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
+  },
   };
 
 const SPELL_UNIT_VALUES = {
@@ -270,6 +276,7 @@ const SPELL_UNIT_VALUES = {
     Pekka: 0.5,
     "Fire Spirit": 1,
     Witch: 2.5,
+    Barbarian: 1,
 
     tower: 2,
     kingTower: -5
@@ -289,7 +296,8 @@ const SPELL_UNIT_VALUES = {
     "Baby Dragon": 0.5,
     Pekka: 0.25,
     "Fire Spirit": 1,
-    Witch: 1.25,
+    Witch: 1.25,    
+    Barbarian: 0.25,
 
     tower: 1,
     kingTower: -5
@@ -310,6 +318,7 @@ const SPELL_UNIT_VALUES = {
     Pekka: 0.25,
     "Fire Spirit": 0,
     Witch: 0.75,
+    Barbarian: 0,
     
     tower: 0.5,
     kingTower: -5
@@ -570,6 +579,13 @@ function spawnEnemyUnit(card, x, y) {
   } 
   else if (card.name === "Witch") {
     units.push(new Unit(x, y, "enemy", "Witch"));
+  } 
+  else if (card.name === "Barbarians") {
+    units.push(new Unit(x, y + 15, "enemy", "Barbarian"));
+    units.push(new Unit(x - 10, y - 15, "enemy", "Barbarian"));
+    units.push(new Unit(x + 10, y - 15, "enemy", "Barbarian"));
+    units.push(new Unit(x - 15, y, "enemy", "Barbarian"));
+    units.push(new Unit(x + 15, y, "enemy", "Barbarian"));
   } 
 }
 
@@ -873,7 +889,7 @@ function drawHand() {
       ctx.beginPath();
       ctx.arc(x + cardWidth / 2, y + 35, 20, 0, Math.PI * 2);
 
-      if (card.name === "Knight") ctx.fillStyle = "yellow";
+      if (card.name === "Knight") ctx.fillStyle = "gold";
       if (card.name === "Archers") ctx.fillStyle = "magenta";
       if (card.name === "Musketeer") ctx.fillStyle = "blueviolet";
       if (card.name === "Giant") ctx.fillStyle = "orange";
@@ -891,6 +907,7 @@ function drawHand() {
       if (card.name === "Pekka") ctx.fillStyle = "midnightblue";
       if (card.name === "Fire Spirit") {ctx.globalAlpha = 0.5; ctx.fillStyle = "red";}
       if (card.name === "Witch") ctx.fillStyle = "indigo";
+      if (card.name === "Barbarians") ctx.fillStyle = "yellow";
       
 
       ctx.fill();
@@ -1297,7 +1314,22 @@ class Unit {
       this.decay = 0;
       this.splashRadius = 40;
       this.spawnSkeletons = (frameClock + 60) % 420;
-    } 
+    } else if (type === "Barbarian") {
+      this.hp = 670;
+      this.maxHp = this.hp;
+      this.speed = 0.5;
+      this.r = 20;
+      this.attackRange = 25;  
+      this.attackDamage = 192;   
+      this.attackCooldown = 78;
+      this.isAir = false;
+      this.attacksAir = false;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 160;
+      this.isBuilding = false;
+      this.decay = 0;
+      this.splashRadius = 0;
+    }
 
     this.type = type;
     this.target = null;
@@ -1483,7 +1515,7 @@ update() {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
 
-    if (this.type === "Knight") ctx.fillStyle = "yellow";
+    if (this.type === "Knight") ctx.fillStyle = "gold";
     else if (this.type === "Archer") ctx.fillStyle = "magenta";
     else if (this.type === "Musketeer") ctx.fillStyle = "blueviolet";
     else if (this.type === "Giant") ctx.fillStyle = "orange";
@@ -1497,6 +1529,7 @@ update() {
     else if (this.type === "Pekka") ctx.fillStyle = "midnightblue";
     else if (this.type === "Fire Spirit") {ctx.globalAlpha = 0.5; ctx.fillStyle = "red";}
     else if (this.type === "Witch") ctx.fillStyle = "indigo";
+    else if (this.type === "Barbarian") ctx.fillStyle = "yellow";
     
     ctx.fill();
     ctx.closePath();
@@ -1693,6 +1726,12 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX, mouseY, "player", "Fire Spirit"));
     } else if (card.name === "Witch") {
       units.push(new Unit(mouseX, mouseY, "player", "Witch"));
+    } else if (card.name === "Barbarians") {
+      units.push(new Unit(mouseX, mouseY - 15, "player", "Barbarian"));
+      units.push(new Unit(mouseX + 15, mouseY, "player", "Barbarian"));
+      units.push(new Unit(mouseX - 15, mouseY, "player", "Barbarian"));
+      units.push(new Unit(mouseX + 10, mouseY + 15, "player", "Barbarian"));
+      units.push(new Unit(mouseX - 10, mouseY + 15, "player", "Barbarian"));
     } 
     
     cycleCard(playerHand, playerDeck, selectedCardIndex);
