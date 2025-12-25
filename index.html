@@ -7,7 +7,7 @@
   <div id="card-pool"></div>
   <p id="deck-count">0 / 8</p>
   <button id="start-game" disabled>Start Game</button>
-</div> 
+</div> f
   
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
@@ -601,7 +601,7 @@ function resolveSpell(card, x, y, team) {
         const targetTowers = team === "player" ? enemyTowers : playerTowers;
         for (const t of targetTowers) {
             const d = distance({ x, y }, t);
-            if (d <= card.radius) t.hp -= card.damage;
+            if (d <= card.radius) t.hp -= card.damage * 0.25;
         }
 
         if (card.name === "Fireball") {
