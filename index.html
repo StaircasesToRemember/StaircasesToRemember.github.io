@@ -1296,7 +1296,7 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
       this.splashRadius = 40;
-      this.spawnSkeletons = (frameClock - 1) % 300;
+      this.spawnSkeletons = (frameClock + 60) % 420;
     } 
 
     this.type = type;
@@ -1309,7 +1309,7 @@ update() {
   this.hp -= this.decay;
 
   if (this.type === "Witch") {
-      if (this.spawnSkeletons === frameClock % 300) {
+      if (this.spawnSkeletons === frameClock % 420) {
           units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x, this.y + 25, this.team, "Skeleton"));
