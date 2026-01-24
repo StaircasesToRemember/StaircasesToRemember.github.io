@@ -1225,7 +1225,10 @@ update() {
 }
 
 function endGameByTowers() {
+
+  console.log("Ending game");
   if (!gameStarted) return;
+  
   gameStarted = false;
 
   const playerTowerCount = playerTowers.length;
