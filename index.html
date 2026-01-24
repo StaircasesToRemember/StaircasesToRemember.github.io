@@ -1237,8 +1237,10 @@ function endGameByTowers() {
   let result = null;
   if (playerTowerCount > enemyTowerCount) result = "PLAYER";
   else if (enemyTowerCount > playerTowerCount) result = "ENEMY";
-  else return; // draw → ignore
-
+  else { 
+      console.log("return draw");
+      return; // draw → ignore
+  }
   // ---- UPDATE STATS ----
   for (const idx of playerData) {
     const card = cards[idx];
