@@ -1608,6 +1608,9 @@ function drawArena() {
   if (frameClock % 60 == 0){
     timeLeft--;
   }
+  if (timeLeft == 0) {
+    endGameByTowers();
+  }
   // Draw grass
   ctx.fillStyle = "lightgreen";
   ctx.fillRect(0, 0, canvas.width, 600);
