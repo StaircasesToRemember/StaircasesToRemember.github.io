@@ -907,6 +907,10 @@ function getEnemyUnits(unit) {
 }
 
 function drawPockets() {
+  if (!gameStarted) {
+      return;
+  }
+  
   ctx.strokeStyle = "magenta";
   ctx.lineWidth = 1;
 
