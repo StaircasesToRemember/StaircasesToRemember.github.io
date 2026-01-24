@@ -1847,8 +1847,10 @@ function drawArena() {
   ctx.fillStyle = "#ddd";
   ctx.fillRect(0, 700, canvas.width, 150);
   drawHand();
-  
-  requestAnimationFrame(drawArena);
+
+  if (gameStarted) {
+    requestAnimationFrame(drawArena);
+  }
 }
   
   
