@@ -125,7 +125,13 @@ function startGame(deck) {
 
   document.getElementById("deck-builder").style.display = "none";
 
-  if (!gameStarted) drawArena();
+  if (!gameStarted) {
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+  }
 
   gameStarted = true;
 }
