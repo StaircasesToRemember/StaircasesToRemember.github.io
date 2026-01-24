@@ -1228,8 +1228,6 @@ function endGameByTowers() {
 
   console.log("Ending game");
   
-  gameStarted = false;
-
   const playerTowerCount = playerTowers.length;
   const enemyTowerCount = enemyTowers.length;
 
@@ -1274,6 +1272,7 @@ function endGameByTowers() {
 
   // ---- RETURN TO HOME ----
   document.getElementById("deck-builder").style.display = "block";
+  gameStarted = false;
   console.log("game over");
 }
   
