@@ -1228,7 +1228,7 @@ function endGameByTowers() {
     let message;
     if (playerTowerCount > enemyTowerCount) message = "You win!";
     else if (enemyTowerCount > playerTowerCount) message = "You lost!";
-    else return;
+    else return; // tie, ignore for now
 
     // Update player card stats
     for (const cardId of playerData) {
@@ -1259,6 +1259,25 @@ function endGameByTowers() {
         const rate = total ? (wins / total * 100).toFixed(1) : "0.0";
         console.log(`${card.name}: ${wins} W / ${losses} L (${rate}%)`);
     }
+
+    // ---- STOP GAMEPLAY ----
+    gameStarted = false;
+    units.length = 0;         // clear all units
+    effects.length = 0;       // clear visual effects
+    pendingSpells.length = 0; // clear pending spells
+    playerHand = [];
+    enemyHand = [];
+    playerTowers = [];        // reset towers
+    enemyTowers = [];
+    timeLeft = 180;           // reset timer
+    playerElixir = 7;
+    enemyElixir = 7;
+
+    // Show deck-builder / homescreen
+    document.getElementById("deck-builder").style.display = "block";
+
+    // Optionally redraw arena as blank
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
   
 // Create towers
