@@ -101,13 +101,11 @@ function startGame(deck) {
 
   // Initialize player deck properly
   const playerState = initializeDeck(deck);
-  console.log("Player Deck:", playerDeck);
   playerHand = playerState.hand;
   playerDeck = playerState.deck;
 
   // Initialize enemy
   const enemyState = initializeDeck(enemyDeck);
-  console.log("Enemy Deck:", enemyDeck);
   enemyHand = enemyState.hand;
   enemyDeck = enemyState.deck;
 
@@ -121,7 +119,10 @@ function startGame(deck) {
 
   // START GAME SYSTEMS
   drawArena();
-}
+  if (gameMode == "AI_VS_AI") {
+    console.log("Player Deck:", randomPlayerDeck);
+    console.log("Enemy Deck:", enemyDeck);
+  }
   
   
 let timeLeft = 180; // 3 minutes in seconds
