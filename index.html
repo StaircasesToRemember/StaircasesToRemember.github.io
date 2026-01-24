@@ -476,31 +476,38 @@ function bestSpellTarget(card, team) {
 function resolveAIPlacement(card, team) {
   const ai = cardAI[card.id];
 
-  const myElixir   = team === "enemy" ? enemyElixir : playerElixir;
-  const oppElixir  = team === "enemy" ? playerElixir : enemyElixir;
+  const myElixir  = team === "enemy" ? enemyElixir : playerElixir;
+  const oppElixir = team === "enemy" ? playerElixir : enemyElixir;
 
-  const dir = team === "enemy" ? 1 : -1;
+  const dir = team === "enemy" ? 1 : -1; // only for offsets
 
   const threat = card.type === "spell"
     ? bestSpellTarget(card, team)
     : furthestEnemyOnOurSide(team);
 
+  // Reactive offset
   if (threat && ai?.reactiveOffset && myElixir >= oppElixir) {
     return {
       x: threat.x + ai.reactiveOffset.x,
-      y: threat.y + ai.reactiveOffset.y * dir
+      y: threat.y + ai.reactiveOffset.y * dir // only flip the offset
     };
   }
 
+  // Reactive position
   if (threat && ai?.reactivePos && myElixir >= oppElixir) {
     return {
       x: ai.reactivePos.x,
-      y: ai.reactivePos.y
+      y: 600 - ai.reactivePos.y // reflect absolute position
     };
   }
 
+  // Investment positions
   if (!threat && ai?.investPos1 && myElixir === 10) {
-    return Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
+    const pos = Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
+    return {
+      x: pos.x,
+      y: 600 - pos.y // reflect absolute position
+    };
   }
 
   return null;
