@@ -1108,8 +1108,6 @@ function updateTowers() {
     }
 
     if (t.isKing && t.hp <= 0) {
-      alert("You lost!");
-      location.reload(); // simple game over reset
     }
   }
 
@@ -1135,8 +1133,6 @@ function updateTowers() {
       }
     }
     if (t.isKing && t.hp <= 0) {
-      alert("You win!");
-      location.reload(); // simple game over reset
       
     }
   }
@@ -1263,8 +1259,6 @@ function endGameByTowers() {
         const rate = total ? (wins / total * 100).toFixed(1) : "0.0";
         console.log(`${card.name}: ${wins} W / ${losses} L (${rate}%)`);
     }
-
-    alert(message);
 }
   
 // Create towers
