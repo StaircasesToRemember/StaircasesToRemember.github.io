@@ -486,7 +486,7 @@ function resolveAIPlacement(card, team) {
     : furthestEnemyOnOurSide(team);
 
   // Reactive offset
-  if (threat && ai?.reactiveOffset && myElixir >= oppElixir) {
+  if (threat && ai?.reactiveOffset) {
     return {
       x: threat.x > 200 ? threat.x - ai.reactiveOffset.x : threat.x - ai.reactiveOffset.x,
       y: threat.y + ai.reactiveOffset.y * dir // flip only the offset
@@ -494,7 +494,7 @@ function resolveAIPlacement(card, team) {
   }
 
   // Reactive position
-  if (threat && ai?.reactivePos && myElixir >= oppElixir) {
+  if (threat && ai?.reactivePos) {
     return {
       x: ai.reactivePos.x,
       y: team === "player" ? 600 - ai.reactivePos.y : ai.reactivePos.y
