@@ -1605,6 +1605,9 @@ function generateElixir() {
 // Draw loop
 function drawArena() {
   frameClock++;
+  if (frameClock % 60 == 0){
+    timeLeft--;
+  }
   // Draw grass
   ctx.fillStyle = "lightgreen";
   ctx.fillRect(0, 0, canvas.width, 600);
