@@ -1119,6 +1119,7 @@ function updateTowers() {
     }
 
     if (t.isKing && t.hp <= 0) {
+        playerTowers.splice(i, 1);
         endGameByTowers();
     }
   }
@@ -1146,6 +1147,7 @@ function updateTowers() {
       }
     }
     if (t.isKing && t.hp <= 0) {
+        enemyTowers.splice(i, 1);
         endGameByTowers();
     }
   }
@@ -1227,8 +1229,6 @@ update() {
 }
 
 function endGameByTowers() {
-
-  console.log("Ending game");
   
   const playerTowerCount = playerTowers.length;
   const enemyTowerCount = enemyTowers.length;
@@ -1237,7 +1237,6 @@ function endGameByTowers() {
   if (playerTowerCount > enemyTowerCount) result = "PLAYER";
   else if (enemyTowerCount > playerTowerCount) result = "ENEMY";
   else { 
-      console.log("return draw");
       return; // draw → ignore
   }
   // ---- UPDATE STATS ----
