@@ -1850,9 +1850,7 @@ function drawArena() {
   ctx.fillRect(0, 700, canvas.width, 150);
   drawHand();
 
-  if (gameStarted) {
-    requestAnimationFrame(drawArena);
-  }
+  requestAnimationFrame(drawArena);
 }
   
   
