@@ -113,6 +113,7 @@ function startGame(deck) {
   setInterval(enemyPlayCard, 1000);
 }
   
+  
 let timeLeft = 180; // 3 minutes in seconds
 let normalInterval = 2800; // 1 elixir every 2.8s
 let doubleElixir = false;
@@ -1097,12 +1098,6 @@ update() {
   }
 }
 }
-
-function startElixirInterval() {
-  const interval = doubleElixir ? normalInterval / 2 : normalInterval;
-  clearInterval(elixirIntervalId); // clear previous interval
-  elixirIntervalId = setInterval(generateElixir, interval);
-}
   
 function endGameByTowers() {
   const playerTowerCount = playerTowers.length;
@@ -1659,6 +1654,14 @@ function drawArena() {
 
   // Draw timer
   drawTimer();
+
+  // Generate elixir
+  if (frameClock % 168 == 0) {
+      generateElixir();
+  }
+  if (frameClock % 168 == 84 && frameClock >= 7200) {
+        generateElixir();
+  }
   
   // Draw elixir bar
   drawElixirBar();
@@ -1671,21 +1674,6 @@ function drawArena() {
   
   requestAnimationFrame(drawArena);
 }
-  
-// Generate elixir
-setInterval(() => {
-  if (timeLeft > 0) {
-    timeLeft--;
-
-    if (timeLeft === 59) {
-      doubleElixir = true;
-      startElixirInterval(); // restart interval at half the time
-    }
-
-  } else {
-    endGameByTowers();
-  }
-}, 1000);
   
 // Event listener
 canvas.addEventListener("click", function (e) {
