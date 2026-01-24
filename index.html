@@ -17,7 +17,9 @@ let gameMode = "PVP";
 
 document.getElementById("start-ai").onclick = () => {
   gameMode = "AI_VS_AI";
-  startGame(playerDeck);
+  // Generate random deck for player in AI mode
+  const randomPlayerDeck = randomEnemyDeck(8);
+  startGame(randomPlayerDeck);
 };
 
   
