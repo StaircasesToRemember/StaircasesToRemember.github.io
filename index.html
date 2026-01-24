@@ -102,6 +102,7 @@ function toggleCard(cardId, button) {
 }
 
 startButton.onclick = () => {
+  enemyDeck = randomEnemyDeck(8);
   startGame(playerDeck);
 };
 
@@ -163,8 +164,6 @@ function randomEnemyDeck(size = 8) {
 
   return indices.slice(0, size);
 }
-
-enemyDeck = randomEnemyDeck(8);
   
 // Create a fresh shuffled deck for the player
 function initializeDeck(deckArray) {
