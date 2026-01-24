@@ -1227,7 +1227,6 @@ update() {
 function endGameByTowers() {
 
   console.log("Ending game");
-  if (!gameStarted) return;
   
   gameStarted = false;
 
@@ -1259,7 +1258,6 @@ function endGameByTowers() {
   }
 
   // ---- LOG ALL WINRATES ----
-  console.clear();
   console.log("=== CARD WINRATES ===");
   for (const id in cardStats) {
     const s = cardStats[id];
