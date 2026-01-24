@@ -1224,10 +1224,7 @@ for (const card of cards) {
 }
 
 function endGameByTowers() {
-    if (!playerData || !enemyData) {
-        console.warn("playerData or enemyData is undefined!");
-        return;
-    }
+    if (!playerData || !enemyData) return;
 
     const playerTowerCount = playerTowers.length;
     const enemyTowerCount = enemyTowers.length;
@@ -1237,8 +1234,9 @@ function endGameByTowers() {
     else if (enemyTowerCount > playerTowerCount) message = "You lost!";
     else return;
 
-    // Update stats
-    for (const card of playerData) {
+    // Update player card stats
+    for (const cardId of playerData) {
+        const card = cards[cardId];
         if (!card.wins) card.wins = 0;
         if (!card.losses) card.losses = 0;
 
@@ -1246,7 +1244,9 @@ function endGameByTowers() {
         else card.losses++;
     }
 
-    for (const card of enemyData) {
+    // Update enemy card stats
+    for (const cardId of enemyData) {
+        const card = cards[cardId];
         if (!card.wins) card.wins = 0;
         if (!card.losses) card.losses = 0;
 
