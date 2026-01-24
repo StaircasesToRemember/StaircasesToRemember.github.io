@@ -109,6 +109,8 @@ startButton.onclick = () => {
 function startGame(deck) {
   gameStarted = true;
 
+  initTowers() {
+  
   const playerState = initializeDeck(deck);
   playerHand = playerState.hand;
   playerDeck = playerState.deck;
@@ -1268,17 +1270,19 @@ function endGameByTowers() {
 }
   
 // Create towers
-const playerTowers = [
-  new Tower(75, 500, 3000, "player"),
-  new Tower(200, 550, 5000, "player", true), // King tower in center
-  new Tower(325, 500, 3000, "player")
-];
-
-const enemyTowers = [
-  new Tower(75, 100, 3000, "enemy"),
-  new Tower(200, 50, 5000, "enemy", true), // Enemy king tower
-  new Tower(325, 100, 3000, "enemy")
-];
+function initTowers() {
+    const playerTowers = [
+      new Tower(75, 500, 3000, "player"),
+      new Tower(200, 550, 5000, "player", true), // King tower in center
+      new Tower(325, 500, 3000, "player")
+    ];
+    
+    const enemyTowers = [
+      new Tower(75, 100, 3000, "enemy"),
+      new Tower(200, 50, 5000, "enemy", true), // Enemy king tower
+      new Tower(325, 100, 3000, "enemy")
+    ];
+}
 
 class Unit {
   constructor(x, y, team, type = "Knight") {
