@@ -32,28 +32,28 @@ const PlacementType = {
 };
 
 const cards = [
-  { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 20 },
-  { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "bomber", name: "Bomber", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 60 },
-  { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "mini_pekka", name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "minion_horde", name: "Minion Horde", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "minions", name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "musketeer", name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "pekka", name: "Pekka", cost: 7, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 192, delay: 1 }
+  { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 20, wins: 0, losses: 0 },
+  { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "bomber", name: "Bomber", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 60, wins: 0, losses: 0 },
+  { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "mini_pekka", name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "minion_horde", name: "Minion Horde", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "minions", name: "Minions", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "musketeer", name: "Musketeer", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "pekka", name: "Pekka", cost: 7, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 192, delay: 1, wins: 0, losses: 0 }
 ];
   
 const cardPoolDiv = document.getElementById("card-pool");
@@ -121,14 +121,6 @@ function startGame(deck) {
 
   // START GAME SYSTEMS
   drawArena();
- if (gameMode == "AI_VS_AI") {
-  const playerDeckNames = playerData.map(i => cards[i].name);
-  const enemyDeckNames  = enemyData.map(i => cards[i].name);
-
-  console.log("Player Deck:", playerDeckNames);
-  console.log("Enemy Deck:", enemyDeckNames);
-}
-
 }
   
 let timeLeft = 180; // 3 minutes in seconds
