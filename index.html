@@ -113,7 +113,6 @@ function startGame(deck) {
   playerElixir = 6;
   enemyElixir = 6;
   timeLeft = 180;
-  doubleElixir = false;
 
   // Hide deck builder
   document.getElementById("deck-builder").style.display = "none";
@@ -124,7 +123,6 @@ function startGame(deck) {
   
   
 let timeLeft = 180; // 3 minutes in seconds
-let doubleElixir = false;
 const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
 const units = [];
@@ -880,7 +878,7 @@ function drawTimer() {
   ctx.textAlign = "right";
   ctx.fillText(`${minutes}:${seconds.toString().padStart(2,'0')}`, canvas.width, 30);
 
-  if (doubleElixir) {
+  if (timeLeft < 60) {
     ctx.font = "20px Arial";
     ctx.fillText("x2", canvas.width, 60);
   }
