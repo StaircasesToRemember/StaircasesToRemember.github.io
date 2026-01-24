@@ -17,15 +17,25 @@ let gameMode = "PVP";
 
 document.getElementById("start-ai").onclick = () => {
   gameMode = "AI_VS_AI";
-  // Generate random deck for player in AI mode
   const randomPlayerDeck = randomEnemyDeck(8);
+  enemyDeck = randomEnemyDeck(8);
   startGame(randomPlayerDeck);
 };
-
   
 let gameStarted = false;
 let frameClock = 0;
 
+// Persistent card stats (never reset)
+const cardStats = {};
+for (const card of cards) {
+  cardStats[card.id] = {
+    name: card.name,
+    wins: 0,
+    losses: 0,
+    games: 0
+  };
+}
+  
 const PlacementType = {
   PLAYER_SIDE_ONLY: "player",
   ANYWHERE: "anywhere"
@@ -99,27 +109,22 @@ startButton.onclick = () => {
 function startGame(deck) {
   gameStarted = true;
 
-  // Initialize player deck properly
   const playerState = initializeDeck(deck);
   playerHand = playerState.hand;
   playerDeck = playerState.deck;
-  playerData = playerState.shuffled;
+  playerData = playerState.shuffled; // ← array of indices
 
-  // Initialize enemy
   const enemyState = initializeDeck(enemyDeck);
   enemyHand = enemyState.hand;
   enemyDeck = enemyState.deck;
-  enemyData = enemyState.shuffled;
+  enemyData = enemyState.shuffled; // ← array of indices
 
-  // Reset resources
   playerElixir = 7;
   enemyElixir = 7;
-  timeLeft = 20;
+  timeLeft = 180;
 
-  // Hide deck builder
   document.getElementById("deck-builder").style.display = "none";
 
-  // START GAME SYSTEMS
   drawArena();
 }
   
@@ -1220,57 +1225,52 @@ for (const card of cards) {
 }
 
 function endGameByTowers() {
-    const playerTowerCount = playerTowers.length;
-    const enemyTowerCount = enemyTowers.length;
+  if (!gameStarted) return;
+  gameStarted = false;
 
-    let message;
-    if (playerTowerCount > enemyTowerCount) message = "You win!";
-    else if (enemyTowerCount > playerTowerCount) message = "You lost!";
-    else return;
+  const playerTowerCount = playerTowers.length;
+  const enemyTowerCount = enemyTowers.length;
 
-    // Update wins/losses
-    for (let index of playerData) {
-        const card = cards[index];  // look up card object
-        if (!card.wins) card.wins = 0;
-        if (!card.losses) card.losses = 0;
+  let result = null;
+  if (playerTowerCount > enemyTowerCount) result = "PLAYER";
+  else if (enemyTowerCount > playerTowerCount) result = "ENEMY";
+  else return; // draw → ignore
 
-        if (playerTowerCount > enemyTowerCount) card.wins++;
-        else card.losses++;
-    }
+  // ---- UPDATE STATS ----
+  for (const idx of playerData) {
+    const card = cards[idx];
+    const stat = cardStats[card.id];
+    stat.games++;
+    if (result === "PLAYER") stat.wins++;
+    else stat.losses++;
+  }
 
-    for (let index of enemyData) {
-        const card = cards[index];  // look up card object
-        if (!card.wins) card.wins = 0;
-        if (!card.losses) card.losses = 0;
+  for (const idx of enemyData) {
+    const card = cards[idx];
+    const stat = cardStats[card.id];
+    stat.games++;
+    if (result === "ENEMY") stat.wins++;
+    else stat.losses++;
+  }
 
-        if (playerTowerCount < enemyTowerCount) card.wins++;
-        else card.losses++;
-    }
+  // ---- LOG ALL WINRATES ----
+  console.clear();
+  console.log("=== CARD WINRATES ===");
+  for (const id in cardStats) {
+    const s = cardStats[id];
+    const rate = s.games ? ((s.wins / s.games) * 100).toFixed(1) : "0.0";
+    console.log(`${s.name}: ${rate}% (${s.wins}/${s.games})`);
+  }
 
-    // Log winrates
-    console.log("=== Card Winrates ===");
-    for (const card of cards) {
-        if (card.wins || card.losses) {
-            const total = (card.wins || 0) + (card.losses || 0);
-            const rate = ((card.wins || 0) / total * 100).toFixed(1);
-            console.log(`${card.name}: ${rate}% (${card.wins || 0}W/${card.losses || 0}L)`);
-        }
-    }
+  // ---- RESET GAME STATE SAFELY ----
+  units.length = 0;
+  effects.length = 0;
+  pendingSpells.length = 0;
+  playerTowers.length = 0;
+  enemyTowers.length = 0;
 
-    alert(message);
-
-    // Reset gameplay to homescreen (without deleting winrate data)
-    gameStarted = false;
-    playerHand = [];
-    playerDeck = [];
-    enemyHand = [];
-    enemyDeck = [];
-    playerTowers.length = 0;
-    enemyTowers.length = 0;
-    pendingSpells.length = 0;
-    effects.length = 0;
-    document.getElementById("deck-builder").style.display = "block";
-    console.log("Reset successful");
+  // ---- RETURN TO HOME ----
+  document.getElementById("deck-builder").style.display = "block";
 }
   
 // Create towers
