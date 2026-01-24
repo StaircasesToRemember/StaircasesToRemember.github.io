@@ -502,7 +502,7 @@ function resolveAIPlacement(card, team) {
   }
 
   // Investment positions
-  if (!threat && ai?.investPos1 && myElixir === 10) {
+  if (!threat && ai?.investPos1 && myElixir >= 9) {
     const pos = Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
     return {
       x: pos.x,
