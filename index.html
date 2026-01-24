@@ -1272,14 +1272,14 @@ function endGameByTowers() {
 }
   
 // Create towers
-function initTowers() {
-    const playerTowers = [
+function initTowers() { 
+    playerTowers = [
       new Tower(75, 500, 3000, "player"),
       new Tower(200, 550, 5000, "player", true), // King tower in center
       new Tower(325, 500, 3000, "player")
     ];
     
-    const enemyTowers = [
+    enemyTowers = [
       new Tower(75, 100, 3000, "enemy"),
       new Tower(200, 50, 5000, "enemy", true), // Enemy king tower
       new Tower(325, 100, 3000, "enemy")
