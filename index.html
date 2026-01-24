@@ -1224,38 +1224,47 @@ for (const card of cards) {
 }
 
 function endGameByTowers() {
+    if (!playerData || !enemyData) {
+        console.warn("playerData or enemyData is undefined!");
+        return;
+    }
+
     const playerTowerCount = playerTowers.length;
     const enemyTowerCount = enemyTowers.length;
 
     let message;
     if (playerTowerCount > enemyTowerCount) message = "You win!";
     else if (enemyTowerCount > playerTowerCount) message = "You lost!";
-    else return; // tie, do nothing
+    else return;
 
-    // Update stats for player's deck
-    for (const idx of playerData.shuffled) {
-        const cardId = cards[idx].id;
-        if (playerTowerCount > enemyTowerCount) cardStats[cardId].wins++;
-        else cardStats[cardId].losses++;
+    // Update stats
+    for (const card of playerData) {
+        if (!card.wins) card.wins = 0;
+        if (!card.losses) card.losses = 0;
+
+        if (playerTowerCount > enemyTowerCount) card.wins++;
+        else card.losses++;
     }
 
-    // Update stats for enemy's deck
-    for (const idx of enemyData.shuffled) {
-        const cardId = cards[idx].id;
-        if (enemyTowerCount > playerTowerCount) cardStats[cardId].wins++;
-        else cardStats[cardId].losses++;
+    for (const card of enemyData) {
+        if (!card.wins) card.wins = 0;
+        if (!card.losses) card.losses = 0;
+
+        if (enemyTowerCount > playerTowerCount) card.wins++;
+        else card.losses++;
+    }
+
+    // Log all winrates
+    console.log("=== Card Winrates ===");
+    for (const card of cards) {
+        const wins = card.wins || 0;
+        const losses = card.losses || 0;
+        const total = wins + losses;
+        const rate = total ? (wins / total * 100).toFixed(1) : "0.0";
+        console.log(`${card.name}: ${wins} W / ${losses} L (${rate}%)`);
     }
 
     alert(message);
-
-    // Log winrates
-    console.log("Card Winrates:");
-    for (const id in cardStats) {
-        const stats = cardStats[id];
-        const total = stats.wins + stats.losses;
-        const rate = total ? ((stats.wins / total) * 100).toFixed(1) : "0";
-        console.log(`${stats.name}: ${stats.wins}W / ${stats.losses}L (${rate}%)`);
-    }
 }
   
 // Create towers
