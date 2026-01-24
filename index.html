@@ -506,6 +506,39 @@ function resolveAIPlacement(card, team) {
   return null;
 }
 
+function aiPlayCard(team, hand, deck) {
+  const elixir = team === "player" ? playerElixir : enemyElixir;
+
+  const playable = hand
+    .map(i => cards[i])
+    .filter(c => elixir >= c.cost);
+
+  if (playable.length === 0) return;
+
+  const card = playable[Math.floor(Math.random() * playable.length)];
+  const cardIndex = cards.indexOf(card);
+  const handIndex = hand.indexOf(cardIndex);
+
+  if (handIndex === -1) return; // safety
+
+  const pos = resolveEnemyPlacement(card, team);
+  if (!pos) return;
+
+  // spend elixir
+  if (team === "player") playerElixir -= card.cost;
+  else enemyElixir -= card.cost;
+
+  if (card.type === "spell") {
+    castSpell(card, pos.x, pos.y, team);
+  } else if (canPlaceCard(card, pos.x, pos.y, team)) {
+    team === "enemy"
+      ? spawnEnemyUnit(card, pos.x, pos.y)
+      : spawnPlayerUnit(card, pos.x, pos.y);
+  }
+
+  cycleCard(hand, deck, handIndex);
+}
+  
 function spawnEnemyUnit(card, x, y) {
   if (card.name === "Knight") {
     units.push(new Unit(x, y, "enemy", "Knight"));
@@ -1739,7 +1772,7 @@ function drawArena() {
       generateElixir();
       aiPlayCard("player", playerHand, playerDeck);
       aiPlayCard("enemy", enemyHand, enemyDeck);
-  }
+a
   
   // Draw elixir bar
   drawElixirBar();
