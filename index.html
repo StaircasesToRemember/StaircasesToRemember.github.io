@@ -109,15 +109,12 @@ function startGame(deck) {
 
   // START GAME SYSTEMS
   drawArena();
-  startElixirInterval();
-  setInterval(enemyPlayCard, 1000);
 }
   
   
 let timeLeft = 180; // 3 minutes in seconds
-let normalInterval = 2800; // 1 elixir every 2.8s
 let doubleElixir = false;
-let elixirIntervalId;const canvas = document.getElementById("arena");
+const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
 const units = [];
 const bridges = [
@@ -1667,6 +1664,9 @@ function drawArena() {
   drawElixirBar();
   console.log("Enemy elixir: ", enemyElixir);
 
+  // Enemy AI plays card
+  enemyPlayCard();
+  
   // Draw hand 
   ctx.fillStyle = "#ddd";
   ctx.fillRect(0, 700, canvas.width, 150);
