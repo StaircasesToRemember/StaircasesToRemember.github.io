@@ -1260,24 +1260,74 @@ function endGameByTowers() {
         console.log(`${card.name}: ${wins} W / ${losses} L (${rate}%)`);
     }
 
+    alert(message);
+
     // ---- STOP GAMEPLAY ----
     gameStarted = false;
-    units.length = 0;         // clear all units
-    effects.length = 0;       // clear visual effects
-    pendingSpells.length = 0; // clear pending spells
-    playerHand = [];
-    enemyHand = [];
-    playerTowers = [];        // reset towers
-    enemyTowers = [];
-    timeLeft = 180;           // reset timer
+
+    // Clear arrays safely without reassigning
+    units.length = 0;
+    effects.length = 0;
+    pendingSpells.length = 0;
+    playerHand.length = 0;
+    enemyHand.length = 0;
+    playerTowers.length = 0;
+    enemyTowers.length = 0;
+
+    // Reset resources
+    timeLeft = 180;
     playerElixir = 7;
     enemyElixir = 7;
 
     // Show deck-builder / homescreen
     document.getElementById("deck-builder").style.display = "block";
 
-    // Optionally redraw arena as blank
+    // Clear arena canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// ---- Make AI vs AI repeatable and accumulate stats ----
+document.getElementById("start-ai").onclick = () => {
+    gameMode = "AI_VS_AI";
+
+    // Generate new random decks for both sides
+    const randomPlayerDeck = randomEnemyDeck(8);
+    const randomEnemyDeckDeck = randomEnemyDeck(8);
+
+    startGame(randomPlayerDeck, randomEnemyDeckDeck);
+};
+
+// Modified startGame to accept custom enemy deck
+function startGame(playerDeckInput, enemyDeckInput) {
+    gameStarted = true;
+
+    // Initialize player deck properly
+    const playerState = initializeDeck(playerDeckInput);
+    playerHand = playerState.hand;
+    playerDeck = playerState.deck;
+    playerData = playerState.shuffled;
+
+    // Initialize enemy deck
+    const enemyState = initializeDeck(enemyDeckInput || enemyDeck);
+    enemyHand = enemyState.hand;
+    enemyDeck = enemyState.deck;
+    enemyData = enemyState.shuffled;
+
+    // Reset resources
+    playerElixir = 7;
+    enemyElixir = 7;
+    timeLeft = 180;
+
+    // Hide deck builder
+    document.getElementById("deck-builder").style.display = "none";
+
+    // START GAME SYSTEMS
+    drawArena();
+
+    if (gameMode === "AI_VS_AI") {
+        console.log("Player Deck:", playerData.map(id => cards[id].name));
+        console.log("Enemy Deck:", enemyData.map(id => cards[id].name));
+    }
 }
   
 // Create towers
