@@ -1772,7 +1772,7 @@ function drawArena() {
       generateElixir();
       aiPlayCard("player", playerHand, playerDeck);
       aiPlayCard("enemy", enemyHand, enemyDeck);
-a
+  }
   
   // Draw elixir bar
   drawElixirBar();
@@ -1785,6 +1785,7 @@ a
   
   requestAnimationFrame(drawArena);
 }
+  
   
 // Event listener
 canvas.addEventListener("click", function (e) {
