@@ -103,13 +103,13 @@ function startGame(deck) {
   const playerState = initializeDeck(deck);
   playerHand = playerState.hand;
   playerDeck = playerState.deck;
-  playerData = playerState.shuffle;
+  playerData = playerState.shuffled;
 
   // Initialize enemy
   const enemyState = initializeDeck(enemyDeck);
   enemyHand = enemyState.hand;
   enemyDeck = enemyState.deck;
-  enemyData = enemyState.shuffle;
+  enemyData = enemyState.shuffled;
 
   // Reset resources
   playerElixir = 7;
