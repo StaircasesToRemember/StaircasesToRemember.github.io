@@ -127,7 +127,7 @@ function startGame(deck) {
 
   document.getElementById("deck-builder").style.display = "none";
 
-  drawArena();
+  if (gameStarted) drawArena();
 }
   
 let timeLeft = 180; // 3 minutes in seconds
@@ -1271,7 +1271,6 @@ function endGameByTowers() {
   pendingSpells.length = 0;
   playerTowers.length = 0;
   enemyTowers.length = 0;
-  gameStarted = false;
 
   // ---- START NEW GAME ----
   console.log("game over");
