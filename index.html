@@ -1098,7 +1098,7 @@ function updateTowers() {
     if (!t.isKing && t.hp <= 0) {
       // Remove the dead tower
       playerTowers.splice(i, 1);
-      if (timeleft == 0) endGameByTowers();
+      if (timeLeft == 0) endGameByTowers();
     
       // Apply 1 damage to all remaining towers
       for (let j = 0; j < playerTowers.length; j++) {
