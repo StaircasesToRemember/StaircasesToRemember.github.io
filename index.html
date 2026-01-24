@@ -121,10 +121,14 @@ function startGame(deck) {
 
   // START GAME SYSTEMS
   drawArena();
-  if (gameMode == "AI_VS_AI") {
-    console.log("Player Deck:", playerData);
-    console.log("Enemy Deck:", enemyData);
-  }
+ if (gameMode == "AI_VS_AI") {
+  const playerDeckNames = playerData.map(i => cards[i].name);
+  const enemyDeckNames  = enemyData.map(i => cards[i].name);
+
+  console.log("Player Deck:", playerDeckNames);
+  console.log("Enemy Deck:", enemyDeckNames);
+}
+
 }
   
 let timeLeft = 180; // 3 minutes in seconds
