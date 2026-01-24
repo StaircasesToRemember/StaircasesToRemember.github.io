@@ -101,11 +101,13 @@ function startGame(deck) {
 
   // Initialize player deck properly
   const playerState = initializeDeck(deck);
+  console.log("Player Deck:", playerDeck);
   playerHand = playerState.hand;
   playerDeck = playerState.deck;
 
   // Initialize enemy
   const enemyState = initializeDeck(enemyDeck);
+  console.log("Enemy Deck:", enemyDeck);
   enemyHand = enemyState.hand;
   enemyDeck = enemyState.deck;
 
@@ -1792,7 +1794,6 @@ function drawArena() {
   
   // Draw elixir bar
   drawElixirBar();
-  console.log("Enemy elixir: ", enemyElixir);
   
   // Draw hand 
   ctx.fillStyle = "#ddd";
