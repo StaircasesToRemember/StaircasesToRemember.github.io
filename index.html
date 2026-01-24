@@ -473,65 +473,37 @@ function bestSpellTarget(card, team) {
   return bestValue > card.cost ? bestTarget : null;
 }
 
-function resolveEnemyPlacement(card, team) {
+function resolveAIPlacement(card, team) {
   const ai = cardAI[card.id];
+
+  const myElixir   = team === "enemy" ? enemyElixir : playerElixir;
+  const oppElixir  = team === "enemy" ? playerElixir : enemyElixir;
+
+  const dir = team === "enemy" ? 1 : -1;
 
   const threat = card.type === "spell"
     ? bestSpellTarget(card, team)
     : furthestEnemyOnOurSide(team);
 
-  if (threat && ai?.reactiveOffset && enemyElixir >= playerElixir) {
+  if (threat && ai?.reactiveOffset && myElixir >= oppElixir) {
     return {
       x: threat.x + ai.reactiveOffset.x,
-      y: Math.max(threat.y + ai.reactiveOffset.y, 0)
+      y: threat.y + ai.reactiveOffset.y * dir
     };
   }
 
-  if (threat && ai?.reactivePos && enemyElixir >= playerElixir) {
+  if (threat && ai?.reactivePos && myElixir >= oppElixir) {
     return {
       x: ai.reactivePos.x,
       y: ai.reactivePos.y
     };
   }
 
-  if (!threat && ai?.investPos1 && enemyElixir === 10) {
+  if (!threat && ai?.investPos1 && myElixir === 10) {
     return Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
   }
 
   return null;
-}
- 
-function aiPlayCard(team, hand, deck) {
-  const elixir = team === "player" ? playerElixir : enemyElixir;
-
-  const playable = hand
-    .map(i => cards[i])
-    .filter(c => elixir >= c.cost);
-
-  if (playable.length === 0) return;
-
-  const card = playable[Math.floor(Math.random() * playable.length)];
-  const cardIndex = cards.indexOf(card);
-  const handIndex = hand.indexOf(cardIndex);
-
-  if (handIndex === -1) return; // safety
-
-  const pos = resolveEnemyPlacement(card, team);
-  if (!pos) return;
-
-  // spend elixir
-  if (team === "player") playerElixir -= card.cost;
-  else enemyElixir -= card.cost;
-
-  if (card.type === "spell") {
-    castSpell(card, pos.x, pos.y, team);
-  } else if (canPlaceCard(card, pos.x, pos.y, team)) {
-    team === "enemy"
-      ? spawnEnemyUnit(card, pos.x, pos.y)
-      : spawnPlayerUnit(card, pos.x, pos.y);
-  }
-
-  cycleCard(hand, deck, handIndex);
 }
 
 function spawnEnemyUnit(card, x, y) {
