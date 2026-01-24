@@ -1217,12 +1217,6 @@ update() {
   }
 }
 }
-  
-// Global object to track card win/loss stats
-const cardStats = {};
-for (const card of cards) {
-    cardStats[card.id] = { name: card.name, wins: 0, losses: 0 };
-}
 
 function endGameByTowers() {
   if (!gameStarted) return;
