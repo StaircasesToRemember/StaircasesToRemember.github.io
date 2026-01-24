@@ -521,7 +521,7 @@ function aiPlayCard(team, hand, deck) {
 
   if (handIndex === -1) return; // safety
 
-  const pos = resolveEnemyPlacement(card, team);
+  const pos = resolveAIPlacement(card, team);
   if (!pos) return;
 
   // spend elixir
