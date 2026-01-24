@@ -1782,11 +1782,11 @@ function drawArena() {
   // Generate elixir
   if (frameClock % 168 == 0) {
       generateElixir();
-      aiPlayCard("player", playerHand, playerDeck);
-      aiPlayCard("enemy", enemyHand, enemyDeck);
   }
   if (frameClock % 168 == 84 && frameClock >= 7200) {
       generateElixir();
+  }
+  if (frameClock % 84 == 42) {
       aiPlayCard("player", playerHand, playerDeck);
       aiPlayCard("enemy", enemyHand, enemyDeck);
   }
