@@ -1655,17 +1655,16 @@ function drawArena() {
   // Generate elixir
   if (frameClock % 168 == 0) {
       generateElixir();
+      enemyPlayCard();
   }
   if (frameClock % 168 == 84 && frameClock >= 7200) {
-        generateElixir();
+      generateElixir();
+      enemyPlayCard();
   }
   
   // Draw elixir bar
   drawElixirBar();
   console.log("Enemy elixir: ", enemyElixir);
-
-  // Enemy AI plays card
-  enemyPlayCard();
   
   // Draw hand 
   ctx.fillStyle = "#ddd";
