@@ -489,7 +489,7 @@ function resolveAIPlacement(card, team) {
   if (threat && ai?.reactiveOffset && myElixir >= oppElixir) {
     return {
       x: threat.x + ai.reactiveOffset.x,
-      y: threat.y + ai.reactiveOffset.y * dir // only flip the offset
+      y: threat.y + ai.reactiveOffset.y * dir // flip only the offset
     };
   }
 
@@ -497,7 +497,7 @@ function resolveAIPlacement(card, team) {
   if (threat && ai?.reactivePos && myElixir >= oppElixir) {
     return {
       x: ai.reactivePos.x,
-      y: 600 - ai.reactivePos.y // reflect absolute position
+      y: team === "player" ? 600 - ai.reactivePos.y : ai.reactivePos.y
     };
   }
 
@@ -506,7 +506,7 @@ function resolveAIPlacement(card, team) {
     const pos = Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
     return {
       x: pos.x,
-      y: 600 - pos.y // reflect absolute position
+      y: team === "player" ? 600 - pos.y : pos.y
     };
   }
 
