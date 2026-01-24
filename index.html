@@ -1226,51 +1226,51 @@ function endGameByTowers() {
     let message;
     if (playerTowerCount > enemyTowerCount) message = "You win!";
     else if (enemyTowerCount > playerTowerCount) message = "You lost!";
-    else return; // Tie, do nothing
+    else return;
 
-    // Update card win/loss stats
-    for (const card of playerData) {
+    // Update wins/losses
+    for (let index of playerData) {
+        const card = cards[index];  // look up card object
+        if (!card.wins) card.wins = 0;
+        if (!card.losses) card.losses = 0;
+
         if (playerTowerCount > enemyTowerCount) card.wins++;
         else card.losses++;
     }
-    for (const card of enemyData) {
-        if (enemyTowerCount > playerTowerCount) card.wins++;
+
+    for (let index of enemyData) {
+        const card = cards[index];  // look up card object
+        if (!card.wins) card.wins = 0;
+        if (!card.losses) card.losses = 0;
+
+        if (playerTowerCount < enemyTowerCount) card.wins++;
         else card.losses++;
+    }
+
+    // Log winrates
+    console.log("=== Card Winrates ===");
+    for (const card of cards) {
+        if (card.wins || card.losses) {
+            const total = (card.wins || 0) + (card.losses || 0);
+            const rate = ((card.wins || 0) / total * 100).toFixed(1);
+            console.log(`${card.name}: ${rate}% (${card.wins || 0}W/${card.losses || 0}L)`);
+        }
     }
 
     alert(message);
 
-    // Log all card winrates
-    console.log("=== Card Winrates ===");
-    const allCards = [...playerData, ...enemyData];
-    for (const card of allCards) {
-        const total = (card.wins || 0) + (card.losses || 0);
-        const rate = total ? ((card.wins / total) * 100).toFixed(1) : "0";
-        console.log(`${card.name}: ${card.wins || 0}W / ${card.losses || 0}L (${rate}%)`);
-    }
-
-    // Stop gameplay
+    // Reset gameplay to homescreen (without deleting winrate data)
     gameStarted = false;
-
-    // Clear arena arrays safely
-    while (units.length) units.pop();
-    while (effects.length) effects.pop();
-    while (pendingSpells.length) pendingSpells.pop();
-    while (playerHand.length) playerHand.pop();
-    while (enemyHand.length) enemyHand.pop();
-    while (playerTowers.length) playerTowers.pop();
-    while (enemyTowers.length) enemyTowers.pop();
-
-    // Reset elixir and time
-    playerElixir = 7;
-    enemyElixir = 7;
-    timeLeft = 180;
-
-    // Show deck builder / home screen
+    playerHand = [];
+    playerDeck = [];
+    enemyHand = [];
+    enemyDeck = [];
+    playerTowers.length = 0;
+    enemyTowers.length = 0;
+    pendingSpells.length = 0;
+    effects.length = 0;
     document.getElementById("deck-builder").style.display = "block";
-
-    // Redraw arena empty
-    drawArena();
+    console.log("Reset successful");
 }
   
 // Create towers
