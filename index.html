@@ -1217,19 +1217,46 @@ update() {
 }
 }
   
-function endGameByTowers() {
-  const playerTowerCount = playerTowers.length;
-  const enemyTowerCount = enemyTowers.length;
-
-  let message;
-  if (playerTowerCount > enemyTowerCount) message = "You win!";
-  else if (enemyTowerCount > playerTowerCount) message = "You lost!";
-  else return;
-
-  alert(message);
-  location.reload(); // simple reset
+// Global object to track card win/loss stats
+const cardStats = {};
+for (const card of cards) {
+    cardStats[card.id] = { name: card.name, wins: 0, losses: 0 };
 }
 
+function endGameByTowers() {
+    const playerTowerCount = playerTowers.length;
+    const enemyTowerCount = enemyTowers.length;
+
+    let message;
+    if (playerTowerCount > enemyTowerCount) message = "You win!";
+    else if (enemyTowerCount > playerTowerCount) message = "You lost!";
+    else return; // tie, do nothing
+
+    // Update stats for player's deck
+    for (const idx of playerData.shuffled) {
+        const cardId = cards[idx].id;
+        if (playerTowerCount > enemyTowerCount) cardStats[cardId].wins++;
+        else cardStats[cardId].losses++;
+    }
+
+    // Update stats for enemy's deck
+    for (const idx of enemyData.shuffled) {
+        const cardId = cards[idx].id;
+        if (enemyTowerCount > playerTowerCount) cardStats[cardId].wins++;
+        else cardStats[cardId].losses++;
+    }
+
+    alert(message);
+
+    // Log winrates
+    console.log("Card Winrates:");
+    for (const id in cardStats) {
+        const stats = cardStats[id];
+        const total = stats.wins + stats.losses;
+        const rate = total ? ((stats.wins / total) * 100).toFixed(1) : "0";
+        console.log(`${stats.name}: ${stats.wins}W / ${stats.losses}L (${rate}%)`);
+    }
+}
   
 // Create towers
 const playerTowers = [
