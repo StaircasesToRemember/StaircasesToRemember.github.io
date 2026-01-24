@@ -107,8 +107,6 @@ startButton.onclick = () => {
 };
 
 function startGame(deck) {
-  gameStarted = true;
-
   initTowers();
   
   const playerState = initializeDeck(deck);
@@ -127,7 +125,9 @@ function startGame(deck) {
 
   document.getElementById("deck-builder").style.display = "none";
 
-  if (gameStarted) drawArena();
+  if (!gameStarted) drawArena();
+
+  gameStarted = true;
 }
   
 let timeLeft = 180; // 3 minutes in seconds
