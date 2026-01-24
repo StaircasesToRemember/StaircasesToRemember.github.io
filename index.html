@@ -25,22 +25,6 @@ document.getElementById("start-ai").onclick = () => {
 let gameStarted = false;
 let frameClock = 0;
 
-// Persistent card stats (never reset)
-const cardStats = {};
-for (const card of cards) {
-  cardStats[card.id] = {
-    name: card.name,
-    wins: 0,
-    losses: 0,
-    games: 0
-  };
-}
-  
-const PlacementType = {
-  PLAYER_SIDE_ONLY: "player",
-  ANYWHERE: "anywhere"
-};
-
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 20, wins: 0, losses: 0 },
@@ -65,6 +49,22 @@ const cards = [
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 192, delay: 1, wins: 0, losses: 0 }
 ];
+  
+// Persistent card stats (never reset)
+const cardStats = {};
+for (const card of cards) {
+  cardStats[card.id] = {
+    name: card.name,
+    wins: 0,
+    losses: 0,
+    games: 0
+  };
+}
+  
+const PlacementType = {
+  PLAYER_SIDE_ONLY: "player",
+  ANYWHERE: "anywhere"
+};
   
 const cardPoolDiv = document.getElementById("card-pool");
 const deckCount = document.getElementById("deck-count");
