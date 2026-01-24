@@ -480,11 +480,7 @@ function resolveEnemyPlacement(card, team) {
     ? bestSpellTarget(card, team)
     : furthestEnemyOnOurSide(team);
 
-  const myElixir = team === "player" ? playerElixir : enemyElixir;
-  const oppElixir = team === "player" ? enemyElixir : playerElixir;
-
-  if (threat && ai?.reactiveOffset && myElixir >= oppElixir)
-
+  if (threat && ai?.reactiveOffset && enemyElixir >= playerElixir) {
     return {
       x: threat.x + ai.reactiveOffset.x,
       y: Math.max(threat.y + ai.reactiveOffset.y, 0)
@@ -498,7 +494,7 @@ function resolveEnemyPlacement(card, team) {
     };
   }
 
-  if (!threat && ai?.investPos1 && enemyElixir == 10) {
+  if (!threat && ai?.investPos1 && enemyElixir === 10) {
     return Math.random() > 0.5 ? ai.investPos1 : ai.investPos2;
   }
 
