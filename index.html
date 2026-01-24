@@ -17,12 +17,21 @@ let gameMode = "PVP";
 
 document.getElementById("start-ai").onclick = () => {
   gameMode = "AI_VS_AI";
-  // Generate random deck for player in AI mode
+
+  // Generate random deck for AI player
   const randomPlayerDeck = randomEnemyDeck(8);
-  startGame(randomPlayerDeck);
+  const randomEnemyDeckArray = randomEnemyDeck(8);
+
+  // Initialize decks properly
+  playerData = initializeDeck(randomPlayerDeck);
+  enemyData  = initializeDeck(randomEnemyDeckArray);
+
+  playerDeck = playerData.deck;
+  enemyDeck  = enemyData.deck;
+
+  startGame(playerDeck); // can still pass playerDeck for simplicity
 };
 
-  
 let gameStarted = false;
 let frameClock = 0;
 
