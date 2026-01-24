@@ -488,7 +488,7 @@ function resolveAIPlacement(card, team) {
   // Reactive offset
   if (threat && ai?.reactiveOffset && myElixir >= oppElixir) {
     return {
-      x: threat.x + ai.reactiveOffset.x,
+      x: threat.x/2,
       y: threat.y + ai.reactiveOffset.y * dir // flip only the offset
     };
   }
