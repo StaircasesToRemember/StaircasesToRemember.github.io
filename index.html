@@ -7,11 +7,20 @@
   <div id="card-pool"></div>
   <p id="deck-count">0 / 8</p>
   <button id="start-game" disabled>Start Game</button>
+  <button id="start-ai">AI vs AI</button>
 </div> f
   
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
 <script>
+let gameMode = "PVP"; 
+
+document.getElementById("start-ai").onclick = () => {
+  gameMode = "AI_VS_AI";
+  startGame(playerDeck);
+};
+
+  
 let gameStarted = false;
 let frameClock = 0;
 
@@ -490,9 +499,11 @@ function resolveEnemyPlacement(card, team) {
   return null;
 }
  
-function enemyPlayCard() {
-  // 1️⃣ Randomly select a playable card
-  const playable = enemyHand
+function aiPlayCard(team, hand, deck) {
+  const elixir = team === "player" ? playerElixir : enemyElixir;
+  
+  // Randomly select a playable card
+  const playable = hand
     .map(i => cards[i])
     .filter(c => enemyElixir >= c.cost);
 
@@ -503,22 +514,23 @@ function enemyPlayCard() {
   const handIndex = enemyHand.indexOf(cardIndex);
 
   // 2️⃣ Determine placement
-  const pos = resolveEnemyPlacement(card, "enemy");
+  const pos = resolveEnemyPlacement(card, team);
 
   // 3️⃣ Do nothing if no valid placement
   if (!pos) return;
 
-  enemyElixir -= card.cost;
+  if (team === "player") playerElixir -= card.cost;
+  else enemyElixir -= card.cost;
 
   if (card.type === "spell") {
-    castSpell(card, pos.x, pos.y, "enemy");
-  } else {
-    if (canPlaceCard(card, pos.x, pos.y, "enemy")) {
-      spawnEnemyUnit(card, pos.x, pos.y);
-    }
+  castSpell(card, pos.x, pos.y, team);
+  } else if (canPlaceCard(card, pos.x, pos.y, team)) {
+    team === "enemy"
+      ? spawnEnemyUnit(card, pos.x, pos.y)
+      : spawnPlayerUnit(card, pos.x, pos.y);
   }
 
-  cycleCard(enemyHand, enemyDeck, handIndex);
+  cycleCard(hand, deck, handIndex);
 }
 
 
@@ -1661,11 +1673,13 @@ function drawArena() {
   // Generate elixir
   if (frameClock % 168 == 0) {
       generateElixir();
-      enemyPlayCard();
+      aiPlayCard("player", playerHand, playerDeck);
+      aiPlayCard("enemy", enemyHand, enemyDeck);
   }
   if (frameClock % 168 == 84 && frameClock >= 7200) {
       generateElixir();
-      enemyPlayCard();
+      aiPlayCard("player", playerHand, playerDeck);
+      aiPlayCard("enemy", enemyHand, enemyDeck);
   }
   
   // Draw elixir bar
@@ -1683,6 +1697,7 @@ function drawArena() {
 // Event listener
 canvas.addEventListener("click", function (e) {
   if (!gameStarted) return;
+  if (gameMode === "AI_VS_AI") return;
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
   const mouseY = e.clientY - rect.top;
