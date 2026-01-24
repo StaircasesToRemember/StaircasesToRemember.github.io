@@ -518,23 +518,33 @@ function aiPlayCard(team, hand, deck) {
   const card = playable[Math.floor(Math.random() * playable.length)];
   const cardIndex = cards.indexOf(card);
   const handIndex = hand.indexOf(cardIndex);
-
-  if (handIndex === -1) return; // safety
+  if (handIndex === -1) return;
 
   const pos = resolveAIPlacement(card, team);
   if (!pos) return;
 
-  // spend elixir
+  // SPELLS always succeed
+  if (card.type === "spell") {
+    if (team === "player") playerElixir -= card.cost;
+    else enemyElixir -= card.cost;
+
+    castSpell(card, pos.x, pos.y, team);
+    cycleCard(hand, deck, handIndex);
+    return;
+  }
+
+  // UNITS must pass placement check
+  if (!canPlaceCard(card, pos.x, pos.y, team)) {
+    return; // 🚫 do nothing
+  }
+
+  // Now commit
   if (team === "player") playerElixir -= card.cost;
   else enemyElixir -= card.cost;
 
-  if (card.type === "spell") {
-    castSpell(card, pos.x, pos.y, team);
-  } else if (canPlaceCard(card, pos.x, pos.y, team)) {
-    team === "enemy"
-      ? spawnEnemyUnit(card, pos.x, pos.y)
-      : spawnPlayerUnit(card, pos.x, pos.y);
-  }
+  team === "enemy"
+    ? spawnEnemyUnit(card, pos.x, pos.y)
+    : spawnPlayerUnit(card, pos.x, pos.y);
 
   cycleCard(hand, deck, handIndex);
 }
