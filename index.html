@@ -103,11 +103,13 @@ function startGame(deck) {
   const playerState = initializeDeck(deck);
   playerHand = playerState.hand;
   playerDeck = playerState.deck;
+  playerData = playerState.shuffle;
 
   // Initialize enemy
   const enemyState = initializeDeck(enemyDeck);
   enemyHand = enemyState.hand;
   enemyDeck = enemyState.deck;
+  enemyData = enemyState.shuffle;
 
   // Reset resources
   playerElixir = 6;
@@ -120,8 +122,8 @@ function startGame(deck) {
   // START GAME SYSTEMS
   drawArena();
   if (gameMode == "AI_VS_AI") {
-    console.log("Player Deck:", playerDeck);
-    console.log("Enemy Deck:", enemyDeck);
+    console.log("Player Deck:", playerData);
+    console.log("Enemy Deck:", enemyData);
   }
 }
   
@@ -164,7 +166,7 @@ function initializeDeck(deckArray) {
   const shuffled = [...deckArray].sort(() => Math.random() - 0.5);
   const hand = shuffled.slice(0, 4);       // first 4 go to hand
   const deck = shuffled.slice(4);          // rest stay in deck
-  return { hand, deck };
+  return { hand, deck, shuffled };
 }
 
 function cycleCard(handArray, deckArray, handIndex) {
