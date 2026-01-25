@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
-
+//bats, goblins, spear goblins, goblin gang, graveyard, rocket, berzerker, skeleton dragons, valkyrie, night witch, lavahound, balloon, mega minion
 <div id="deck-builder">
   <h3>Choose 8 Cards</h3>
   <div id="card-pool"></div>
@@ -35,6 +35,7 @@ const cards = [
   { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 20, wins: 0, losses: 0 },
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "bats", name: "Bats", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "bomber", name: "Bomber", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -303,6 +304,11 @@ const cardAI = {
     reactivePos: { x: 200, y: 270 },
     investPos1: { x: 75, y: 270 },
     investPos2: { x: 325, y: 270 }
+  }, 
+  minions: {
+    reactiveOffset: { x: 0, y: 0 },
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
   },
   };
 
@@ -325,6 +331,7 @@ const SPELL_UNIT_VALUES = {
     Barbarian: 1,
     Bomber: 2,
     Wallbreaker: 1,
+    Bat: 0.4,
 
     tower: 2,
     kingTower: -5
@@ -348,6 +355,7 @@ const SPELL_UNIT_VALUES = {
     Barbarian: 0.25,
     Bomber: 2,
     Wallbreaker: 1,
+    Bat: 0.4,
 
     tower: 1,
     kingTower: -5
@@ -371,6 +379,7 @@ const SPELL_UNIT_VALUES = {
     Barbarian: 0,
     Bomber: 0.5,
     Wallbreaker: 0.5,
+    Bat: 0.4,
     
     tower: 0.5,
     kingTower: -5
@@ -668,6 +677,13 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x + 15, y, "enemy", "Wallbreaker"));
     units.push(new Unit(x - 15, y, "enemy", "Wallbreaker"));
   } 
+  else if (card.name === "Bats") {
+    units.push(new Unit(x - 15, y + 15, "enemy", "Bat"));
+    units.push(new Unit(x + 15, y + 15, "enemy", "Bat"));
+    units.push(new Unit(x - 15, y - 10, "enemy", "Bat"));
+    units.push(new Unit(x + 15, y - 10, "enemy", "Bat"));
+    units.push(new Unit(x, y - 35, "enemy", "Bat"));
+  }
 }
 
 function spawnPlayerUnit(card, x, y) {
@@ -755,6 +771,13 @@ function spawnPlayerUnit(card, x, y) {
   else if (card.name === "Wallbreakers") {
     units.push(new Unit(x + 15, y, "player", "Wallbreaker"));
     units.push(new Unit(x - 15, y, "player", "Wallbreaker"));
+  }
+  else if (card.name === "Bats") {
+    units.push(new Unit(x - 15, y - 15, "player", "Bat"));
+    units.push(new Unit(x + 15, y - 15, "player", "Bat"));
+    units.push(new Unit(x - 15, y + 10, "player", "Bat"));
+    units.push(new Unit(x + 15, y + 10, "player", "Bat"));
+    units.push(new Unit(x, y + 35, "player", "Bat"));
   }
 }
   
@@ -1083,6 +1106,7 @@ function drawHand() {
       if (card.name === "Barbarians") ctx.fillStyle = "yellow";
       if (card.name === "Bomber") ctx.fillStyle = "sienna";
       if (card.name === "Wallbreakers") ctx.fillStyle = "royalblue";
+      if (card.name === "Bats") ctx.fillStyle = "dimgray";
 
       ctx.fill();
       ctx.closePath();
@@ -1567,7 +1591,21 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
       this.splashRadius = 40;
-    } 
+    } else if (type === "Bat") {
+      this.hp = 81;
+      this.maxHp = this.hp;
+      this.speed = 0.8;
+      this.r = 8;
+      this.attackRange = 40;  
+      this.attackDamage = 81;
+      this.attackCooldown = 78;  // slower attack speed
+      this.isAir = true;
+      this.attacksAir = true;
+      this.targetsOnlyBuildings = false;  // Only targets towers!
+      this.sightRange = 160;
+      this.isBuilding = false;
+      this.decay = 0;
+    }
 
     this.type = type;
     this.target = null;
@@ -1770,6 +1808,7 @@ update() {
     else if (this.type === "Barbarian") ctx.fillStyle = "yellow";
     else if (this.type === "Bomber") ctx.fillStyle = "sienna";
     else if (this.type === "Wallbreaker") ctx.fillStyle = "royalblue";
+    else if (this.type === "Bat") ctx.fillStyle = "dimgray";
     
     ctx.fill();
     ctx.closePath();
@@ -1981,7 +2020,13 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Wallbreakers") {
       units.push(new Unit(mouseX - 15, mouseY, "player", "Wallbreaker"));
       units.push(new Unit(mouseX + 15, mouseY, "player", "Wallbreaker"));
-    } 
+    } else if (card.name === "Bats") {
+      units.push(new Unit(mouseX - 15, mouseY + 10, "player", "Bat"));
+      units.push(new Unit(mouseX + 15, mouseY + 10, "player", "Bat"));
+      units.push(new Unit(mouseX, mouseY + 35, "player", "Bat"));
+      units.push(new Unit(mouseX - 15, mouseY - 15, "player", "Bat"));
+      units.push(new Unit(mouseX + 15, mouseY - 15, "player", "Bat"));
+    }
     
     cycleCard(playerHand, playerDeck, selectedCardIndex);
     selectedCardIndex = null;
