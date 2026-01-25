@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
-Coming: goblins, spear goblins, goblin gang, graveyard, rocket, berzerker, skeleton dragons, night witch, lavahound, balloon, mega minion, tombstone
+Coming: goblins, spear goblins, goblin gang, graveyard, rocket, berzerker, skeleton dragons, night witch, lavahound, mega minion, tombstone
 <div id="deck-builder">
   <h3>Choose 8 Cards</h3>
   <div id="card-pool"></div>
@@ -32,14 +32,15 @@ const PlacementType = {
   
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 85, damage: 366, delay: 20, wins: 0, losses: 0 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 80, damage: 366, delay: 20, wins: 0, losses: 0 },
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "balloon", name: "Balloon", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "bats", name: "Bats", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "bomber", name: "Bomber", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 65, damage: 688, delay: 60, wins: 0, losses: 0 },
+  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 70, damage: 688, delay: 60, wins: 0, losses: 0 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -54,7 +55,7 @@ const cards = [
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 192, delay: 1, wins: 0, losses: 0 }
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 80, damage: 192, delay: 1, wins: 0, losses: 0 }
 ];
   
 // Persistent card stats (never reset)
@@ -329,6 +330,7 @@ const SPELL_UNIT_VALUES = {
     Skeleton: 0.25,
     Cannon: 1.5,
     "Hog Rider": 1,
+    Balloon: 2,
     Wizard: 2.5,
     "Baby Dragon": 1,
     Pekka: 0.5,
@@ -354,6 +356,7 @@ const SPELL_UNIT_VALUES = {
     Skeleton: 0.25,
     Cannon: 0.75,
     "Hog Rider": 0.5,
+    Balloon: 1,
     Wizard: 1.25,
     "Baby Dragon": 0.5,
     Pekka: 0.25,
@@ -379,6 +382,7 @@ const SPELL_UNIT_VALUES = {
     Skeleton: 0.25,
     Cannon: 0.25,
     "Hog Rider": 0.25,
+    Balloon: 0.5,
     Wizard: 0.75,
     "Baby Dragon": 0.25,
     Pekka: 0.25,
@@ -652,6 +656,9 @@ function spawnEnemyUnit(card, x, y) {
   else if (card.name === "Hog Rider") {
     units.push(new Unit(x, y, "enemy", "Hog Rider"));
   } 
+  else if (card.name === "Balloon") {
+    units.push(new Unit(x, y, "enemy", "Balloon"));
+  } 
   else if (card.name === "Wizard") {
     units.push(new Unit(x, y, "enemy", "Wizard"));
   } 
@@ -748,6 +755,9 @@ function spawnPlayerUnit(card, x, y) {
   } 
   else if (card.name === "Hog Rider") {
     units.push(new Unit(x, y, "player", "Hog Rider"));
+  } 
+  else if (card.name === "Balloon") {
+    units.push(new Unit(x, y, "player", "Balloon"));
   } 
   else if (card.name === "Wizard") {
     units.push(new Unit(x, y, "player", "Wizard"));
@@ -1113,6 +1123,7 @@ function drawHand() {
       if (card.name === "Skeleton Army") ctx.fillStyle = "floralwhite";
       if (card.name === "Cannon") ctx.fillStyle = "black";
       if (card.name === "Hog Rider") ctx.fillStyle = "saddlebrown";
+      if (card.name === "Balloon") ctx.fillStyle = "lightcoral";
       if (card.name === "Wizard") ctx.fillStyle = "dodgerblue";
       if (card.name === "Baby Dragon") ctx.fillStyle = "lime";
       if (card.name === "Minion Horde") ctx.fillStyle = "cornflowerblue";
@@ -1368,7 +1379,7 @@ class Unit {
       this.r = 24;
       this.attackRange = 40;
       this.attackDamage = 202;
-      this.attackCooldown = 66;
+      this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1397,7 +1408,7 @@ class Unit {
       this.r = 16;
       this.attackRange = 145; 
       this.attackDamage = 112;  
-      this.attackCooldown = 60;
+      this.attackCooldown = 72;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1411,7 +1422,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 160;  
       this.attackDamage = 217;   
-      this.attackCooldown = 84;
+      this.attackCooldown = 96;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1502,6 +1513,20 @@ class Unit {
       this.sightRange = 200;
       this.isBuilding = false;
       this.decay = 0;
+    } else if (type === "Balloon") {
+      this.hp = 1750;
+      this.maxHp = this.hp;
+      this.speed = 0.5;
+      this.r = 30;
+      this.attackRange = 40;  
+      this.attackDamage = 640;
+      this.attackCooldown = 120;  
+      this.isAir = true;
+      this.attacksAir = false;
+      this.targetsOnlyBuildings = true; 
+      this.sightRange = 200;
+      this.isBuilding = false;
+      this.decay = 0;
     } else if (type === "Wizard") {
       this.hp = 755;
       this.maxHp = this.hp;
@@ -1547,7 +1572,7 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Fire Spirit") {
-      this.hp = 230;
+      this.hp = 250;
       this.maxHp = this.hp;
       this.speed = 0.65;
       this.r = 16;
@@ -1584,7 +1609,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 40;  
       this.attackDamage = 192;   
-      this.attackCooldown = 78;
+      this.attackCooldown = 90;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1629,7 +1654,7 @@ class Unit {
       this.r = 8;
       this.attackRange = 40;  
       this.attackDamage = 81;
-      this.attackCooldown = 56;  // slower attack speed
+      this.attackCooldown = 36;  // slower attack speed
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
@@ -1832,6 +1857,7 @@ update() {
     else if (this.type === "Skeleton") ctx.fillStyle = "floralwhite";
     else if (this.type === "Cannon") ctx.fillStyle = "black";
     else if (this.type === "Hog Rider") ctx.fillStyle = "saddlebrown";
+    else if (this.type === "Balloon") ctx.fillStyle = "lightcoral";
     else if (this.type === "Wizard") ctx.fillStyle = "dodgerblue";
     else if (this.type === "Baby Dragon") ctx.fillStyle = "lime";
     else if (this.type === "Pekka") ctx.fillStyle = "midnightblue";
@@ -2026,6 +2052,8 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX, mouseY, "player", "Cannon"));
     } else if (card.name === "Hog Rider") {
       units.push(new Unit(mouseX, mouseY, "player", "Hog Rider"));
+    } else if (card.name === "Balloon") {
+      units.push(new Unit(mouseX, mouseY, "player", "Balloon"));
     } else if (card.name === "Wizard") {
       units.push(new Unit(mouseX, mouseY, "player", "Wizard"));
     } else if (card.name === "Baby Dragon") {
