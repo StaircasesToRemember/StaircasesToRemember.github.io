@@ -131,6 +131,19 @@ function startGame(deck) {
     drawArena();
     drawArena();
     drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
+    drawArena();
   }
 
   gameStarted = true;
@@ -1313,9 +1326,9 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 24;
-      this.attackRange = 25;
+      this.attackRange = 40;
       this.attackDamage = 202;
-      this.attackCooldown = 72;
+      this.attackCooldown = 66;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1329,7 +1342,7 @@ class Unit {
       this.r = 16;
       this.attackRange = 145; 
       this.attackDamage = 112;  
-      this.attackCooldown = 54;
+      this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1343,7 +1356,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 160;  
       this.attackDamage = 217;   
-      this.attackCooldown = 60;
+      this.attackCooldown = 72;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1351,13 +1364,13 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Giant") {
-      this.hp = 4090;
+      this.hp = 4080;
       this.maxHp = this.hp;
       this.speed = 0.35;
       this.r = 36;
-      this.attackRange = 25;  // melee range
+      this.attackRange = 40;  // melee range
       this.attackDamage = 253;
-      this.attackCooldown = 90;  // slower attack speed
+      this.attackCooldown = 78;  // slower attack speed
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = true;  // Only targets towers!
@@ -1369,7 +1382,7 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.65;
       this.r = 16;
-      this.attackRange = 75;  // melee range
+      this.attackRange = 80;  // melee range
       this.attackDamage = 107;
       this.attackCooldown = 66;  // slower attack speed
       this.isAir = true;
@@ -1383,9 +1396,9 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.65;
       this.r = 20;
-      this.attackRange = 25;
+      this.attackRange = 40;
       this.attackDamage = 755;
-      this.attackCooldown = 96;
+      this.attackCooldown = 84;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1397,7 +1410,7 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 8;
-      this.attackRange = 25;
+      this.attackRange = 40;
       this.attackDamage = 81;
       this.attackCooldown = 66;
       this.isAir = false;
@@ -1425,9 +1438,9 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.8;
       this.r = 22;
-      this.attackRange = 25;  
+      this.attackRange = 40;  
       this.attackDamage = 317;
-      this.attackCooldown = 96;  
+      this.attackCooldown = 90;  
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = true; 
@@ -1441,7 +1454,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 145;  
       this.attackDamage = 281;   
-      this.attackCooldown = 84;
+      this.attackCooldown = 90;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1471,7 +1484,7 @@ class Unit {
       this.r = 36;
       this.attackRange = 40;
       this.attackDamage = 816;
-      this.attackCooldown = 108;
+      this.attackCooldown = 114;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1481,9 +1494,9 @@ class Unit {
     } else if (type === "Fire Spirit") {
       this.hp = 230;
       this.maxHp = this.hp;
-      this.speed = 0.8;
+      this.speed = 0.65;
       this.r = 16;
-      this.attackRange = 75;  
+      this.attackRange = 80;  
       this.attackDamage = 207;   
       this.attackCooldown = 20;
       this.isAir = false;
@@ -1500,7 +1513,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 145;  
       this.attackDamage = 135;   
-      this.attackCooldown = 66;
+      this.attackCooldown = 78;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1514,9 +1527,9 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 20;
-      this.attackRange = 25;  
+      this.attackRange = 40;  
       this.attackDamage = 192;   
-      this.attackCooldown = 78;
+      this.attackCooldown = 84;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1544,7 +1557,7 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.8;
       this.r = 16;
-      this.attackRange = 25;  
+      this.attackRange = 40;  
       this.attackDamage = 350;   
       this.attackCooldown = 1;
       this.isAir = false;
