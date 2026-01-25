@@ -57,7 +57,7 @@ const cards = [
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 90, damage: 192, delay: 1, wins: 0, losses: 0 }
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 100, damage: 192, delay: 1, wins: 0, losses: 0 }
 ];
   
 // Persistent card stats (never reset)
@@ -1661,7 +1661,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 145;  
       this.attackDamage = 135;   
-      this.attackCooldown = 114;
+      this.attackCooldown = 126;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
