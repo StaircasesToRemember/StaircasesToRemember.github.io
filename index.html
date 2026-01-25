@@ -1161,7 +1161,7 @@ function drawHand() {
       ctx.arc(x + cardWidth / 2, y + 35, 20, 0, Math.PI * 2);
 
       if (card.name === "Knight") ctx.fillStyle = "gold";
-      if (card.name === "Valkyrie") ctx.fillStyle = "orange";
+      if (card.name === "Valkyrie") ctx.fillStyle = "darkorange";
       if (card.name === "Archers") ctx.fillStyle = "magenta";
       if (card.name === "Musketeer") ctx.fillStyle = "blueviolet";
       if (card.name === "Three Musketeers") ctx.fillStyle = "blueviolet";
@@ -1944,7 +1944,7 @@ update() {
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
 
     if (this.type === "Knight") ctx.fillStyle = "gold";
-    else if (this.type === "Valkyrie") ctx.fillStyle = "orange";
+    else if (this.type === "Valkyrie") ctx.fillStyle = "darkorange";
     else if (this.type === "Archer") ctx.fillStyle = "magenta";
     else if (this.type === "Musketeer") ctx.fillStyle = "blueviolet";
     else if (this.type === "Giant") ctx.fillStyle = "orange";
