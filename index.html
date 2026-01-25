@@ -1460,7 +1460,7 @@ class Unit {
       this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
-      this.splashRadius = 200;
+      this.splashRadius = 175;
     } else if (type === "Archer") {
       this.hp = 304;
       this.maxHp = this.hp;
@@ -1496,7 +1496,7 @@ class Unit {
       this.r = 36;
       this.attackRange = 40;  // melee range
       this.attackDamage = 253;
-      this.attackCooldown = 72;  // slower attack speed
+      this.attackCooldown = 78;  // slower attack speed
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = true;  // Only targets towers!
@@ -1506,7 +1506,7 @@ class Unit {
     } else if (type === "Minion") {
       this.hp = 230;
       this.maxHp = this.hp;
-      this.speed = 0.65;
+      this.speed = 0.7;
       this.r = 16;
       this.attackRange = 80;  // melee range
       this.attackDamage = 107;
@@ -1520,11 +1520,11 @@ class Unit {
     } else if (type === "Mini Pekka") {
       this.hp = 1433;
       this.maxHp = this.hp;
-      this.speed = 0.65;
+      this.speed = 0.7;
       this.r = 20;
       this.attackRange = 40;
       this.attackDamage = 755;
-      this.attackCooldown = 60;
+      this.attackCooldown = 54;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1572,12 +1572,12 @@ class Unit {
       this.targetsOnlyBuildings = false;
       this.sightRange = 1;
       this.isBuilding = true;
-      this.decay = 0.3;
+      this.decay = 0.2;
       this.spawnSkeletons = (frameClock + 60) % 240;
     } else if (type === "Hog Rider") {
       this.hp = 1697;
       this.maxHp = this.hp;
-      this.speed = 0.8;
+      this.speed = 0.9;
       this.r = 22;
       this.attackRange = 40;  
       this.attackDamage = 317;
@@ -1609,7 +1609,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 145;  
       this.attackDamage = 281;   
-      this.attackCooldown = 108;
+      this.attackCooldown = 114;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1620,11 +1620,11 @@ class Unit {
     } else if (type === "Baby Dragon") {
       this.hp = 1152;
       this.maxHp = this.hp;
-      this.speed = 0.65;
+      this.speed = 0.7;
       this.r = 24;
       this.attackRange = 100;  
       this.attackDamage = 161;   
-      this.attackCooldown = 114;
+      this.attackCooldown = 108;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1635,11 +1635,11 @@ class Unit {
     } else if (type === "Skeleton Dragon") {
       this.hp = 560;
       this.maxHp = this.hp;
-      this.speed = 0.65;
+      this.speed = 0.7;
       this.r = 24;
       this.attackRange = 100;  
       this.attackDamage = 161;   
-      this.attackCooldown = 114;
+      this.attackCooldown = 120;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1664,7 +1664,7 @@ class Unit {
     } else if (type === "Fire Spirit") {
       this.hp = 250;
       this.maxHp = this.hp;
-      this.speed = 0.80;
+      this.speed = 0.9;
       this.r = 16;
       this.attackRange = 80;  
       this.attackDamage = 207;   
@@ -1699,7 +1699,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 40;  
       this.attackDamage = 192;   
-      this.attackCooldown = 90;
+      this.attackCooldown = 84;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1725,7 +1725,7 @@ class Unit {
     } else if (type === "Wallbreaker") {
       this.hp = 330;
       this.maxHp = this.hp;
-      this.speed = 0.8;
+      this.speed = 0.9;
       this.r = 16;
       this.attackRange = 40;  
       this.attackDamage = 350;   
@@ -1740,7 +1740,7 @@ class Unit {
     } else if (type === "Bat") {
       this.hp = 81;
       this.maxHp = this.hp;
-      this.speed = 0.8;
+      this.speed = 0.9;
       this.r = 8;
       this.attackRange = 40;  
       this.attackDamage = 81;
