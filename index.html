@@ -32,14 +32,14 @@ const PlacementType = {
   
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 20, wins: 0, losses: 0 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 90, damage: 366, delay: 20, wins: 0, losses: 0 },
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "bats", name: "Bats", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "bomber", name: "Bomber", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 60, wins: 0, losses: 0 },
+  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 688, delay: 60, wins: 0, losses: 0 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -53,7 +53,7 @@ const cards = [
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 192, delay: 1, wins: 0, losses: 0 }
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 192, delay: 1, wins: 0, losses: 0 }
 ];
   
 // Persistent card stats (never reset)
@@ -1380,7 +1380,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 160;  
       this.attackDamage = 217;   
-      this.attackCooldown = 72;
+      this.attackCooldown = 84;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1450,7 +1450,7 @@ class Unit {
       this.r = 24;
       this.attackRange = 145;
       this.attackDamage = 212;
-      this.attackCooldown = 60;
+      this.attackCooldown = 66;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1478,14 +1478,14 @@ class Unit {
       this.r = 20;
       this.attackRange = 145;  
       this.attackDamage = 281;   
-      this.attackCooldown = 90;
+      this.attackCooldown = 96;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
       this.sightRange = 160;
       this.isBuilding = false;
       this.decay = 0;
-      this.splashRadius = 40;
+      this.splashRadius = 30;
     } else if (type === "Baby Dragon") {
       this.hp = 1152;
       this.maxHp = this.hp;
@@ -1500,7 +1500,7 @@ class Unit {
       this.sightRange = 160;
       this.isBuilding = false;
       this.decay = 0;
-      this.splashRadius = 40;
+      this.splashRadius = 30;
     } else if (type === "Pekka") {
       this.hp = 3760;
       this.maxHp = this.hp;
@@ -1529,7 +1529,7 @@ class Unit {
       this.sightRange = 160;
       this.isBuilding = false;
       this.decay = 0;
-      this.splashRadius = 40;
+      this.splashRadius = 30;
     } else if (type === "Witch") {
       this.hp = 839;
       this.maxHp = this.hp;
@@ -1544,7 +1544,7 @@ class Unit {
       this.sightRange = 160;
       this.isBuilding = false;
       this.decay = 0;
-      this.splashRadius = 40;
+      this.splashRadius = 30;
       this.spawnSkeletons = (frameClock + 60) % 420;
     } else if (type === "Barbarian") {
       this.hp = 670;
@@ -1553,7 +1553,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 40;  
       this.attackDamage = 192;   
-      this.attackCooldown = 84;
+      this.attackCooldown = 78;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1568,14 +1568,14 @@ class Unit {
       this.r = 16;
       this.attackRange = 100;  
       this.attackDamage = 225;   
-      this.attackCooldown = 108;
+      this.attackCooldown = 102;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
       this.sightRange = 160;
       this.isBuilding = false;
       this.decay = 0;
-      this.splashRadius = 40;
+      this.splashRadius = 30;
     } else if (type === "Wallbreaker") {
       this.hp = 330;
       this.maxHp = this.hp;
@@ -1590,7 +1590,7 @@ class Unit {
       this.sightRange = 200;
       this.isBuilding = false;
       this.decay = 0;
-      this.splashRadius = 40;
+      this.splashRadius = 30;
     } else if (type === "Bat") {
       this.hp = 81;
       this.maxHp = this.hp;
