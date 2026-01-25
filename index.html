@@ -1368,7 +1368,8 @@ function endGameByTowers() {
   for (const id in cardStats) {
     const s = cardStats[id];
     const rate = s.games ? ((s.wins / s.games) * 100).toFixed(1) : "0.0";
-    console.log(`${s.name}: ${rate}% (${s.wins}/${s.games})`);
+    const z = s.games ? (s.wins / s.games - 0.5) * 2 * Math.sqrt(s.games) : 0;
+    console.log(`${s.name}: ${rate}% | z=${(s.games ? (s.wins / s.games - 0.5) * 2 * Math.sqrt(s.games) : 0).toFixed(2)} (${s.wins}/${s.games})`);
   }
 
   // ---- RESET GAME STATE SAFELY ----
