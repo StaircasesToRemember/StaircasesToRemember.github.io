@@ -264,6 +264,10 @@ const cardAI = {
     investPos1: { x: 0, y: 274 },
     investPos2: { x: 400, y: 274 }
   },
+  balloon: {
+    investPos1: { x: 0, y: 274 },
+    investPos2: { x: 400, y: 274 }
+  },
   wizard: {
     reactiveOffset: { x: 100, y: -145 },
     investPos1: { x: 199, y: 0 },
@@ -317,12 +321,12 @@ const cardAI = {
     investPos1: { x: 75, y: 270 },
     investPos2: { x: 325, y: 270 }
   }, 
-  minions: {
+  bats: {
     reactiveOffset: { x: 0, y: 0 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
-  Valkyrie: {
+  valkyrie: {
     reactiveOffset: { x: 0, y: -25 }, // spawn below enemy troop
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
@@ -1425,7 +1429,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 20;
       this.attackDamage = 266;
-      this.attackCooldown = 78;
+      this.attackCooldown = 66;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1596,7 +1600,7 @@ class Unit {
       this.r = 24;
       this.attackRange = 100;  
       this.attackDamage = 161;   
-      this.attackCooldown = 102;
+      this.attackCooldown = 108;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1611,7 +1615,7 @@ class Unit {
       this.r = 24;
       this.attackRange = 100;  
       this.attackDamage = 161;   
-      this.attackCooldown = 102;
+      this.attackCooldown = 108;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1655,7 +1659,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 145;  
       this.attackDamage = 135;   
-      this.attackCooldown = 102;
+      this.attackCooldown = 114;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1671,7 +1675,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 40;  
       this.attackDamage = 192;   
-      this.attackCooldown = 90;
+      this.attackCooldown = 96;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1686,7 +1690,7 @@ class Unit {
       this.r = 16;
       this.attackRange = 100;  
       this.attackDamage = 225;   
-      this.attackCooldown = 102;
+      this.attackCooldown = 90;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1700,7 +1704,7 @@ class Unit {
       this.speed = 0.8;
       this.r = 16;
       this.attackRange = 40;  
-      this.attackDamage = 350;   
+      this.attackDamage = 320;   
       this.attackCooldown = 1;
       this.isAir = false;
       this.attacksAir = false;
@@ -1716,7 +1720,7 @@ class Unit {
       this.r = 8;
       this.attackRange = 40;  
       this.attackDamage = 81;
-      this.attackCooldown = 30;  // slower attack speed
+      this.attackCooldown = 24;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
