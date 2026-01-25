@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
-Coming: goblins, spear goblins, goblin gang, graveyard, rocket, berzerker, skeleton dragons, night witch, lavahound, mega minion, tombstone
+Coming: goblins, spear goblins, goblin gang, graveyard, rocket, berzerker, skeleton dragons, night witch, lavahound, mega minion
 <div id="deck-builder">
   <h3>Choose 8 Cards</h3>
   <div id="card-pool"></div>
@@ -51,11 +51,12 @@ const cards = [
   { id: "pekka", name: "Pekka", cost: 7, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "tombstone", name: "Tombstone", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "valkyrie", name: "Valkyrie", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 80, damage: 192, delay: 1, wins: 0, losses: 0 }
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 90, damage: 192, delay: 1, wins: 0, losses: 0 }
 ];
   
 // Persistent card stats (never reset)
@@ -255,6 +256,9 @@ const cardAI = {
   cannon: {
     reactivePos: { x: 200, y: 190 }
   },
+  tombstone: {
+    reactivePos: { x: 200, y: 190 }
+  },
   hog_rider: {
     investPos1: { x: 0, y: 274 },
     investPos2: { x: 400, y: 274 }
@@ -329,6 +333,7 @@ const SPELL_UNIT_VALUES = {
     "Mini Pekka": 1,
     Skeleton: 0.25,
     Cannon: 1.5,
+    Tombstone: 1.5,
     "Hog Rider": 1,
     Balloon: 2,
     Wizard: 2.5,
@@ -355,6 +360,7 @@ const SPELL_UNIT_VALUES = {
     "Mini Pekka": 0.5,
     Skeleton: 0.25,
     Cannon: 0.75,
+    Tombstone: 0.75,
     "Hog Rider": 0.5,
     Balloon: 1,
     Wizard: 1.25,
@@ -381,6 +387,7 @@ const SPELL_UNIT_VALUES = {
     "Mini Pekka": 0.25,
     Skeleton: 0.25,
     Cannon: 0.25,
+    Tombstone: 0.25,
     "Hog Rider": 0.25,
     Balloon: 0.5,
     Wizard: 0.75,
@@ -653,6 +660,9 @@ function spawnEnemyUnit(card, x, y) {
   else if (card.name === "Cannon") {
     units.push(new Unit(x, y, "enemy", "Cannon"));
   } 
+  else if (card.name === "Tombstone") {
+    units.push(new Unit(x, y, "enemy", "Tombstone"));
+  } 
   else if (card.name === "Hog Rider") {
     units.push(new Unit(x, y, "enemy", "Hog Rider"));
   } 
@@ -752,6 +762,9 @@ function spawnPlayerUnit(card, x, y) {
 
   else if (card.name === "Cannon") {
     units.push(new Unit(x, y, "player", "Cannon"));
+  } 
+  else if (card.name === "Tombstone") {
+    units.push(new Unit(x, y, "player", "Tombstone"));
   } 
   else if (card.name === "Hog Rider") {
     units.push(new Unit(x, y, "player", "Hog Rider"));
@@ -1122,6 +1135,7 @@ function drawHand() {
       if (card.name === "Skeletons") ctx.fillStyle = "floralwhite";
       if (card.name === "Skeleton Army") ctx.fillStyle = "floralwhite";
       if (card.name === "Cannon") ctx.fillStyle = "black";
+      if (card.name === "Tombstone") ctx.fillStyle = "mintcream";
       if (card.name === "Hog Rider") ctx.fillStyle = "saddlebrown";
       if (card.name === "Balloon") ctx.fillStyle = "lightcoral";
       if (card.name === "Wizard") ctx.fillStyle = "dodgerblue";
@@ -1422,7 +1436,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 160;  
       this.attackDamage = 217;   
-      this.attackCooldown = 96;
+      this.attackCooldown = 108;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1478,7 +1492,7 @@ class Unit {
       this.r = 8;
       this.attackRange = 40;
       this.attackDamage = 81;
-      this.attackCooldown = 66;
+      this.attackCooldown = 54;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1499,6 +1513,21 @@ class Unit {
       this.sightRange = 145;
       this.isBuilding = true;
       this.decay = 0.4;
+    } else if (type === "Tombstone") {
+      this.hp = 529;
+      this.maxHp = this.hp;
+      this.speed = 0;
+      this.r = 24;
+      this.attackRange = 0;
+      this.attackDamage = 0;
+      this.attackCooldown = 1;
+      this.isAir = false;
+      this.attacksAir = false;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 1;
+      this.isBuilding = true;
+      this.decay = 0.4;
+      this.spawnSkeletons = (frameClock + 60) % 240;
     } else if (type === "Hog Rider") {
       this.hp = 1697;
       this.maxHp = this.hp;
@@ -1514,7 +1543,7 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Balloon") {
-      this.hp = 1750;
+      this.hp = 1800;
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 30;
@@ -1593,7 +1622,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 145;  
       this.attackDamage = 135;   
-      this.attackCooldown = 78;
+      this.attackCooldown = 90;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1678,6 +1707,12 @@ update() {
           units.push(new Unit(this.x - 50, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x, this.y + 50, this.team, "Skeleton"));
           units.push(new Unit(this.x, this.y - 50, this.team, "Skeleton"));
+      }
+  }
+    if (this.type === "Tombstone") {
+      if (this.spawnSkeletons === frameClock % 240) {
+          units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
+          units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
       }
   }
   
@@ -1863,6 +1898,7 @@ update() {
     else if (this.type === "Pekka") ctx.fillStyle = "midnightblue";
     else if (this.type === "Fire Spirit") {ctx.globalAlpha = 0.5; ctx.fillStyle = "red";}
     else if (this.type === "Witch") ctx.fillStyle = "indigo";
+    else if (this.type === "Witch") ctx.fillStyle = "mintcream";
     else if (this.type === "Barbarian") ctx.fillStyle = "yellow";
     else if (this.type === "Bomber") ctx.fillStyle = "sienna";
     else if (this.type === "Wallbreaker") ctx.fillStyle = "royalblue";
@@ -2071,6 +2107,8 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX, mouseY, "player", "Fire Spirit"));
     } else if (card.name === "Witch") {
       units.push(new Unit(mouseX, mouseY, "player", "Witch"));
+    } else if (card.name === "Tombstone") {
+      units.push(new Unit(mouseX, mouseY, "player", "Tombstone"));
     } else if (card.name === "Barbarians") {
       units.push(new Unit(mouseX, mouseY - 15, "player", "Barbarian"));
       units.push(new Unit(mouseX + 15, mouseY, "player", "Barbarian"));
