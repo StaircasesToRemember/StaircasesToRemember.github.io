@@ -58,7 +58,7 @@ const cards = [
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 100, damage: 192, delay: 1, wins: 0, losses: 0 }
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 110, damage: 192, delay: 1, wins: 0, losses: 0 }
 ];
   
 // Persistent card stats (never reset)
@@ -230,7 +230,7 @@ const cardAI = {
     investPos2: { x: 201, y: 0 }
   },
   giant: {
-    reactiveOffset: { x: 100, y: -160 },
+    reactiveOffset: { x: 150, y: 0 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
@@ -251,7 +251,7 @@ const cardAI = {
     reactiveOffset: { x: 0, y: 0 },
   },
   skeletons: {
-    reactiveOffset: { x: 0, y: 0 },
+    reactivePos: { x: 200, y: 200 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
@@ -1482,7 +1482,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 160;  
       this.attackDamage = 217;   
-      this.attackCooldown = 108;
+      this.attackCooldown = 120;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1492,7 +1492,7 @@ class Unit {
     } else if (type === "Giant") {
       this.hp = 4080;
       this.maxHp = this.hp;
-      this.speed = 0.35;
+      this.speed = 0.4;
       this.r = 36;
       this.attackRange = 40;  // melee range
       this.attackDamage = 253;
@@ -1510,7 +1510,7 @@ class Unit {
       this.r = 16;
       this.attackRange = 80;  // melee range
       this.attackDamage = 107;
-      this.attackCooldown = 66;  // slower attack speed
+      this.attackCooldown = 78;  // slower attack speed
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
@@ -1524,7 +1524,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 40;
       this.attackDamage = 755;
-      this.attackCooldown = 84;
+      this.attackCooldown = 72;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1558,7 +1558,7 @@ class Unit {
       this.targetsOnlyBuildings = false;
       this.sightRange = 145;
       this.isBuilding = true;
-      this.decay = 0.4;
+      this.decay = 0.3;
     } else if (type === "Tombstone") {
       this.hp = 529;
       this.maxHp = this.hp;
@@ -1572,7 +1572,7 @@ class Unit {
       this.targetsOnlyBuildings = false;
       this.sightRange = 1;
       this.isBuilding = true;
-      this.decay = 0.4;
+      this.decay = 0.3;
       this.spawnSkeletons = (frameClock + 60) % 240;
     } else if (type === "Hog Rider") {
       this.hp = 1697;
@@ -1609,7 +1609,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 145;  
       this.attackDamage = 281;   
-      this.attackCooldown = 96;
+      this.attackCooldown = 108;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1639,7 +1639,7 @@ class Unit {
       this.r = 24;
       this.attackRange = 100;  
       this.attackDamage = 161;   
-      this.attackCooldown = 108;
+      this.attackCooldown = 114;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1650,7 +1650,7 @@ class Unit {
     } else if (type === "Pekka") {
       this.hp = 3760;
       this.maxHp = this.hp;
-      this.speed = 0.35;
+      this.speed = 0.4;
       this.r = 36;
       this.attackRange = 40;
       this.attackDamage = 816;
@@ -1683,7 +1683,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 145;  
       this.attackDamage = 135;   
-      this.attackCooldown = 126;
+      this.attackCooldown = 138;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1744,7 +1744,7 @@ class Unit {
       this.r = 8;
       this.attackRange = 40;  
       this.attackDamage = 81;
-      this.attackCooldown = 24;
+      this.attackCooldown = 30;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
