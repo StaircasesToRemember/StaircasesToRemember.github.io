@@ -32,7 +32,7 @@ const PlacementType = {
   
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 90, damage: 366, delay: 20, wins: 0, losses: 0 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 80, damage: 366, delay: 20, wins: 0, losses: 0 },
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "balloon", name: "Balloon", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -1468,7 +1468,7 @@ class Unit {
       this.r = 16;
       this.attackRange = 145; 
       this.attackDamage = 112;  
-      this.attackCooldown = 78;
+      this.attackCooldown = 84;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1496,7 +1496,7 @@ class Unit {
       this.r = 36;
       this.attackRange = 40;  // melee range
       this.attackDamage = 253;
-      this.attackCooldown = 78;  // slower attack speed
+      this.attackCooldown = 72;  // slower attack speed
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = true;  // Only targets towers!
@@ -1524,7 +1524,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 40;
       this.attackDamage = 755;
-      this.attackCooldown = 72;
+      this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1581,7 +1581,7 @@ class Unit {
       this.r = 22;
       this.attackRange = 40;  
       this.attackDamage = 317;
-      this.attackCooldown = 78;  
+      this.attackCooldown = 90;  
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = true; 
@@ -1624,7 +1624,7 @@ class Unit {
       this.r = 24;
       this.attackRange = 100;  
       this.attackDamage = 161;   
-      this.attackCooldown = 108;
+      this.attackCooldown = 114;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1652,7 +1652,7 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.4;
       this.r = 36;
-      this.attackRange = 40;
+      this.attackRange = 55;
       this.attackDamage = 816;
       this.attackCooldown = 114;
       this.isAir = false;
@@ -1664,7 +1664,7 @@ class Unit {
     } else if (type === "Fire Spirit") {
       this.hp = 250;
       this.maxHp = this.hp;
-      this.speed = 0.65;
+      this.speed = 0.80;
       this.r = 16;
       this.attackRange = 80;  
       this.attackDamage = 207;   
@@ -1699,7 +1699,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 40;  
       this.attackDamage = 192;   
-      this.attackCooldown = 96;
+      this.attackCooldown = 90;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1714,7 +1714,7 @@ class Unit {
       this.r = 16;
       this.attackRange = 100;  
       this.attackDamage = 225;   
-      this.attackCooldown = 84;
+      this.attackCooldown = 90;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1728,7 +1728,7 @@ class Unit {
       this.speed = 0.8;
       this.r = 16;
       this.attackRange = 40;  
-      this.attackDamage = 320;   
+      this.attackDamage = 350;   
       this.attackCooldown = 1;
       this.isAir = false;
       this.attacksAir = false;
@@ -1744,7 +1744,7 @@ class Unit {
       this.r = 8;
       this.attackRange = 40;  
       this.attackDamage = 81;
-      this.attackCooldown = 30;
+      this.attackCooldown = 36;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
