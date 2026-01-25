@@ -133,24 +133,6 @@ function startGame(deck) {
 
   if (!gameStarted) {
     drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-    drawArena();
-
   }
 
   gameStarted = true;
@@ -1382,12 +1364,18 @@ function endGameByTowers() {
 
   // ---- LOG ALL WINRATES ----
   console.log("=== CARD WINRATES ===");
-  for (const id in cardStats) {
-    const s = cardStats[id];
-    const rate = s.games ? ((s.wins / s.games) * 100).toFixed(1) : "0.0";
-    const z = s.games ? (s.wins / s.games - 0.5) * 2 * Math.sqrt(s.games) : 0;
-    console.log(`${s.name}: ${rate}% z=${(s.games ? (s.wins / s.games - 0.5) * 2 * Math.sqrt(s.games) : 0).toFixed(2)} (${s.wins}/${s.games})`);
-  }
+  
+  Object.values(cardStats)
+    .sort((a, b) =>
+      (b.games ? (b.wins / b.games - 0.5) * 2 * Math.sqrt(b.games) : 0) -
+      (a.games ? (a.wins / a.games - 0.5) * 2 * Math.sqrt(a.games) : 0)
+    )
+    .forEach(s => {
+      const rate = s.games ? ((s.wins / s.games) * 100).toFixed(1) : "0.0";
+      const z = s.games ? (s.wins / s.games - 0.5) * 2 * Math.sqrt(s.games) : 0;
+      console.log(`${s.name}: ${rate}% z=${z.toFixed(2)} (${s.wins}/${s.games})`);
+    });
+
 
   // ---- RESET GAME STATE SAFELY ----
   units.length = 0;
