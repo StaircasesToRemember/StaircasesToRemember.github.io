@@ -32,14 +32,14 @@ const PlacementType = {
   
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 90, damage: 366, delay: 20, wins: 0, losses: 0 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 85, damage: 366, delay: 20, wins: 0, losses: 0 },
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "bats", name: "Bats", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "bomber", name: "Bomber", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 688, delay: 60, wins: 0, losses: 0 },
+  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 65, damage: 688, delay: 60, wins: 0, losses: 0 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -50,6 +50,7 @@ const cards = [
   { id: "pekka", name: "Pekka", cost: 7, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "valkyrie", name: "Valkyrie", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -310,6 +311,11 @@ const cardAI = {
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
+  Valkyrie: {
+    reactiveOffset: { x: 0, y: -25 }, // spawn below enemy troop
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
+  },
   };
 
 const SPELL_UNIT_VALUES = {
@@ -332,6 +338,7 @@ const SPELL_UNIT_VALUES = {
     Bomber: 2,
     Wallbreaker: 1,
     Bat: 0.4,
+    Valkyrie: 1.25,
 
     tower: 2,
     kingTower: -5
@@ -356,6 +363,7 @@ const SPELL_UNIT_VALUES = {
     Bomber: 2,
     Wallbreaker: 1,
     Bat: 0.4,
+    Valkyrie: 0.5,
 
     tower: 1,
     kingTower: -5
@@ -380,6 +388,7 @@ const SPELL_UNIT_VALUES = {
     Bomber: 0.5,
     Wallbreaker: 0.5,
     Bat: 0.4,
+    Valkyrie: 0.25,
     
     tower: 0.5,
     kingTower: -5
@@ -594,6 +603,9 @@ function spawnEnemyUnit(card, x, y) {
   if (card.name === "Knight") {
     units.push(new Unit(x, y, "enemy", "Knight"));
   } 
+  else if (card.name === "Valkyrie") {
+    units.push(new Unit(x, y, "enemy", "Valkyrie"));
+  } 
   else if (card.name === "Archers") {
     units.push(new Unit(x - 15, y, "enemy", "Archer"));
     units.push(new Unit(x + 15, y, "enemy", "Archer"));
@@ -689,6 +701,9 @@ function spawnEnemyUnit(card, x, y) {
 function spawnPlayerUnit(card, x, y) {
   if (card.name === "Knight") {
     units.push(new Unit(x, y, "player", "Knight"));
+  } 
+  else if (card.name === "Valkyrie") {
+    units.push(new Unit(x, y, "player", "Valkyrie"));
   } 
   else if (card.name === "Archers") {
     units.push(new Unit(x - 15, y, "player", "Archer"));
@@ -1086,6 +1101,7 @@ function drawHand() {
       ctx.arc(x + cardWidth / 2, y + 35, 20, 0, Math.PI * 2);
 
       if (card.name === "Knight") ctx.fillStyle = "gold";
+      if (card.name === "Valkyrie") ctx.fillStyle = "orange";
       if (card.name === "Archers") ctx.fillStyle = "magenta";
       if (card.name === "Musketeer") ctx.fillStyle = "blueviolet";
       if (card.name === "Giant") ctx.fillStyle = "orange";
@@ -1359,6 +1375,21 @@ class Unit {
       this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
+    } else if (type === "Valkyrie") {
+      this.hp = 1907;
+      this.maxHp = this.hp;
+      this.speed = 0.5;
+      this.r = 20;
+      this.attackRange = 20;
+      this.attackDamage = 266;
+      this.attackCooldown = 90;
+      this.isAir = false;
+      this.attacksAir = false;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 170;
+      this.isBuilding = false;
+      this.decay = 0;
+      this.splashRadius = 60;
     } else if (type === "Archer") {
       this.hp = 304;
       this.maxHp = this.hp;
@@ -1598,7 +1629,7 @@ class Unit {
       this.r = 8;
       this.attackRange = 40;  
       this.attackDamage = 81;
-      this.attackCooldown = 78;  // slower attack speed
+      this.attackCooldown = 56;  // slower attack speed
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
@@ -1792,6 +1823,7 @@ update() {
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
 
     if (this.type === "Knight") ctx.fillStyle = "gold";
+    else if (this.type === "Valkyrie") ctx.fillStyle = "orange";
     else if (this.type === "Archer") ctx.fillStyle = "magenta";
     else if (this.type === "Musketeer") ctx.fillStyle = "blueviolet";
     else if (this.type === "Giant") ctx.fillStyle = "orange";
@@ -1954,6 +1986,8 @@ canvas.addEventListener("click", function (e) {
       if (card.type === "spell") {
       castSpell(card, mouseX, mouseY, "player");
     } else if (card.name === "Knight") {
+      units.push(new Unit(mouseX, mouseY, "player", "Knight"));
+    } else if (card.name === "Valkyrie") {
       units.push(new Unit(mouseX, mouseY, "player", "Knight"));
     } else if (card.name === "Archers") {
       units.push(new Unit(mouseX - 15, mouseY, "player", "Archer"));
