@@ -1410,7 +1410,7 @@ function endGameByTowers() {
       const randomDecks = randomEnemyDeck(16);
       enemyDeck = randomDecks.slice(0,8);
       playerDeck = randomDecks.slice(8,16);
-      startGame(randomPlayerDeck);
+      startGame(playerDeck);
   } else {
       enemyDeck = randomEnemyDeck(8);
       startGame(playerDeck);
