@@ -12,7 +12,7 @@
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
 <script>
-//Coming:goblin gang, graveyard, rocket, berzerker, night witch, lavahound, mega minion, ice golem, delivery, rascals, firecracker, royal hogs, furnace, royal giant, golem, recruits
+//Coming: goblin gang, graveyard, rocket, berzerker, night witch, lavahound, mega minion, ice golem, delivery, rascals, firecracker, royal hogs, furnace, royal giant, golem, recruits
 let gameMode = "PVP"; 
 
 document.getElementById("start-ai").onclick = () => {
@@ -44,6 +44,7 @@ const cards = [
   { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 65, damage: 688, delay: 45, wins: 0, losses: 0 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "goblins", name: "Goblins", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "goblin_gang", name: "Goblin Gang", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "mini_pekka", name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -136,12 +137,11 @@ function startGame(deck) {
 
   if (!gameStarted) {
     drawArena();
-    /*if (gameMode === "AI_VS_AI") {
+    if (gameMode === "AI_VS_AI") {
       for (i = 1; i < 90; i++) {
         drawArena();
       }
     }
-    */
   }
 
   gameStarted = true;
@@ -293,6 +293,11 @@ const cardAI = {
   },
   minion_horde: {
     reactiveOffset: { x: 0, y: 0 },
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
+  },
+  goblin_gang:  {
+    reactiveOffset: { x: 75, y: -130 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
@@ -734,6 +739,14 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x + 15, y - 10, "enemy", "Minion"));
     units.push(new Unit(x, y - 35, "enemy", "Minion"));
   }
+  else if (card.name === "Goblin Gang") {
+    units.push(new Unit(x - 15, y + 15, "enemy", "Goblin"));
+    units.push(new Unit(x + 15, y + 15, "enemy", "Goblin"));
+    units.push(new Unit(x, y + 40, "enemy", "Goblin"));
+    units.push(new Unit(x - 15, y - 10, "enemy", "Spear Goblin"));
+    units.push(new Unit(x + 15, y - 10, "enemy", "Spear Goblin"));
+    units.push(new Unit(x, y - 35, "enemy", "Spear Goblin"));
+  }
   else if (card.name === "Pekka") {
     units.push(new Unit(x, y, "enemy", "Pekka"));
   } 
@@ -858,7 +871,14 @@ function spawnPlayerUnit(card, x, y) {
     units.push(new Unit(x + 15, y + 10, "player", "Minion"));
     units.push(new Unit(x, y + 35, "player", "Minion"));
   }
-
+  else if (card.name === "Goblin Gang") {
+    units.push(new Unit(x - 15, y - 15, "player", "Goblin"));
+    units.push(new Unit(x + 15, y - 15, "player", "Goblin"));
+    units.push(new Unit(x, y - 40, "player", "Goblin"));
+    units.push(new Unit(x - 15, y + 10, "player", "Spear Goblin"));
+    units.push(new Unit(x + 15, y + 10, "player", "Spear Goblin"));
+    units.push(new Unit(x, y + 35, "player", "Spear Goblin"));
+  }
   else if (card.name === "Pekka") {
     units.push(new Unit(x, y, "player", "Pekka"));
   } 
@@ -1217,6 +1237,7 @@ function drawHand() {
       if (card.name === "Baby Dragon") ctx.fillStyle = "lime";
       if (card.name === "Skeleton Dragons") ctx.fillStyle = "floralwhite";
       if (card.name === "Minion Horde") ctx.fillStyle = "cornflowerblue";
+      if (card.name === "Goblin Gang") ctx.fillStyle = "lawngreen";
       if (card.name === "Pekka") ctx.fillStyle = "midnightblue";
       if (card.name === "Fire Spirit") {ctx.globalAlpha = 0.5; ctx.fillStyle = "red";}
       if (card.name === "Witch") ctx.fillStyle = "indigo";
@@ -2271,6 +2292,13 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX - 15, mouseY - 15, "player", "Minion"));
       units.push(new Unit(mouseX + 15, mouseY - 15, "player", "Minion"));
       units.push(new Unit(mouseX, mouseY - 40, "player", "Minion"));
+    } else if (card.name === "Goblin Gang") {
+      units.push(new Unit(mouseX - 15, mouseY + 10, "player", "Spear Goblin"));
+      units.push(new Unit(mouseX + 15, mouseY + 10, "player", "Spear Goblin"));
+      units.push(new Unit(mouseX, mouseY + 35, "player", "Spear Goblin"));
+      units.push(new Unit(mouseX - 15, mouseY - 15, "player", "Goblin"));
+      units.push(new Unit(mouseX + 15, mouseY - 15, "player", "Goblin"));
+      units.push(new Unit(mouseX, mouseY - 40, "player", "Goblin"));
     } else if (card.name === "Pekka") {
       units.push(new Unit(mouseX, mouseY, "player", "Pekka"));
     } else if (card.name === "Fire Spirit") {
