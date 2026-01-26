@@ -43,6 +43,7 @@ const cards = [
   { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 65, damage: 688, delay: 45, wins: 0, losses: 0 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "goblins", name: "Goblins", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "mini_pekka", name: "Mini Pekka", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -59,7 +60,7 @@ const cards = [
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 65, damage: 277, delay: 1, wins: 0, losses: 0 }
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 65, damage: 192, delay: 1, wins: 0, losses: 0 }
 ];
   
 // Persistent card stats (never reset)
@@ -245,6 +246,11 @@ const cardAI = {
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
+  goblins: {
+    reactiveOffset: { x: 0, y: 0 },
+    investPos1: { x: 199, y: 0 },
+    investPos2: { x: 201, y: 0 }
+  },
   skeleton_army: {
     reactiveOffset: { x: 0, y: 0 },
     investPos1: { x: 199, y: 0 },
@@ -340,6 +346,7 @@ const SPELL_UNIT_VALUES = {
     "Mini Pekka": 1,
     Skeleton: 0.25,
     Cannon: 1.5,
+    Goblin: 0.5
     Tombstone: 1.5,
     "Hog Rider": 1,
     Balloon: 2,
@@ -369,6 +376,7 @@ const SPELL_UNIT_VALUES = {
     "Mini Pekka": 0.5,
     Skeleton: 0.25,
     Cannon: 0.75,
+    Goblin: 0.5,
     Tombstone: 0.75,
     "Hog Rider": 0.5,
     Balloon: 1,
@@ -398,6 +406,7 @@ const SPELL_UNIT_VALUES = {
     "Mini Pekka": 0.25,
     Skeleton: 0.25,
     Cannon: 0.25,
+    Goblin: 0.25,
     Tombstone: 0.25,
     "Hog Rider": 0.25,
     Balloon: 0.5,
@@ -658,6 +667,12 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x - 10, y + 10, "enemy", "Skeleton"));
     units.push(new Unit(x + 10, y + 10, "enemy", "Skeleton"));
   }
+  else if (card.name === "Goblins") {
+    units.push(new Unit(x - 15, y - 15, "enemy", "Goblin"));
+    units.push(new Unit(x + 15, y - 15, "enemy", "Goblin"));
+    units.push(new Unit(x - 15, y + 15, "enemy", "Goblin"));
+    units.push(new Unit(x + 15, y + 15, "enemy", "Goblin"));
+  }
   else if (card.name === "Skeleton Army") {
     units.push(new Unit(x - 30, y - 30, "enemy", "Skeleton"));
     units.push(new Unit(x - 30, y - 10, "enemy", "Skeleton"));
@@ -769,6 +784,12 @@ function spawnPlayerUnit(card, x, y) {
     units.push(new Unit(x + 10, y + 10, "player", "Skeleton"));
     units.push(new Unit(x - 10, y - 10, "player", "Skeleton"));
     units.push(new Unit(x + 10, y - 10, "player", "Skeleton"));
+  }
+  else if (card.name === "Goblins") {
+    units.push(new Unit(x - 15, y + 15, "player", "Goblin"));
+    units.push(new Unit(x + 15, y + 15, "player", "Goblin"));
+    units.push(new Unit(x - 15, y - 15, "player", "Goblin"));
+    units.push(new Unit(x + 15, y - 15, "player", "Goblin"));
   }
   else if (card.name === "Skeleton Army") {
     units.push(new Unit(x - 30, y + 30, "player", "Skeleton"));
@@ -882,7 +903,7 @@ function resolveSpell(card, x, y, team) {
                 u.hp -= card.damage;
                 if (card.name === "Zap") {
                     u.target = null;
-                    u.currentAttackCooldown = u.attackCooldown;
+                    u.currentAttackCooldown = u.attackCooldown + 30;
               }
             }
         }
@@ -1168,6 +1189,7 @@ function drawHand() {
       if (card.name === "Skeletons") ctx.fillStyle = "floralwhite";
       if (card.name === "Skeleton Army") ctx.fillStyle = "floralwhite";
       if (card.name === "Cannon") ctx.fillStyle = "black";
+      if (card.name === "Goblin") ctx.fillStyle = "green";
       if (card.name === "Tombstone") ctx.fillStyle = "lightcyan";
       if (card.name === "Hog Rider") ctx.fillStyle = "saddlebrown";
       if (card.name === "Balloon") ctx.fillStyle = "lightcoral";
@@ -1554,6 +1576,20 @@ class Unit {
       this.r = 8;
       this.attackRange = 40;
       this.attackDamage = 180;
+      this.attackCooldown = 66;
+      this.isAir = false;
+      this.attacksAir = false;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 170;
+      this.isBuilding = false;
+      this.decay = 0;
+    } else if (type === "Goblin") {
+      this.hp = 202;
+      this.maxHp = this.hp;
+      this.speed = 1.0;
+      this.r = 12;
+      this.attackRange = 40;
+      this.attackDamage = 120;
       this.attackCooldown = 66;
       this.isAir = false;
       this.attacksAir = false;
@@ -1968,6 +2004,7 @@ update() {
     else if (this.type === "Minion") ctx.fillStyle = "cornflowerblue";
     else if (this.type === "Mini Pekka") ctx.fillStyle = "navy";
     else if (this.type === "Skeleton") ctx.fillStyle = "floralwhite";
+    else if (this.type === "Goblin") ctx.fillStyle = "green";
     else if (this.type === "Cannon") ctx.fillStyle = "black";
     else if (this.type === "Tombstone") ctx.fillStyle = "lightcyan";
     else if (this.type === "Hog Rider") ctx.fillStyle = "saddlebrown";
@@ -2154,6 +2191,11 @@ canvas.addEventListener("click", function (e) {
       units.push(new Unit(mouseX + 10, mouseY + 10, "player", "Skeleton"));
       units.push(new Unit(mouseX - 10, mouseY - 10, "player", "Skeleton"));
       units.push(new Unit(mouseX + 10, mouseY - 10, "player", "Skeleton"));
+    } else if (card.name === "Goblins") {
+      units.push(new Unit(mouseX - 15, mouseY + 15, "player", "Goblin"));
+      units.push(new Unit(mouseX + 15, mouseY + 15, "player", "Goblin"));
+      units.push(new Unit(mouseX - 15, mouseY - 15, "player", "Goblin"));
+      units.push(new Unit(mouseX + 15, mouseY - 15, "player", "Goblin"));
     } else if (card.name === "Skeleton Army") {
       units.push(new Unit(mouseX - 30, mouseY - 10, "player", "Skeleton"));
       units.push(new Unit(mouseX - 30, mouseY + 10, "player", "Skeleton"));
