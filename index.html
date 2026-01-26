@@ -59,7 +59,7 @@ const cards = [
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 292, delay: 1, wins: 0, losses: 0 }
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 277, delay: 1, wins: 0, losses: 0 }
 ];
   
 // Persistent card stats (never reset)
@@ -240,7 +240,7 @@ const cardAI = {
     reactiveOffset: { x: 0, y: 0 },
   },
   skeletons: {
-    reactivePos: { x: 200, y: 200 },
+    reactiveOffset: { x: 0, y: 0 },
     investPos1: { x: 199, y: 0 },
     investPos2: { x: 201, y: 0 }
   },
@@ -1439,7 +1439,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 24;
       this.attackRange = 40;
-      this.attackDamage = 324;
+      this.attackDamage = 340;
       this.attackCooldown = 72;
       this.isAir = false;
       this.attacksAir = false;
@@ -1538,7 +1538,7 @@ class Unit {
       this.speed = 0.7;
       this.r = 20;
       this.attackRange = 55;
-      this.attackDamage = 2591;
+      this.attackDamage = 2461;
       this.attackCooldown = 96;
       this.isAir = false;
       this.attacksAir = false;
@@ -1552,7 +1552,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 8;
       this.attackRange = 40;
-      this.attackDamage = 149;
+      this.attackDamage = 164;
       this.attackCooldown = 66;
       this.isAir = false;
       this.attacksAir = false;
@@ -1588,7 +1588,7 @@ class Unit {
       this.sightRange = 1;
       this.isBuilding = true;
       this.decay = 0.25;
-      this.spawnSkeletons = (frameClock + 60) % 150;
+      this.spawnSkeletons = (frameClock + 60) % 130;
     } else if (type === "Hog Rider") {
       this.hp = 1697;
       this.maxHp = this.hp;
@@ -1609,7 +1609,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 30;
       this.attackRange = 40;  
-      this.attackDamage = 650;
+      this.attackDamage = 683;
       this.attackCooldown = 120;  
       this.isAir = true;
       this.attacksAir = false;
@@ -1623,7 +1623,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 145;  
-      this.attackDamage = 183;   
+      this.attackDamage = 174;   
       this.attackCooldown = 84;
       this.isAir = false;
       this.attacksAir = true;
@@ -1653,7 +1653,7 @@ class Unit {
       this.speed = 0.7;
       this.r = 24;
       this.attackRange = 100;  
-      this.attackDamage = 90;   
+      this.attackDamage = 86;   
       this.attackCooldown = 90;
       this.isAir = true;
       this.attacksAir = true;
@@ -1697,7 +1697,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 145;  
-      this.attackDamage = 29;   
+      this.attackDamage = 26;   
       this.attackCooldown = 42;
       this.isAir = false;
       this.attacksAir = true;
@@ -1706,7 +1706,7 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
       this.splashRadius = 50;
-      this.spawnSkeletons = (frameClock + 60) % 420;
+      this.spawnSkeletons = (frameClock + 60) % 480;
     } else if (type === "Barbarian") {
       this.hp = 670;
       this.maxHp = this.hp;
@@ -1728,7 +1728,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 16;
       this.attackRange = 100;  
-      this.attackDamage = 408;   
+      this.attackDamage = 428;   
       this.attackCooldown = 108;
       this.isAir = false;
       this.attacksAir = false;
@@ -1778,7 +1778,7 @@ update() {
   this.hp -= this.decay;
 
   if (this.type === "Witch") {
-      if (this.spawnSkeletons === frameClock % 420) {
+      if (this.spawnSkeletons === frameClock % 480) {
           units.push(new Unit(this.x + 50, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 50, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x, this.y + 50, this.team, "Skeleton"));
@@ -1786,7 +1786,7 @@ update() {
       }
   }
     if (this.type === "Tombstone") {
-      if (this.spawnSkeletons === frameClock % 150) {
+      if (this.spawnSkeletons === frameClock % 130) {
           units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
       }
