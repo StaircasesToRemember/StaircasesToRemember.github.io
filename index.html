@@ -362,7 +362,7 @@ const SPELL_UNIT_VALUES = {
     Knight: 0.5,
     Archer: 1.5,
     Musketeer: 1,
-    "Baby Musketeer": 1,
+    "Baby Musketeer": 2.5,
     Giant: 0.25,
     Minion: 1,
     "Mini Pekka": 0.5,
@@ -391,7 +391,7 @@ const SPELL_UNIT_VALUES = {
     Knight: 0.25,
     Archer: 0.5,
     Musketeer: 0.5,
-    "Baby Musketeer": 0.25,
+    "Baby Musketeer": 0.5,
     Giant: 0.25,
     Minion: 0.25,
     "Mini Pekka": 0.25,
@@ -652,9 +652,10 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Mini Pekka"));
   } 
   else if (card.name === "Skeletons") {
-    units.push(new Unit(x - 30, y - 20, "enemy", "Skeleton"));
-    units.push(new Unit(x + 30, y - 20, "enemy", "Skeleton"));
-    units.push(new Unit(x, y + 30, "enemy", "Skeleton"));
+    units.push(new Unit(x - 10, y - 10, "enemy", "Skeleton"));
+    units.push(new Unit(x + 10, y - 10, "enemy", "Skeleton"));
+    units.push(new Unit(x - 10, y + 10, "enemy", "Skeleton"));
+    units.push(new Unit(x + 10, y + 10, "enemy", "Skeleton"));
   }
   else if (card.name === "Skeleton Army") {
     units.push(new Unit(x - 30, y - 30, "enemy", "Skeleton"));
@@ -763,10 +764,10 @@ function spawnPlayerUnit(card, x, y) {
     units.push(new Unit(x, y - 15, "player", "Minion"));
   }
   else if (card.name === "Skeletons") {
-    units.push(new Unit(x - 30, y + 30, "player", "Skeleton"));
-    units.push(new Unit(x + 30, y + 30, "player", "Skeleton"));
-    units.push(new Unit(x - 30, y - 30, "player", "Skeleton"));
-    units.push(new Unit(x + 30, y - 30, "player", "Skeleton"));
+    units.push(new Unit(x - 10, y + 10, "player", "Skeleton"));
+    units.push(new Unit(x + 10, y + 10, "player", "Skeleton"));
+    units.push(new Unit(x - 10, y - 10, "player", "Skeleton"));
+    units.push(new Unit(x + 10, y - 10, "player", "Skeleton"));
   }
   else if (card.name === "Skeleton Army") {
     units.push(new Unit(x - 30, y + 30, "player", "Skeleton"));
@@ -1490,7 +1491,7 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Baby Musketeer") {
-      this.hp = 385;
+      this.hp = 304;
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 16;
@@ -2148,10 +2149,10 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Mini Pekka") {
       units.push(new Unit(mouseX, mouseY, "player", "Mini Pekka"));
     } else if (card.name === "Skeletons") {
-      units.push(new Unit(mouseX - 30, mouseY + 30, "player", "Skeleton"));
-      units.push(new Unit(mouseX + 30, mouseY + 30, "player", "Skeleton"));
-      units.push(new Unit(mouseX - 30, mouseY - 30, "player", "Skeleton"));
-      units.push(new Unit(mouseX + 30, mouseY - 30, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 10, mouseY + 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 10, mouseY + 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 10, mouseY - 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 10, mouseY - 10, "player", "Skeleton"));
     } else if (card.name === "Skeleton Army") {
       units.push(new Unit(mouseX - 30, mouseY - 10, "player", "Skeleton"));
       units.push(new Unit(mouseX - 30, mouseY + 10, "player", "Skeleton"));
