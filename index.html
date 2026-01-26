@@ -1406,7 +1406,7 @@ function endGameByTowers() {
 
   // ---- START NEW GAME ----
   console.log("game over");
-  if (gameMode = "AI_VS_AI"){
+  if (gameMode === "AI_VS_AI"){
       const randomDecks = randomEnemyDeck(16);
       enemyDeck = randomDecks.slice(0,8);
       playerDeck = randomDecks.slice(8,16);
