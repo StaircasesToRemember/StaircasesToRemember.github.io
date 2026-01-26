@@ -1697,7 +1697,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 145;  
-      this.attackDamage = 26;   
+      this.attackDamage = 36;   
       this.attackCooldown = 42;
       this.isAir = false;
       this.attacksAir = true;
@@ -1706,7 +1706,7 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
       this.splashRadius = 50;
-      this.spawnSkeletons = (frameClock + 60) % 480;
+      this.spawnSkeletons = (frameClock + 60) % 600;
     } else if (type === "Barbarian") {
       this.hp = 670;
       this.maxHp = this.hp;
@@ -1778,7 +1778,7 @@ update() {
   this.hp -= this.decay;
 
   if (this.type === "Witch") {
-      if (this.spawnSkeletons === frameClock % 480) {
+      if (this.spawnSkeletons === frameClock % 600) {
           units.push(new Unit(this.x + 50, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 50, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x, this.y + 50, this.team, "Skeleton"));
