@@ -59,7 +59,7 @@ const cards = [
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 265, delay: 1, wins: 0, losses: 0 }
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 292, delay: 1, wins: 0, losses: 0 }
 ];
   
 // Persistent card stats (never reset)
@@ -1438,7 +1438,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 24;
       this.attackRange = 40;
-      this.attackDamage = 360;
+      this.attackDamage = 324;
       this.attackCooldown = 72;
       this.isAir = false;
       this.attacksAir = false;
@@ -1467,7 +1467,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 16;
       this.attackRange = 145; 
-      this.attackDamage = 67;  
+      this.attackDamage = 60;  
       this.attackCooldown = 54;
       this.isAir = false;
       this.attacksAir = true;
@@ -1490,7 +1490,7 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Baby Musketeer") {
-      this.hp = 432;
+      this.hp = 385;
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 16;
@@ -1523,7 +1523,7 @@ class Unit {
       this.speed = 0.7;
       this.r = 16;
       this.attackRange = 80;  // melee range
-      this.attackDamage = 84;
+      this.attackDamage = 88;
       this.attackCooldown = 66;  // slower attack speed
       this.isAir = true;
       this.attacksAir = true;
@@ -1537,7 +1537,7 @@ class Unit {
       this.speed = 0.7;
       this.r = 20;
       this.attackRange = 55;
-      this.attackDamage = 2253;
+      this.attackDamage = 2591;
       this.attackCooldown = 96;
       this.isAir = false;
       this.attacksAir = false;
@@ -1565,7 +1565,7 @@ class Unit {
       this.speed = 0;
       this.r = 24;
       this.attackRange = 145;
-      this.attackDamage = 304;
+      this.attackDamage = 350;
       this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = false;
@@ -1587,7 +1587,7 @@ class Unit {
       this.sightRange = 1;
       this.isBuilding = true;
       this.decay = 0.25;
-      this.spawnSkeletons = (frameClock + 60) % 180;
+      this.spawnSkeletons = (frameClock + 60) % 150;
     } else if (type === "Hog Rider") {
       this.hp = 1697;
       this.maxHp = this.hp;
@@ -1622,7 +1622,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 145;  
-      this.attackDamage = 193;   
+      this.attackDamage = 183;   
       this.attackCooldown = 84;
       this.isAir = false;
       this.attacksAir = true;
@@ -1742,7 +1742,7 @@ class Unit {
       this.speed = 1.0;
       this.r = 16;
       this.attackRange = 40;  
-      this.attackDamage = 320;   
+      this.attackDamage = 304;   
       this.attackCooldown = 1;
       this.isAir = false;
       this.attacksAir = false;
@@ -1785,7 +1785,7 @@ update() {
       }
   }
     if (this.type === "Tombstone") {
-      if (this.spawnSkeletons === frameClock % 180) {
+      if (this.spawnSkeletons === frameClock % 150) {
           units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
       }
