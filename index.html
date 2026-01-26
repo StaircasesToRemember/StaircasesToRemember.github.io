@@ -33,7 +33,7 @@ const PlacementType = {
   
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 90, damage: 366, delay: 20, wins: 0, losses: 0 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 15, wins: 0, losses: 0 },
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "balloon", name: "Balloon", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -41,7 +41,7 @@ const cards = [
   { id: "bomber", name: "Bomber", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 688, delay: 50, wins: 0, losses: 0 },
+  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 45, wins: 0, losses: 0 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -1447,7 +1447,7 @@ class Unit {
       this.r = 24;
       this.attackRange = 40;
       this.attackDamage = 202;
-      this.attackCooldown = 48;
+      this.attackCooldown = 42;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1490,7 +1490,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 160;  
       this.attackDamage = 217;   
-      this.attackCooldown = 120;
+      this.attackCooldown = 132;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1498,7 +1498,7 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Giant") {
-      this.hp = 4500;
+      this.hp = 5000;
       this.maxHp = this.hp;
       this.speed = 0.4;
       this.r = 36;
@@ -1518,7 +1518,7 @@ class Unit {
       this.r = 16;
       this.attackRange = 80;  // melee range
       this.attackDamage = 107;
-      this.attackCooldown = 78;  // slower attack speed
+      this.attackCooldown = 84;  // slower attack speed
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
@@ -1589,7 +1589,7 @@ class Unit {
       this.r = 22;
       this.attackRange = 40;  
       this.attackDamage = 317;
-      this.attackCooldown = 96;  
+      this.attackCooldown = 84;  
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = true; 
@@ -1602,7 +1602,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 30;
       this.attackRange = 40;  
-      this.attackDamage = 675;
+      this.attackDamage = 650;
       this.attackCooldown = 120;  
       this.isAir = true;
       this.attacksAir = false;
@@ -1647,7 +1647,7 @@ class Unit {
       this.r = 24;
       this.attackRange = 100;  
       this.attackDamage = 161;   
-      this.attackCooldown = 138;
+      this.attackCooldown = 144;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1707,7 +1707,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 40;  
       this.attackDamage = 192;   
-      this.attackCooldown = 63;
+      this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
@@ -1722,7 +1722,7 @@ class Unit {
       this.r = 16;
       this.attackRange = 100;  
       this.attackDamage = 225;   
-      this.attackCooldown = 78;
+      this.attackCooldown = 72;
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = false;
