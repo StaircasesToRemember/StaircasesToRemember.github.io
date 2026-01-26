@@ -33,7 +33,7 @@ const PlacementType = {
   
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 15, wins: 0, losses: 0 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 25, wins: 0, losses: 0 },
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "balloon", name: "Balloon", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -41,7 +41,7 @@ const cards = [
   { id: "bomber", name: "Bomber", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 65, damage: 688, delay: 45, wins: 0, losses: 0 },
+  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 65, damage: 688, delay: 55, wins: 0, losses: 0 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "goblins", name: "Goblins", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "goblin_gang", name: "Goblin Gang", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -1528,7 +1528,7 @@ class Unit {
       this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
-      this.splashRadius = 120;
+      this.splashRadius = 100;
     } else if (type === "Archer") {
       this.hp = 304;
       this.maxHp = this.hp;
@@ -1661,7 +1661,7 @@ class Unit {
       this.speed = 0;
       this.r = 24;
       this.attackRange = 145;
-      this.attackDamage = 320;
+      this.attackDamage = 329;
       this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = false;
@@ -1792,7 +1792,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 145;  
-      this.attackDamage = 26;   
+      this.attackDamage = 23;   
       this.attackCooldown = 42;
       this.isAir = false;
       this.attacksAir = true;
@@ -1823,7 +1823,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 16;
       this.attackRange = 100;  
-      this.attackDamage = 459;   
+      this.attackDamage = 470;   
       this.attackCooldown = 108;
       this.isAir = false;
       this.attacksAir = false;
