@@ -1588,14 +1588,14 @@ class Unit {
       this.sightRange = 1;
       this.isBuilding = true;
       this.decay = 0.25;
-      this.spawnSkeletons = (frameClock + 60) % 130;
+      this.spawnSkeletons = (frameClock + 60) % 100;
     } else if (type === "Hog Rider") {
       this.hp = 1697;
       this.maxHp = this.hp;
       this.speed = 1.0;
       this.r = 22;
       this.attackRange = 40;  
-      this.attackDamage = 403;
+      this.attackDamage = 423;
       this.attackCooldown = 96;  
       this.isAir = false;
       this.attacksAir = false;
@@ -1604,7 +1604,7 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Balloon") {
-      this.hp = 1800;
+      this.hp = 1679;
       this.maxHp = this.hp;
       this.speed = 0.5;
       this.r = 30;
@@ -1653,7 +1653,7 @@ class Unit {
       this.speed = 0.7;
       this.r = 24;
       this.attackRange = 100;  
-      this.attackDamage = 86;   
+      this.attackDamage = 70;   
       this.attackCooldown = 90;
       this.isAir = true;
       this.attacksAir = true;
@@ -1758,7 +1758,7 @@ class Unit {
       this.speed = 1.0;
       this.r = 8;
       this.attackRange = 40;  
-      this.attackDamage = 115;
+      this.attackDamage = 144;
       this.attackCooldown = 78;
       this.isAir = true;
       this.attacksAir = true;
@@ -1786,7 +1786,7 @@ update() {
       }
   }
     if (this.type === "Tombstone") {
-      if (this.spawnSkeletons === frameClock % 130) {
+      if (this.spawnSkeletons === frameClock % 100) {
           units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
       }
