@@ -41,7 +41,7 @@ const cards = [
   { id: "bomber", name: "Bomber", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 45, wins: 0, losses: 0 },
+  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 60, wins: 0, losses: 0 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "hog_rider", name: "Hog Rider", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "knight", name: "Knight", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -53,13 +53,13 @@ const cards = [
   { id: "skeleton_army", name: "Skeleton Army", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "skeleton_dragons", name: "Skeleton Dragons", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "skeletons", name: "Skeletons", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "three_musketeers", name: "Three Musketeers", cost: 10, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
+  { id: "three_musketeers", name: "Three Musketeers", cost: 9, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "tombstone", name: "Tombstone", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "valkyrie", name: "Valkyrie", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 220, delay: 1, wins: 0, losses: 0 }
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 240, delay: 1, wins: 0, losses: 0 }
 ];
   
 // Persistent card stats (never reset)
@@ -333,6 +333,7 @@ const SPELL_UNIT_VALUES = {
     Knight: 1,
     Archer: 1.5,
     Musketeer: 2,
+    "Baby Musketeer": 2.5,
     Giant: 0.5,
     Minion: 1,
     "Mini Pekka": 1,
@@ -361,6 +362,7 @@ const SPELL_UNIT_VALUES = {
     Knight: 0.5,
     Archer: 1.5,
     Musketeer: 1,
+    "Baby Musketeer": 1,
     Giant: 0.25,
     Minion: 1,
     "Mini Pekka": 0.5,
@@ -389,6 +391,7 @@ const SPELL_UNIT_VALUES = {
     Knight: 0.25,
     Archer: 0.5,
     Musketeer: 0.5,
+    "Baby Musketeer": 0.25,
     Giant: 0.25,
     Minion: 0.25,
     "Mini Pekka": 0.25,
@@ -633,8 +636,8 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Musketeer"));
   } 
   else if (card.name === "Three Musketeers") {
-    units.push(new Unit(x - 30, y - 20, "enemy", "Musketeer"));
-    units.push(new Unit(x + 30, y - 20, "enemy", "Musketeer"));
+    units.push(new Unit(x - 30, y - 20, "enemy", "Baby Musketeer"));
+    units.push(new Unit(x + 30, y - 20, "enemy", "Baby Musketeer"));
     units.push(new Unit(x, y + 30, "enemy", "Musketeer"));
   } 
   else if (card.name === "Giant") {
@@ -649,9 +652,9 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Mini Pekka"));
   } 
   else if (card.name === "Skeletons") {
-    units.push(new Unit(x - 15, y - 10, "enemy", "Skeleton"));
-    units.push(new Unit(x + 15, y - 10, "enemy", "Skeleton"));
-    units.push(new Unit(x, y + 15, "enemy", "Skeleton"));
+    units.push(new Unit(x - 30, y - 20, "enemy", "Skeleton"));
+    units.push(new Unit(x + 30, y - 20, "enemy", "Skeleton"));
+    units.push(new Unit(x, y + 30, "enemy", "Skeleton"));
   }
   else if (card.name === "Skeleton Army") {
     units.push(new Unit(x - 30, y - 30, "enemy", "Skeleton"));
@@ -747,8 +750,8 @@ function spawnPlayerUnit(card, x, y) {
     units.push(new Unit(x, y, "player", "Musketeer"));
   } 
   else if (card.name === "Three Musketeers") {
-    units.push(new Unit(x - 30, y + 20, "player", "Musketeer"));
-    units.push(new Unit(x + 30, y + 20, "player", "Musketeer"));
+    units.push(new Unit(x - 30, y + 20, "player", "Baby Musketeer"));
+    units.push(new Unit(x + 30, y + 20, "player", "Baby Musketeer"));
     units.push(new Unit(x, y - 30, "player", "Musketeer"));
   } 
   else if (card.name === "Giant") {
@@ -760,9 +763,9 @@ function spawnPlayerUnit(card, x, y) {
     units.push(new Unit(x, y - 15, "player", "Minion"));
   }
   else if (card.name === "Skeletons") {
-    units.push(new Unit(x - 15, y + 10, "player", "Skeleton"));
-    units.push(new Unit(x + 15, y + 10, "player", "Skeleton"));
-    units.push(new Unit(x, y - 15, "player", "Skeleton"));
+    units.push(new Unit(x - 30, y + 20, "player", "Skeleton"));
+    units.push(new Unit(x + 30, y + 20, "player", "Skeleton"));
+    units.push(new Unit(x, y - 30, "player", "Skeleton"));
   }
   else if (card.name === "Skeleton Army") {
     units.push(new Unit(x - 30, y + 30, "player", "Skeleton"));
@@ -1434,7 +1437,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 24;
       this.attackRange = 40;
-      this.attackDamage = 346;
+      this.attackDamage = 360;
       this.attackCooldown = 72;
       this.isAir = false;
       this.attacksAir = false;
@@ -1448,7 +1451,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 40;
-      this.attackDamage = 266;
+      this.attackDamage = 288;
       this.attackCooldown = 90;
       this.isAir = false;
       this.attacksAir = false;
@@ -1463,7 +1466,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 16;
       this.attackRange = 145; 
-      this.attackDamage = 71;  
+      this.attackDamage = 67;  
       this.attackCooldown = 54;
       this.isAir = false;
       this.attacksAir = true;
@@ -1478,6 +1481,20 @@ class Unit {
       this.r = 20;
       this.attackRange = 160;  
       this.attackDamage = 135;   
+      this.attackCooldown = 66;
+      this.isAir = false;
+      this.attacksAir = true;
+      this.targetsOnlyBuildings = false;
+      this.sightRange = 185;
+      this.isBuilding = false;
+      this.decay = 0;
+    } else if (type === "Baby Musketeer") {
+      this.hp = 457;
+      this.maxHp = this.hp;
+      this.speed = 0.5;
+      this.r = 14;
+      this.attackRange = 160;  
+      this.attackDamage = 112;   
       this.attackCooldown = 66;
       this.isAir = false;
       this.attacksAir = true;
@@ -1519,7 +1536,7 @@ class Unit {
       this.speed = 0.7;
       this.r = 20;
       this.attackRange = 55;
-      this.attackDamage = 1510;
+      this.attackDamage = 1853;
       this.attackCooldown = 96;
       this.isAir = false;
       this.attacksAir = false;
@@ -1547,7 +1564,7 @@ class Unit {
       this.speed = 0;
       this.r = 24;
       this.attackRange = 145;
-      this.attackDamage = 224;
+      this.attackDamage = 254;
       this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = false;
@@ -1569,7 +1586,7 @@ class Unit {
       this.sightRange = 1;
       this.isBuilding = true;
       this.decay = 0.25;
-      this.spawnSkeletons = (frameClock + 60) % 240;
+      this.spawnSkeletons = (frameClock + 60) % 180;
     } else if (type === "Hog Rider") {
       this.hp = 1697;
       this.maxHp = this.hp;
@@ -1604,7 +1621,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 145;  
-      this.attackDamage = 207;   
+      this.attackDamage = 193;   
       this.attackCooldown = 84;
       this.isAir = false;
       this.attacksAir = true;
@@ -1634,7 +1651,7 @@ class Unit {
       this.speed = 0.7;
       this.r = 24;
       this.attackRange = 100;  
-      this.attackDamage = 110;   
+      this.attackDamage = 90;   
       this.attackCooldown = 90;
       this.isAir = true;
       this.attacksAir = true;
@@ -1649,7 +1666,7 @@ class Unit {
       this.speed = 0.4;
       this.r = 36;
       this.attackRange = 55;
-      this.attackDamage = 864;
+      this.attackDamage = 804;
       this.attackCooldown = 108;
       this.isAir = false;
       this.attacksAir = false;
@@ -1694,7 +1711,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 40;  
-      this.attackDamage = 250;   
+      this.attackDamage = 257;   
       this.attackCooldown = 78;
       this.isAir = false;
       this.attacksAir = false;
@@ -1709,7 +1726,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 16;
       this.attackRange = 100;  
-      this.attackDamage = 378;   
+      this.attackDamage = 408;   
       this.attackCooldown = 108;
       this.isAir = false;
       this.attacksAir = false;
@@ -1724,7 +1741,7 @@ class Unit {
       this.speed = 1.0;
       this.r = 16;
       this.attackRange = 40;  
-      this.attackDamage = 400;   
+      this.attackDamage = 320;   
       this.attackCooldown = 1;
       this.isAir = false;
       this.attacksAir = false;
@@ -1739,7 +1756,7 @@ class Unit {
       this.speed = 1.0;
       this.r = 8;
       this.attackRange = 40;  
-      this.attackDamage = 88;
+      this.attackDamage = 100;
       this.attackCooldown = 78;
       this.isAir = true;
       this.attacksAir = true;
@@ -1767,7 +1784,7 @@ update() {
       }
   }
     if (this.type === "Tombstone") {
-      if (this.spawnSkeletons === frameClock % 240) {
+      if (this.spawnSkeletons === frameClock % 180) {
           units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
       }
@@ -1943,6 +1960,7 @@ update() {
     else if (this.type === "Archer") ctx.fillStyle = "magenta";
     else if (this.type === "Valkyrie") ctx.fillStyle = "darkorange";
     else if (this.type === "Musketeer") ctx.fillStyle = "blueviolet";
+    else if (this.type === "Baby Musketeer") ctx.fillStyle = "blueviolet";
     else if (this.type === "Giant") ctx.fillStyle = "orange";
     else if (this.type === "Minion") ctx.fillStyle = "cornflowerblue";
     else if (this.type === "Mini Pekka") ctx.fillStyle = "navy";
@@ -2117,8 +2135,8 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Musketeer") {
       units.push(new Unit(mouseX, mouseY, "player", "Musketeer"));
     } else if (card.name === "Three Musketeers") {
-      units.push(new Unit(mouseX - 30, mouseY + 20, "player", "Musketeer"));
-      units.push(new Unit(mouseX + 30, mouseY + 20, "player", "Musketeer"));
+      units.push(new Unit(mouseX - 30, mouseY + 20, "player", "Baby Musketeer"));
+      units.push(new Unit(mouseX + 30, mouseY + 20, "player", "Baby Musketeer"));
       units.push(new Unit(mouseX, mouseY - 30, "player", "Musketeer"));
     } else if (card.name === "Giant") {
       units.push(new Unit(mouseX, mouseY, "player", "Giant"));
@@ -2129,9 +2147,9 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Mini Pekka") {
       units.push(new Unit(mouseX, mouseY, "player", "Mini Pekka"));
     } else if (card.name === "Skeletons") {
-      units.push(new Unit(mouseX - 15, mouseY + 10, "player", "Skeleton"));
-      units.push(new Unit(mouseX + 15, mouseY + 10, "player", "Skeleton"));
-      units.push(new Unit(mouseX, mouseY - 15, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 30, mouseY + 20, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 30, mouseY + 20, "player", "Skeleton"));
+      units.push(new Unit(mouseX, mouseY - 30, "player", "Skeleton"));
     } else if (card.name === "Skeleton Army") {
       units.push(new Unit(mouseX - 30, mouseY - 10, "player", "Skeleton"));
       units.push(new Unit(mouseX - 30, mouseY + 10, "player", "Skeleton"));
