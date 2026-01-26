@@ -676,10 +676,10 @@ function spawnEnemyUnit(card, x, y) {
     units.push(new Unit(x, y, "enemy", "Mini Pekka"));
   } 
   else if (card.name === "Skeletons") {
-    units.push(new Unit(x - 10, y - 10, "enemy", "Skeleton"));
-    units.push(new Unit(x + 10, y - 10, "enemy", "Skeleton"));
-    units.push(new Unit(x - 10, y + 10, "enemy", "Skeleton"));
-    units.push(new Unit(x + 10, y + 10, "enemy", "Skeleton"));
+    units.push(new Unit(x - 15, y - 15, "enemy", "Skeleton"));
+    units.push(new Unit(x + 15, y - 15, "enemy", "Skeleton"));
+    units.push(new Unit(x - 15, y + 15, "enemy", "Skeleton"));
+    units.push(new Unit(x + 15, y + 15, "enemy", "Skeleton"));
   }
   else if (card.name === "Goblins") {
     units.push(new Unit(x - 15, y - 15, "enemy", "Goblin"));
@@ -810,10 +810,10 @@ function spawnPlayerUnit(card, x, y) {
     units.push(new Unit(x, y, "player", "Mini Pekka"));
   } 
   else if (card.name === "Skeletons") {
-    units.push(new Unit(x - 10, y + 10, "player", "Skeleton"));
-    units.push(new Unit(x + 10, y + 10, "player", "Skeleton"));
-    units.push(new Unit(x - 10, y - 10, "player", "Skeleton"));
-    units.push(new Unit(x + 10, y - 10, "player", "Skeleton"));
+    units.push(new Unit(x - 15, y + 15, "player", "Skeleton"));
+    units.push(new Unit(x + 15, y + 15, "player", "Skeleton"));
+    units.push(new Unit(x - 15, y - 15, "player", "Skeleton"));
+    units.push(new Unit(x + 15, y - 15, "player", "Skeleton"));
   }
   else if (card.name === "Goblins") {
     units.push(new Unit(x - 15, y + 15, "player", "Goblin"));
@@ -2246,10 +2246,10 @@ canvas.addEventListener("click", function (e) {
     } else if (card.name === "Mini Pekka") {
       units.push(new Unit(mouseX, mouseY, "player", "Mini Pekka"));
     } else if (card.name === "Skeletons") {
-      units.push(new Unit(mouseX - 10, mouseY + 10, "player", "Skeleton"));
-      units.push(new Unit(mouseX + 10, mouseY + 10, "player", "Skeleton"));
-      units.push(new Unit(mouseX - 10, mouseY - 10, "player", "Skeleton"));
-      units.push(new Unit(mouseX + 10, mouseY - 10, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 15, mouseY + 15, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 15, mouseY + 15, "player", "Skeleton"));
+      units.push(new Unit(mouseX - 15, mouseY - 15, "player", "Skeleton"));
+      units.push(new Unit(mouseX + 15, mouseY - 15, "player", "Skeleton"));
     } else if (card.name === "Goblins") {
       units.push(new Unit(mouseX - 15, mouseY + 15, "player", "Goblin"));
       units.push(new Unit(mouseX + 15, mouseY + 15, "player", "Goblin"));
