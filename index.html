@@ -1407,9 +1407,13 @@ function endGameByTowers() {
   // ---- START NEW GAME ----
   console.log("game over");
   if (gameMode === "AI_VS_AI"){
-      const randomDecks = randomEnemyDeck(16);
-      enemyDeck = randomDecks.slice(0,8);
-      playerDeck = randomDecks.slice(8,16);
+      const winningDeck = result === "PLAYER" ? playerData : enemyData;
+      enemySlice1 = winningDeck.slice(0,4);
+      enemySlice2 = randomEnemyDeck(4);
+      enemyDeck = [...enemySlice1, ...enemySlice2];
+      playerSlice1 = winningDeck.slice(4,8);
+      playerSlice2 = randomEnemyDeck(4);
+      playerDeck = [...playerSlice1, ...playerSlice2];
       startGame(playerDeck);
   } else {
       enemyDeck = randomEnemyDeck(8);
