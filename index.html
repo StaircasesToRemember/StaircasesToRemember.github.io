@@ -33,7 +33,7 @@ const PlacementType = {
   
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 35, wins: 0, losses: 0 }, //(30, inf)
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 70, damage: 366, delay: 25, wins: 0, losses: 0 }, //(25, inf)
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "balloon", name: "Balloon", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -41,7 +41,7 @@ const cards = [
   { id: "bomber", name: "Bomber", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "cannon", name: "Cannon", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "fire_spirit", name: "Fire Spirit", cost: 1, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 65, damage: 688, delay: 55, wins: 0, losses: 0 },
+  { id: "fireball", name: "Fireball", cost: 4, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 688, delay: 55, wins: 0, losses: 0 },
   { id: "giant", name: "Giant", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "goblins", name: "Goblins", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "goblin_gang", name: "Goblin Gang", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -62,7 +62,7 @@ const cards = [
   { id: "wallbreakers", name: "Wallbreakers", cost: 2, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "witch", name: "Witch", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "wizard", name: "Wizard", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 65, damage: 192, delay: 1, wins: 0, losses: 0 }
+  { id: "zap", name: "Zap", cost: 2, placement: PlacementType.ANYWHERE, type: "spell", radius: 60, damage: 192, delay: 1, wins: 0, losses: 0 }
 ];
   
 // Persistent card stats (never reset)
@@ -1577,7 +1577,7 @@ class Unit {
       this.speed = 0.4;
       this.r = 36;
       this.attackRange = 40;  // melee range
-      this.attackDamage = 567; //(540, inf)
+      this.attackDamage = 595; //(567, inf)
       this.attackCooldown = 90;  // slower attack speed
       this.isAir = false;
       this.attacksAir = false;
@@ -1647,7 +1647,7 @@ class Unit {
       this.speed = 1.0;
       this.r = 12;
       this.attackRange = 130;
-      this.attackDamage = 77; (0, 81)
+      this.attackDamage = 70; (0, 77)
       this.attackCooldown = 102;
       this.isAir = false;
       this.attacksAir = true;
