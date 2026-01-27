@@ -18,8 +18,10 @@ let gameMode = "PVP";
 document.getElementById("start-ai").onclick = () => {
   gameMode = "AI_VS_AI";
   const randomDecks = randomEnemyDeck(16);
-  enemyDeck = randomDecks.slice(0,8);
-  playerDeck = randomDecks.slice(8,16);
+  //enemyDeck = randomDecks.slice(0,8);
+  //playerDeck = randomDecks.slice(8,16);
+  enemyDeck = [8, 9, 10, 14, 15, 19, 23, 31]
+  playerDeck = [2, 15, 16, 25, 26, 27, 28, 31]
   startGame(playerDeck);
 };
   
@@ -1466,9 +1468,9 @@ function endGameByTowers() {
   console.log("game over");
   if (gameMode === "AI_VS_AI"){
       const winningDeck = result === "PLAYER" ? playerData : enemyData;
-      randomDecks = randomEnemyDeck(16);
-      enemyDeck = randomDecks.slice(0,8);
-      playerDeck = randomDecks.slice(8,16);
+      //randomDecks = randomEnemyDeck(16);
+      //enemyDeck = randomDecks.slice(0,8);
+      //playerDeck = randomDecks.slice(8,16);
       startGame(playerDeck);
   } else {
       enemyDeck = randomEnemyDeck(8);
