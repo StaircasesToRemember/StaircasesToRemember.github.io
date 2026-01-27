@@ -33,7 +33,7 @@ const PlacementType = {
   
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 25, wins: 0, losses: 0 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 30, wins: 0, losses: 0 },
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "balloon", name: "Balloon", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -945,7 +945,7 @@ function resolveSpell(card, x, y, team) {
                 u.hp -= card.damage;
                 if (card.name === "Zap") {
                     u.target = null;
-                    u.currentAttackCooldown = u.attackCooldown + 45;
+                    u.currentAttackCooldown = u.attackCooldown + 50; //(45,inf)
               }
             }
         }
@@ -1506,7 +1506,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 24;
       this.attackRange = 40;
-      this.attackDamage = 345;
+      this.attackDamage = 365; //(345, inf)
       this.attackCooldown = 72;
       this.isAir = false;
       this.attacksAir = false;
@@ -1683,7 +1683,7 @@ class Unit {
       this.sightRange = 1;
       this.isBuilding = true;
       this.decay = 0.25;
-      this.spawnSkeletons = (frameClock + 30) % 80;
+      this.spawnSkeletons = (frameClock + 30) % 90; (80, inf)
     } else if (type === "Hog Rider") {
       this.hp = 1697;
       this.maxHp = this.hp;
@@ -1777,7 +1777,7 @@ class Unit {
       this.speed = 1.0;
       this.r = 16;
       this.attackRange = 80;  
-      this.attackDamage = 250;   
+      this.attackDamage = 280; //(250, inf)
       this.attackCooldown = 20;
       this.isAir = false;
       this.attacksAir = true;
@@ -1881,7 +1881,7 @@ update() {
       }
   }
     if (this.type === "Tombstone") {
-      if (this.spawnSkeletons === frameClock % 80) {
+      if (this.spawnSkeletons === frameClock % 90) {
           units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
       }
