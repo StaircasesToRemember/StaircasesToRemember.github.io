@@ -1520,7 +1520,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 40;
-      this.attackDamage = 269; //(0,288)
+      this.attackDamage = 376; //(0,288)
       this.attackCooldown = 90;
       this.isAir = false;
       this.attacksAir = false;
@@ -1528,7 +1528,7 @@ class Unit {
       this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
-      this.splashRadius = 100;
+      this.splashRadius = 75;
     } else if (type === "Archer") {
       this.hp = 304;
       this.maxHp = this.hp;
@@ -1941,7 +1941,18 @@ update() {
               this.target.hp -= this.attackDamage;
   
               // Splash damage (centered on target)
-              if (this.splashRadius > 0) {
+            if (this.type === "Valkyrie") {
+                  for (const u of units) {
+                      if (u === this.target) continue;          // no double damage
+                      if (u.team === this.team) continue;       // no friendly fire
+                      if (u.isAir && !this.attacksAir) continue; // air check
+  
+                      const sd = distance(this, u);
+                      if (sd <= this.splashRadius) {
+                          u.hp -= this.attackDamage;
+                      }
+                  }
+            } else if (this.splashRadius > 0) {
                   for (const u of units) {
                       if (u === this.target) continue;          // no double damage
                       if (u.team === this.team) continue;       // no friendly fire
