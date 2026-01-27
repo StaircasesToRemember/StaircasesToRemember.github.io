@@ -33,7 +33,7 @@ const PlacementType = {
   
 const cards = [
   { id: "archers", name: "Archers", cost: 3, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
-  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 30, wins: 0, losses: 0 },
+  { id: "arrows", name: "Arrows", cost: 3, placement: PlacementType.ANYWHERE, type: "spell", radius: 75, damage: 366, delay: 35, wins: 0, losses: 0 }, //(30, inf)
   { id: "baby_dragon", name: "Baby Dragon", cost: 4, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "balloon", name: "Balloon", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
   { id: "barbarians", name: "Barbarians", cost: 5, placement: PlacementType.PLAYER_SIDE_ONLY, wins: 0, losses: 0 },
@@ -1549,7 +1549,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 160;  
-      this.attackDamage = 112;   
+      this.attackDamage = 106; //(0,112)
       this.attackCooldown = 66;
       this.isAir = false;
       this.attacksAir = true;
@@ -1733,7 +1733,7 @@ class Unit {
       this.speed = 0.7;
       this.r = 24;
       this.attackRange = 100;  
-      this.attackDamage = 90;   
+      this.attackDamage = 84; //(0,90) 
       this.attackCooldown = 90;
       this.isAir = true;
       this.attacksAir = true;
