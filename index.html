@@ -10,7 +10,7 @@
 </div>
 
 <div id="scoreboard">
-  Wins: <span id="wins">0</span> |
+  Wins: <span id="">0</span> |
   Losses: <span id="losses">0</span>
 </div>
 
@@ -1496,12 +1496,16 @@ function endGameByTowers() {
   let result = null;
   if (playerTowerCount > enemyTowerCount) {
     result = "PLAYER";
-    wins++;
+    if (gameMode === "PVP") {
+      wins++;
+    }
     updateScoreboard();
   }
   else if (enemyTowerCount > playerTowerCount) {
     result = "ENEMY";
-    losses++;
+    if (gameMode === "PVP") {
+      losses++;
+    }
     updateScoreboard();
   }
   else { 
@@ -2216,6 +2220,11 @@ update() {
 function generateElixir() {
   if (playerElixir < maxElixir) playerElixir += 1;
   if (enemyElixir < maxElixir) enemyElixir += 1;
+  if (gameMode == "PVP") {
+    if (Math.random() < wins/12) {
+      enemyElixir += 1;
+    }
+  }
 }
 
 // Draw loop
@@ -2277,11 +2286,12 @@ function drawArena() {
 
   // Generate elixir
   if (frameClock % 168 == 0) {
-      generateElixir();
+      function generate elixir();
   }
   if (frameClock % 168 == 84 && frameClock >= 7200) {
-      generateElixir();
+      function generate elixir();
   }
+    
   if (frameClock % 84 == 42) {
       if (gameMode == "AI_VS_AI") {
           aiPlayCard("player", playerHand, playerDeck);
