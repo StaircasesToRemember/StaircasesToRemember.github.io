@@ -194,6 +194,7 @@ startButton.onclick = () => {
 
 function startGame(deck) {
   initTowers();
+  frameClock = 0;
   
   const playerState = initializeDeck(deck);
   playerHand = playerState.hand;
