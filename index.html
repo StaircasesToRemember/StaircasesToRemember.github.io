@@ -6,11 +6,79 @@
   <div id="card-pool"></div>
   <p id="deck-count">0 / 8</p>
   <button id="start-game" disabled>Start Game</button>
-  <button id="start-ai">AI vs AI</button>
+  <button id="start-ai">Watch Top Game</button>
 </div>
-  
+
+<div id="scoreboard">
+  Wins: <span id="wins">0</span> |
+  Losses: <span id="losses">0</span>
+</div>
+
+<style>
+  #scoreboard {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    z-index: 10;
+  }
+
+  #arena {
+    display: block;
+    margin: 50px auto 0 auto; /* space so scoreboard doesn't overlap */
+  }
+</style>
+
+<canvas id="arena" width="400" height="1000"></canvas>
+
 <canvas id="arena" width="400" height="1000" style="border:0px solid black;"></canvas>
 
+<div id="end-overlay" style="display:none;">
+  <div id="end-box">
+    <h1 id="end-title"></h1>
+    <button id="end-button">OK</button>
+  </div>
+</div>
+
+<style>
+  #end-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+
+  #end-box {
+    background: #111;
+    color: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+
+  #end-box h1 {
+    margin-bottom: 20px;
+    font-size: 32px;
+  }
+
+  #end-box button {
+    padding: 8px 18px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+
+  
 <script>
 //Coming: goblin gang, graveyard, rocket, berzerker, night witch, lavahound, mega minion, ice golem, delivery, rascals, firecracker, royal hogs, furnace, royal giant, golem, recruits
 let gameMode = "PVP"; 
@@ -93,6 +161,14 @@ function renderCardPool() {
   }
 }
 
+let wins = 0;
+let losses = 0;
+
+function updateScoreboard() {
+  document.getElementById("wins").textContent = wins;
+  document.getElementById("losses").textContent = losses;
+}
+
 renderCardPool();
 
 function toggleCard(cardId, button) {
@@ -137,11 +213,11 @@ function startGame(deck) {
 
   if (!gameStarted) {
     drawArena();
-    if (gameMode === "AI_VS_AI") {
+    /*if (gameMode === "AI_VS_AI") {
       for (i = 1; i < 90; i++) {
         drawArena();
       }
-    }
+    }*/
   }
 
   gameStarted = true;
@@ -1418,8 +1494,16 @@ function endGameByTowers() {
   const enemyTowerCount = enemyTowers.length;
 
   let result = null;
-  if (playerTowerCount > enemyTowerCount) result = "PLAYER";
-  else if (enemyTowerCount > playerTowerCount) result = "ENEMY";
+  if (playerTowerCount > enemyTowerCount) {
+    result = "PLAYER";
+    wins++;
+    updateScoreboard();
+  }
+  else if (enemyTowerCount > playerTowerCount) {
+    result = "ENEMY";
+    losses++;
+    updateScoreboard();
+  }
   else { 
       return; // draw → ignore
   }
@@ -1471,12 +1555,36 @@ function endGameByTowers() {
       playerDeck = randomDecks.slice(8,16);
       startGame(playerDeck);
   } else {
-      enemyDeck = randomEnemyDeck(8);
-      playerDeck = playerData;
-      startGame(playerDeck);
+      if (wins < 12 && losses < 3) {  
+        enemyDeck = randomEnemyDeck(8);
+        playerDeck = playerData;
+        startGame(playerDeck);
+      } else if (wins == 12) {
+        showEndMessage("win");
+      } else {
+        showEndMessage("loss");
+      }
   }
 }
-  
+
+function showEndMessage(type) {
+  const overlay = document.getElementById("end-overlay");
+  const title = document.getElementById("end-title");
+  const button = document.getElementById("end-button");
+
+  if (type === "win") {
+    title.textContent = "Challenge Complete! 🏆";
+  } else {
+    title.textContent = "Challenge Failed! 💀";
+  }
+
+  overlay.style.display = "flex";
+
+  button.onclick = () => {
+    overlay.style.display = "none";
+  };
+}
+
 // Create towers
 function initTowers() { 
     playerTowers = [
