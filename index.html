@@ -89,6 +89,71 @@ document.getElementById("start-ai").onclick = () => {
   enemyDeck = randomDecks.slice(0,8);
   playerDeck = randomDecks.slice(8,16);
   startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
+  startGame(playerDeck);
 };
   
 let gameStarted = false;
@@ -1619,7 +1684,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 24;
       this.attackRange = 40;
-      this.attackDamage = 365; //(345, inf)
+      this.attackDamage = 202; 
       this.attackCooldown = 72;
       this.isAir = false;
       this.attacksAir = false;
@@ -1633,7 +1698,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 40;
-      this.attackDamage = 567; //(0,288)
+      this.attackDamage = 266; 
       this.attackCooldown = 90;
       this.isAir = false;
       this.attacksAir = false;
@@ -1648,7 +1713,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 16;
       this.attackRange = 145; 
-      this.attackDamage = 52;  
+      this.attackDamage = 112;  
       this.attackCooldown = 54;
       this.isAir = false;
       this.attacksAir = true;
@@ -1662,8 +1727,8 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 160;  
-      this.attackDamage = 106; //(0,112)
-      this.attackCooldown = 66;
+      this.attackDamage = 217;
+      this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1676,8 +1741,8 @@ class Unit {
       this.speed = 0.5;
       this.r = 16;
       this.attackRange = 160;  
-      this.attackDamage = 95; //(0,112)
-      this.attackCooldown = 66;
+      this.attackDamage = 95;
+      this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1689,12 +1754,12 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.4;
       this.r = 36;
-      this.attackRange = 40;  // melee range
-      this.attackDamage = 595; //(567, inf)
-      this.attackCooldown = 90;  // slower attack speed
+      this.attackRange = 40;  
+      this.attackDamage = 253;
+      this.attackCooldown = 90; 
       this.isAir = false;
       this.attacksAir = false;
-      this.targetsOnlyBuildings = true;  // Only targets towers!
+      this.targetsOnlyBuildings = true;  
       this.sightRange = 200;
       this.isBuilding = false;
       this.decay = 0;
@@ -1703,22 +1768,22 @@ class Unit {
       this.maxHp = this.hp;
       this.speed = 0.7;
       this.r = 16;
-      this.attackRange = 80;  // melee range
-      this.attackDamage = 81; //(80,82)
-      this.attackCooldown = 66;  // slower attack speed
+      this.attackRange = 80; 
+      this.attackDamage = 107; 
+      this.attackCooldown = 66; 
       this.isAir = true;
       this.attacksAir = true;
-      this.targetsOnlyBuildings = false;  // Only targets towers!
+      this.targetsOnlyBuildings = false; 
       this.sightRange = 170;
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Mini Pekka") {
-      this.hp = 1433;
+      this.hp = 1390;
       this.maxHp = this.hp;
       this.speed = 0.7;
       this.r = 20;
       this.attackRange = 40;
-      this.attackDamage = 1120; //(1050, inf)
+      this.attackDamage = 755;
       this.attackCooldown = 96;
       this.isAir = false;
       this.attacksAir = false;
@@ -1732,7 +1797,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 8;
       this.attackRange = 40;
-      this.attackDamage = 165; (0,170)
+      this.attackDamage = 81; 
       this.attackCooldown = 66;
       this.isAir = false;
       this.attacksAir = false;
@@ -1746,7 +1811,7 @@ class Unit {
       this.speed = 1.0;
       this.r = 12;
       this.attackRange = 40;
-      this.attackDamage = 129; //(128,135)
+      this.attackDamage = 120; 
       this.attackCooldown = 66;
       this.isAir = false;
       this.attacksAir = false;
@@ -1760,7 +1825,7 @@ class Unit {
       this.speed = 1.0;
       this.r = 12;
       this.attackRange = 130;
-      this.attackDamage = 70; (0, 77)
+      this.attackDamage = 81; 
       this.attackCooldown = 102;
       this.isAir = false;
       this.attacksAir = true;
@@ -1774,7 +1839,7 @@ class Unit {
       this.speed = 0;
       this.r = 24;
       this.attackRange = 145;
-      this.attackDamage = 329; //(329,inf)
+      this.attackDamage = 212; 
       this.attackCooldown = 60;
       this.isAir = false;
       this.attacksAir = false;
@@ -1796,14 +1861,14 @@ class Unit {
       this.sightRange = 1;
       this.isBuilding = true;
       this.decay = 0.25;
-      this.spawnSkeletons = (frameClock + 30) % 90; //(80, inf)
+      this.spawnSkeletons = (frameClock + 30) % 180; //(80, inf)
     } else if (type === "Hog Rider") {
       this.hp = 1697;
       this.maxHp = this.hp;
       this.speed = 1.0;
       this.r = 22;
       this.attackRange = 40;  
-      this.attackDamage = 394; (384,404)
+      this.attackDamage = 317; 
       this.attackCooldown = 96;  
       this.isAir = false;
       this.attacksAir = false;
@@ -1817,7 +1882,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 30;
       this.attackRange = 40;  
-      this.attackDamage = 683;
+      this.attackDamage = 640;
       this.attackCooldown = 120;  
       this.isAir = true;
       this.attacksAir = false;
@@ -1831,7 +1896,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 145;  
-      this.attackDamage = 155; //(0,165)
+      this.attackDamage = 281; 
       this.attackCooldown = 84;
       this.isAir = false;
       this.attacksAir = true;
@@ -1846,7 +1911,7 @@ class Unit {
       this.speed = 0.7;
       this.r = 24;
       this.attackRange = 100;  
-      this.attackDamage = 90; //(84,90) 
+      this.attackDamage = 161
       this.attackCooldown = 90;
       this.isAir = true;
       this.attacksAir = true;
@@ -1876,7 +1941,7 @@ class Unit {
       this.speed = 0.4;
       this.r = 36;
       this.attackRange = 55;
-      this.attackDamage = 1000; //(0, 1050)
+      this.attackDamage = 816; 
       this.attackCooldown = 108;
       this.isAir = false;
       this.attacksAir = false;
@@ -1885,12 +1950,12 @@ class Unit {
       this.isBuilding = false;
       this.decay = 0;
     } else if (type === "Fire Spirit") {
-      this.hp = 270;
+      this.hp = 230;
       this.maxHp = this.hp;
       this.speed = 1.0;
       this.r = 16;
       this.attackRange = 80;  
-      this.attackDamage = 300; //(280, inf)
+      this.attackDamage = 207; 
       this.attackCooldown = 20;
       this.isAir = false;
       this.attacksAir = true;
@@ -1905,7 +1970,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 145;  
-      this.attackDamage = 24; (23,26)  
+      this.attackDamage = 135; 
       this.attackCooldown = 42;
       this.isAir = false;
       this.attacksAir = true;
@@ -1921,7 +1986,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 20;
       this.attackRange = 40;  
-      this.attackDamage = 257;   
+      this.attackDamage = 192;   
       this.attackCooldown = 78;
       this.isAir = false;
       this.attacksAir = false;
@@ -1935,7 +2000,7 @@ class Unit {
       this.speed = 0.5;
       this.r = 16;
       this.attackRange = 100;  
-      this.attackDamage = 567; //(505, inf)
+      this.attackDamage = 225; 
       this.attackCooldown = 108;
       this.isAir = false;
       this.attacksAir = false;
@@ -1950,7 +2015,7 @@ class Unit {
       this.speed = 1.0;
       this.r = 16;
       this.attackRange = 40;  
-      this.attackDamage = 334; //(320, inf)
+      this.attackDamage = 350; 
       this.attackCooldown = 1;
       this.isAir = false;
       this.attacksAir = false;
@@ -1965,7 +2030,7 @@ class Unit {
       this.speed = 1.0;
       this.r = 8;
       this.attackRange = 40;  
-      this.attackDamage = 135; //(0,144)
+      this.attackDamage = 81; 
       this.attackCooldown = 78;
       this.isAir = true;
       this.attacksAir = true;
@@ -1993,7 +2058,7 @@ update() {
       }
   }
     if (this.type === "Tombstone") {
-      if (this.spawnSkeletons === frameClock % 90) {
+      if (this.spawnSkeletons === frameClock % 180) {
           units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
       }
