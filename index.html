@@ -1647,7 +1647,7 @@ class Unit {
       this.r = 16;
       this.attackRange = 145; 
       this.attackDamage = 112;  
-      this.attackCooldown = 66;
+      this.attackCooldown = 72;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1661,7 +1661,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 160;  
       this.attackDamage = 217;
-      this.attackCooldown = 78;
+      this.attackCooldown = 84;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1689,7 +1689,7 @@ class Unit {
       this.r = 36;
       this.attackRange = 40;  
       this.attackDamage = 253;
-      this.attackCooldown = 78; 
+      this.attackCooldown = 72; 
       this.isAir = false;
       this.attacksAir = false;
       this.targetsOnlyBuildings = true;  
@@ -1794,7 +1794,7 @@ class Unit {
       this.sightRange = 1;
       this.isBuilding = true;
       this.decay = 0.25;
-      this.spawnSkeletons = (frameClock + 30) % 180; //(80, inf)
+      this.spawnSkeletons = (frameClock + 30) % 120;
     } else if (type === "Hog Rider") {
       this.hp = 1697;
       this.maxHp = this.hp;
@@ -1904,7 +1904,7 @@ class Unit {
       this.r = 20;
       this.attackRange = 145;  
       this.attackDamage = 135; 
-      this.attackCooldown = 60;
+      this.attackCooldown = 66;
       this.isAir = false;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;
@@ -1964,7 +1964,7 @@ class Unit {
       this.r = 8;
       this.attackRange = 40;  
       this.attackDamage = 81; 
-      this.attackCooldown = 78;
+      this.attackCooldown = 72;
       this.isAir = true;
       this.attacksAir = true;
       this.targetsOnlyBuildings = false;  // Only targets towers!
@@ -1991,7 +1991,7 @@ update() {
       }
   }
     if (this.type === "Tombstone") {
-      if (this.spawnSkeletons === frameClock % 180) {
+      if (this.spawnSkeletons === frameClock % 120) {
           units.push(new Unit(this.x + 25, this.y, this.team, "Skeleton"));
           units.push(new Unit(this.x - 25, this.y, this.team, "Skeleton"));
       }
