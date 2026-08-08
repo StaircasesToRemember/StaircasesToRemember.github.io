@@ -214,8 +214,9 @@ function startGame(deck) {
 
   if (!gameStarted) {
     drawArena();
+    drawArena();
     if (gameMode === "AI_VS_AI") {
-      for (i = 1; i < 99; i++) {
+      for (i = 1; i < 98; i++) {
         drawArena();
       }
     }
