@@ -1466,14 +1466,19 @@ update() {
   // Acquire target ONLY if none
   if (!this.target) {
     const enemies = units.filter(u =>
-      u.team !== this.team &&
-      distance(this, u) <= this.range
+        u.team !== this.team &&
+        u.hp > 0 &&
+        distance(this, u) <= this.range
     );
 
     if (enemies.length > 0) {
-      this.target = enemies[0]; // or closest if you want
+        this.target = enemies.reduce((closest, enemy) => {
+            return distance(this, enemy) < distance(this, closest)
+                ? enemy
+                : closest;
+        });
     }
-  }
+}
 
   // Attack if possible
   if (this.target) {
